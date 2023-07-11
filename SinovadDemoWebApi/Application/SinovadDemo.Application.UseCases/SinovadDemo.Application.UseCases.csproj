@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Domain\SinovadDemo.Domain\SinovadDemo.Domain.csproj" />
+    <ProjectReference Include="..\..\Transversal\SinovadDemo.Transversal.Common\SinovadDemo.Transversal.Common.csproj" />
+    <ProjectReference Include="..\..\Transversal\SinovadDemo.Transversal.Mapping\SinovadDemo.Transversal.Mapping.csproj" />
+    <ProjectReference Include="..\SinovadDemo.Application.DTO\SinovadDemo.Application.DTO.csproj" />
+    <ProjectReference Include="..\SinovadDemo.Application.Helpers\SinovadDemo.Application.Helpers.csproj" />
+    <ProjectReference Include="..\SinovadDemo.Application.Interface\SinovadDemo.Application.Interface.csproj" />
+    <ProjectReference Include="..\SinovadDemo.Application.Shared\SinovadDemo.Application.Shared.csproj" />
+    <ProjectReference Include="..\SinovadDemo.Application.Validator\SinovadDemo.Application.Validator.csproj" />
+  </ItemGroup>
+
+</Project>

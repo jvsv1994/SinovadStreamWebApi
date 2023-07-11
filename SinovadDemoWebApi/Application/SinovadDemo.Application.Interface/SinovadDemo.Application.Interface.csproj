@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Domain\SinovadDemo.Domain\SinovadDemo.Domain.csproj" />
+    <ProjectReference Include="..\..\Transversal\SinovadDemo.Transversal.Collection\SinovadDemo.Transversal.Collection.csproj" />
+    <ProjectReference Include="..\..\Transversal\SinovadDemo.Transversal.Common\SinovadDemo.Transversal.Common.csproj" />
+    <ProjectReference Include="..\SinovadDemo.Application.DTO\SinovadDemo.Application.DTO.csproj" />
+  </ItemGroup>
+
+</Project>

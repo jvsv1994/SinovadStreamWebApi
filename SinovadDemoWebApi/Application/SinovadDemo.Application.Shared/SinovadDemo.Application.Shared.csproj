@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Transversal\SinovadDemo.Transversal.Logger\SinovadDemo.Transversal.Logger.csproj" />
+    <ProjectReference Include="..\SinovadDemo.Application.Builder\SinovadDemo.Application.Builder.csproj" />
+  </ItemGroup>
+
+</Project>
