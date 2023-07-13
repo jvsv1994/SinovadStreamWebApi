@@ -25,6 +25,7 @@ namespace SinovadDemo.Application.UseCases
         {
             //scoped services
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IMenuService, MenuService>();
             services.AddScoped<IMediaServerService, MediaServerService>();
             services.AddScoped<IStorageService, StorageService>();
             services.AddScoped<IMovieService, MovieService>();

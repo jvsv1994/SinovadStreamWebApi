@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SinovadDemo.Domain.Entities;
 
@@ -11,9 +12,11 @@ using SinovadDemo.Domain.Entities;
 namespace SinovadDemo.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230713222049_Update130720234")]
+    partial class Update130720234
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -166,7 +169,7 @@ namespace SinovadDemo.Persistence.Migrations
                         {
                             Id = 9,
                             Enabled = true,
-                            IconClass = "fa-solid fa-film",
+                            IconClass = "fa-solid fa-list-film",
                             IconTypeCatalogDetailId = 2,
                             IconTypeCatalogId = 5,
                             ParentId = 3,
@@ -178,7 +181,7 @@ namespace SinovadDemo.Persistence.Migrations
                         {
                             Id = 10,
                             Enabled = true,
-                            IconClass = "fa-solid fa-tv",
+                            IconClass = "fa-solid fa-list-tv",
                             IconTypeCatalogDetailId = 2,
                             IconTypeCatalogId = 5,
                             ParentId = 3,

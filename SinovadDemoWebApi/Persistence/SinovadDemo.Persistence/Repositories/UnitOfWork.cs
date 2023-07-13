@@ -7,6 +7,7 @@ namespace SinovadDemo.Persistence.Repositories
     {
         private ApplicationDbContext _context;
         private IGenericRepository<User> _users;
+        private IMenuRepository _menus;
         private IGenericRepository<MediaServer> _mediaServers;
         private IGenericRepository<Storage> _accountStorages;
         private IGenericRepository<Catalog> _catalogs;
@@ -38,6 +39,16 @@ namespace SinovadDemo.Persistence.Repositories
                 return _appUsers == null ?
                 _appUsers = new AppUserRepository(_context) :
                 _appUsers;
+            }
+        }
+
+        public IMenuRepository Menus
+        {
+            get
+            {
+                return _menus == null ?
+                _menus = new MenuRepository(_context) :
+                _menus;
             }
         }
 

@@ -68,6 +68,11 @@ namespace SinovadDemo.Persistence.Repositories
             return await _table.Where(predicate).ToListAsync(cancellationToken);
         }
 
+        public  IEnumerable<TEntity> GetAllByFunctionAsync(Func<TEntity, bool> function)
+        {
+            return  _table.Where(function);
+        }
+
         public async Task<DataCollection<TEntity>> GetAllWithPaginationAsync(int page, int take, string orderByColumnName, bool isAscending, CancellationToken cancellationToken = default)
         {
             return await _table.AsNoTracking().GetPagedAsync(page, take, orderByColumnName, isAscending, cancellationToken);

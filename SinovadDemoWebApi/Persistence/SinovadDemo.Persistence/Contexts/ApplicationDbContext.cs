@@ -21,8 +21,6 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
         _auditableEntitySaveChangesInterceptor = auditableEntitySaveChangesInterceptor;
     }
 
-    public DbSet<User> Users { get; set; }
-
     public virtual DbSet<MediaServer> MediaServers { get; set; }
 
     public virtual DbSet<Storage> Storages { get; set; }
@@ -34,8 +32,10 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
     public virtual DbSet<Episode> Episodes { get; set; }
 
     public virtual DbSet<Genre> Genres { get; set; }
-
     public virtual DbSet<Movie> Movies { get; set; }
+
+    public virtual DbSet<Menu> Menus { get; set; }
+    public virtual DbSet<RoleMenu> RoleMenus { get; set; }
 
     public virtual DbSet<MovieGenre> MovieGenres { get; set; }
 
@@ -85,11 +85,11 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
         new Menu { Id = 6, ParentId = 1, SortOrder = 3, Title = "Series",Path = "/tvseries", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-tv", Enabled = true },
         new Menu { Id = 7, ParentId = 2, SortOrder = 1, Title = "Almacenamiento", Path = "/storages", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-database", Enabled = true },
         new Menu { Id = 8, ParentId = 2, SortOrder = 2, Title = "Transcodificacion", Path = "/transcoder", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-database", Enabled = true },
-        new Menu { Id = 9, ParentId = 3, SortOrder = 1, Title = "Peliculas", Path = "/movies-maintenance", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-film", Enabled = true },
-        new Menu { Id = 10, ParentId = 3, SortOrder = 2, Title = "Series", Path = "/tvseries-maintenance", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-tv", Enabled = true },
+        new Menu { Id = 9, ParentId = 3, SortOrder = 1, Title = "Peliculas", Path = "/movies-maintenance", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-film", Enabled = true },
+        new Menu { Id = 10, ParentId = 3, SortOrder = 2, Title = "Series", Path = "/tvseries-maintenance", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-tv", Enabled = true },
         new Menu { Id = 11, ParentId = 3, SortOrder = 3, Title = "Generos", Path = "/genres-maintenance", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-check", Enabled = true },
         new Menu { Id = 12, ParentId = 3, SortOrder = 4, Title = "Roles", Path = "/roles-maintenance", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-check", Enabled = true },
-        new Menu { Id = 13, ParentId = 3, SortOrder = 5, Title = "Usuarios", Path = "/users-maintenance", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-user", Enabled = true },
+        new Menu { Id = 13, ParentId = 3, SortOrder = 5, Title = "Usuarios", Path = "/users-maintenance", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-user", Enabled = true },
         new Menu { Id = 14, ParentId = 3, SortOrder = 6, Title = "Opciones", Path = "/options-maintenance", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-check", Enabled = true });
 
         modelBuilder.Entity<User>(entity =>
@@ -209,6 +209,8 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
 
         modelBuilder.Entity<RoleMenu>(roleMenu =>
         {
+            roleMenu.ToTable("RoleMenu");
+
             roleMenu.HasKey(rm => new { rm.RoleId, rm.MenuId });
 
             roleMenu.HasOne(rm => rm.Role)
