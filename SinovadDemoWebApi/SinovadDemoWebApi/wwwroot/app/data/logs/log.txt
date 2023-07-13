@@ -125,3 +125,7 @@
 2023.07.12 23:04:23  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
 2023.07.12 23:07:08  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
 2023.07.12 23:09:30  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 23:19:15  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 23:26:31  - SinovadDemo.Application.UseCases.Users - UserService - <Login>d__14 - Successful autentication for the user jvsv1994
+2023.07.12 23:26:31  - SinovadDemo.Application.UseCases.Users - UserService - <Login>d__14 - Token generated for the user jvsv1994 : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJqdnN2MTk5NCIsIm5iZiI6MTY4OTIyMjM5MSwiZXhwIjoxNjkxODE0MzkxLCJpYXQiOjE2ODkyMjIzOTEsImlzcyI6IlNpbm92YWQuY29tIiwiYXVkIjoiU2lub3ZhZC5jb20ifQ.rDaA7GDBy0JS960BgC_fq3lLCWuCLJliRZmKp5yrbsE
+2023.07.12 23:26:31  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
