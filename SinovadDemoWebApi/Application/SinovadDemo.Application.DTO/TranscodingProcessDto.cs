@@ -12,6 +12,8 @@ namespace SinovadDemo.Application.DTO
         public int MediaServerId { get; set; }
         public int VideoId { get; set; }
         public bool PendingDeletion { get; set; }
+        public DateTime Created { get; set; }
+
 
     }
 }

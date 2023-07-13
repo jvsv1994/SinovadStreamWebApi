@@ -58,7 +58,7 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
     {
        optionsBuilder.AddInterceptors(_auditableEntitySaveChangesInterceptor);
        optionsBuilder.EnableSensitiveDataLogging();
-       optionsBuilder.UseSqlServer("Data Source=SQL8005.site4now.net;Initial Catalog=db_a87658_sinovad;User Id=db_a87658_sinovad_admin;Password=alfondo28V.");
+       //optionsBuilder.UseSqlServer("Add connection String");
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken=default)
