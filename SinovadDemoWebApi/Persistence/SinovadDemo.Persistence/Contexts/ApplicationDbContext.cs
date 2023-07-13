@@ -222,6 +222,24 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
                 .IsRequired();
         });
 
+
+        modelBuilder.Entity<RoleMenu>().HasData(
+           new RoleMenu { RoleId = 1, MenuId = 1 },
+           new RoleMenu { RoleId = 1, MenuId = 2 },
+           new RoleMenu { RoleId = 1, MenuId = 3 },
+           new RoleMenu { RoleId = 1, MenuId = 4 },
+           new RoleMenu { RoleId = 1, MenuId = 5 },
+           new RoleMenu { RoleId = 1, MenuId = 6 },
+           new RoleMenu { RoleId = 1, MenuId = 7 },
+           new RoleMenu { RoleId = 1, MenuId = 8 },
+           new RoleMenu { RoleId = 1, MenuId = 9 },
+           new RoleMenu { RoleId = 1, MenuId = 10 },
+           new RoleMenu { RoleId = 1, MenuId = 11 },
+           new RoleMenu { RoleId = 1, MenuId = 12 },
+           new RoleMenu { RoleId = 1, MenuId = 13 },
+           new RoleMenu { RoleId = 1, MenuId = 14 });
+
+
         modelBuilder.Entity<MediaServer>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__MediaServer__3214EC27FF56ACAD");
