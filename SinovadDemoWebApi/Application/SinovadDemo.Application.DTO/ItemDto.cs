@@ -34,7 +34,7 @@ namespace SinovadDemo.Application.DTO
         public int TvSerieGenreId { get; set; }
         public string GenreName { get; set; }
         public string IpAddress { get; set; }
-        public string Url { get; set; }
+        public string MediaServerUrl { get; set; }
         public MediaServerState MediaServerState { get; set; }
         public MediaType MediaType { get; set; }
         public DateTime Created { get; set; }

@@ -216,7 +216,7 @@ namespace SinovadDemo.Application.UseCases.TvSeries
                     {
                         var episode = new EpisodeDto();
                         episode.MediaServerId = video.MediaServerId;
-                        episode.Url=video.Url;
+                        episode.MediaServerUrl=video.MediaServerUrl;
                         episode.TvSerieName = tvSerieDetail.Name;
                         episode.EpisodeNumber = (int)episodeems.EpisodeNumber;
                         episode.SeasonNumber = (int)seasonems.SeasonNumber;

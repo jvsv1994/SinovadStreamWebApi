@@ -47,3 +47,81 @@
 2023.07.12 19:09:37  - SinovadDemo.Application.UseCases.Users - UserService - <Login>d__14 - Successful autentication for the user jvsv1994
 2023.07.12 19:09:41  - SinovadDemo.Application.UseCases.Users - UserService - <Login>d__14 - Token generated for the user jvsv1994 : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJqdnN2MTk5NCIsIm5iZiI6MTY4OTIwNjk3OSwiZXhwIjoxNjkxNzk4OTc5LCJpYXQiOjE2ODkyMDY5NzksImlzcyI6IlNpbm92YWQuY29tIiwiYXVkIjoiU2lub3ZhZC5jb20ifQ.UyFCRyLRG7xYVJxBLwRQOG0LMCSJ4H9UiwKyuxsvT64
 2023.07.12 19:09:41  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 20:38:47  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 20:40:13  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 20:41:49  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 20:42:33  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 20:44:00  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 20:44:31  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 20:49:10  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 20:51:08  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 20:52:40  - SinovadDemo.Application.UseCases.Videos - VideoService - VideoService - Starting search movies
+2023.07.12 20:52:40  - SinovadDemo.Application.UseCases.Videos - VideoService - VideoService - Prepare video paths
+2023.07.12 20:52:40  - SinovadDemo.Application.UseCases.Videos - VideoService - VideoService - Check if videos were already registered
+2023.07.12 20:52:41  - SinovadDemo.Application.UseCases.Videos - VideoService - VideoService - Check if there are videos to delete
+2023.07.12 20:52:41  - SinovadDemo.Application.UseCases.Videos - VideoService - VideoService - Processing new video with path C:\Users\JORGE\Videos\movies\DRAGON BALL LA MAGIA COMIENZA 1991.mkv
+2023.07.12 20:52:41  - SinovadDemo.Application.UseCases.Videos - VideoService - VideoService - Movie finded in TMDb Data Base Dragon Ball La magia comienza 1991
+2023.07.12 20:52:41  - SinovadDemo.Application.UseCases.Videos - VideoService - VideoService - Movie finded in TMDb Data Base Dragon Ball La magia comienza 1991
+2023.07.12 20:52:43  - SinovadDemo.Application.UseCases.Videos - VideoService - VideoService - Saving all new movie videos
+2023.07.12 20:52:43  - SinovadDemo.Application.UseCases.Videos - VideoService - VideoService - Ending search movies
+2023.07.12 20:52:43  - SinovadDemo.Application.UseCases.Videos - VideoService - VideoService - Starting search tv series
+2023.07.12 20:52:43  - SinovadDemo.Application.UseCases.Videos - VideoService - VideoService - Prepare video paths
+2023.07.12 20:52:43  - SinovadDemo.Application.UseCases.Videos - VideoService - VideoService - Check if videos were already registered
+2023.07.12 20:52:43  - SinovadDemo.Application.UseCases.Videos - VideoService - VideoService - Check if there are videos to delete
+2023.07.12 20:52:44  - SinovadDemo.Application.UseCases.Videos - VideoService - VideoService - Processing new video with path C:\Users\JORGE\Videos\tvseries\EL JUEGO DEL CALAMAR S01E001.mkv
+2023.07.12 20:52:45  - SinovadDemo.Application.UseCases.Videos - VideoService - VideoService - Episode finded in TMDb Data Base El juego del calamar T1:E1 Luz roja, luz verde
+2023.07.12 20:52:45  - SinovadDemo.Application.UseCases.Videos - VideoService - VideoService - Saving all new movie videos
+2023.07.12 20:52:45  - SinovadDemo.Application.UseCases.Videos - VideoService - VideoService - Ending search tv series
+2023.07.12 20:54:33  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 20:59:59  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 21:00:46  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 21:00:49  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 21:01:12  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 21:01:16  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 21:01:36  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 21:02:24  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 21:02:43  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 21:02:49  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:30:18  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:30:22  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:31:40  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:31:53  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:32:44  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:33:52  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:34:01  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:34:38  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:35:04  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:38:48  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:38:55  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:45:27  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:45:40  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:45:45  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:47:09  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:47:12  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:51:54  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:51:57  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:52:00  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:52:04  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:52:12  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:52:15  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:52:18  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:52:20  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:52:22  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:52:33  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:52:35  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:53:40  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:56:05  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:56:37  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:57:53  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 22:58:30  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 23:01:30  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 23:01:48  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 23:02:02  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 23:02:07  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 23:02:32  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 23:03:11  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 23:03:38  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 23:04:12  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 23:04:23  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 23:07:08  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994
+2023.07.12 23:09:30  - SinovadDemo.Application.UseCases.Users - UserService - <GetAsync>d__9 - Getting user data from jvsv1994

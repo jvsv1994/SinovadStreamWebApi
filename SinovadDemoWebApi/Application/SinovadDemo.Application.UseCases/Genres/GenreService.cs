@@ -193,9 +193,9 @@ namespace SinovadDemo.Application.UseCases.Genres
                     var listGenres = listGenresDto.MapTo<List<Genre>>();
                     _unitOfWork.Genres.AddList(listGenres);
                     _unitOfWork.Save();
-                    response.IsSuccess = true;
-                    response.Message = "Successful";
                 }
+                response.IsSuccess = true;
+                response.Message = "Successful";
             }
             catch (Exception ex)
             {

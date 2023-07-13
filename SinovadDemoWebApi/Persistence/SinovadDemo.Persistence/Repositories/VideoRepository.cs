@@ -27,7 +27,7 @@ namespace SinovadDemo.Persistence.Repositories
                 {
                     UserId = mediaServer.UserId,
                     MediaServerId = mediaServer.Id,
-                    Url=mediaServer.Url,
+                    MediaServerUrl=mediaServer.Url,
                     MediaType = (MediaType)storage.storage.MediaTypeCatalogDetailId,
                     TmdbId = storage.video.tvserie.TmdbId != null ? (int)storage.video.tvserie.TmdbId : 0,
                     SeasonNumber = storage.video.video.SeasonNumber != null ? (int)storage.video.video.SeasonNumber : 0,

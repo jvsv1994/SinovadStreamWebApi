@@ -23,7 +23,7 @@ namespace SinovadDemo.Application.DTO
         public int EpisodeNumber { get; set; }
         public int SeasonNumber { get; set; }
         public string EpisodeName { get; set; }
-        public string Url { get; set; }
+        public string MediaServerUrl { get; set; }
 
     }
 }
