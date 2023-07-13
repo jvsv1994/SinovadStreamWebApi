@@ -27,11 +27,9 @@ namespace SinovadDemo.Application.DTO
         public string PhysicalPath { get; set; }
         public int TvSerieId { get; set; }
         public int MovieId { get; set; }
-        public int MovieGenreId { get; set; }
         public int GenreId { get; set; }
         public int VideoId { get; set; }
         public int MediaServerId { get; set; }
-        public int TvSerieGenreId { get; set; }
         public string GenreName { get; set; }
         public string IpAddress { get; set; }
         public string MediaServerUrl { get; set; }

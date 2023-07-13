@@ -106,7 +106,7 @@ namespace SinovadDemo.Persistence.Repositories
                               MediaServerId = mediaServer.Id,
                               MediaType = (MediaType)storage.MediaTypeCatalogDetailId,
                               Created = (DateTime)video.Created
-                          }).AsEnumerable().GroupBy(a => a.TvSerieGenreId).Select(x => x.First()).ToList();
+                          }).AsEnumerable().GroupBy(a => new { a.GenreId, a.TvSerieId }).Select(x => x.First()).ToList();
             return result;
         }
 

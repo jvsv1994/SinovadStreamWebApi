@@ -9,7 +9,6 @@ namespace SinovadDemo.Application.DTO
 {
     public class MovieGenreDto
     {
-        public int Id { get; set; }
         public int MovieId { get; set; }
         public int GenreId { get; set; }
         public string GenreName { get; set; }
