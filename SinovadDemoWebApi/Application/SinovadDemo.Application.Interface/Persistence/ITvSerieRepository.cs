@@ -5,12 +5,12 @@ namespace SinovadDemo.Application.Interface.Persistence
 {
     public interface ITvSerieRepository : IGenericRepository<TvSerie>
     {
-        ItemDto GetTvSerieDataByAccount(string accountId, int tvSerieId);
+        ItemDto GetTvSerieDataByUser(int userId, int tvSerieId);
         List<TvSerie> GetTvSeriesByTMDdIds(List<string> listTMDbIds);
         List<int> GetListTmdbIdsExistingInOwnDataBase(List<int> listTMDbIds);
-        object GetTvSeriesByAccountIdAndSerchText(string accountId, string searchText);
-        object GetTvSeriesByAccountId(string accountId);
-        object GetRecentlyTvSeriesAdded(string accountId);
+        object GetTvSeriesByUserIdAndSerchText(int userId, string searchText);
+        object GetTvSeriesByUserId(int userId);
+        object GetRecentlyTvSeriesAdded(int userId);
         object GetTvSeriesByProfileId(int profileId);
 
     }

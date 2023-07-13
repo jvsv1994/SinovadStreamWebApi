@@ -6,22 +6,22 @@ using SinovadDemo.Application.Interface.UseCases;
 namespace SinovadDemoWebApi.Controllers.v1
 {
     [ApiController]
-    [Route("api/v{version:apiVersion}/transcodeSettings")]
+    [Route("api/v{version:apiVersion}/transcoderSettings")]
     [Authorize]
     [ApiVersion("1.0", Deprecated = true)]
-    public class TranscodeSettingController : Controller
+    public class TranscoderSettingsController : Controller
     {
-        private readonly ITranscodeSettingService _transcodeSettingService;
+        private readonly ITranscoderSettingsService _transcoderSettingsService;
 
-        public TranscodeSettingController(ITranscodeSettingService transcodeSettingService)
+        public TranscoderSettingsController(ITranscoderSettingsService transcoderSettingsService)
         {
-            _transcodeSettingService = transcodeSettingService;
+            _transcoderSettingsService = transcoderSettingsService;
         }
 
-        [HttpGet("GetByAccountServerAsync/{accountServerId}")]
-        public async Task<ActionResult> GetByAccountServerAsync(int accountServerId)
+        [HttpGet("GetByMediaServerAsync/{mediaServerId}")]
+        public async Task<ActionResult> GetByMediaServerAsync(int mediaServerId)
         {
-            var response = await _transcodeSettingService.GetByAccountServerAsync(accountServerId);
+            var response = await _transcoderSettingsService.GetByMediaServerAsync(mediaServerId);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -29,10 +29,10 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message);
         }
 
-        [HttpGet("GetAllWithPaginationByAccountServerAsync/{accountServerId}")]
-        public async Task<ActionResult> GetAllWithPaginationByAccountServerAsync(int accountServerId,[FromQuery] int page = 1,[FromQuery] int take = 1000)
+        [HttpGet("GetAllWithPaginationByMediaServerAsync/{mediaServerId}")]
+        public async Task<ActionResult> GetAllWithPaginationByMediaServerAsync(int mediaServerId,[FromQuery] int page = 1,[FromQuery] int take = 1000)
         {
-            var response = await _transcodeSettingService.GetAllWithPaginationByAccountServerAsync(accountServerId, page, take);
+            var response = await _transcoderSettingsService.GetAllWithPaginationByMediaServerAsync(mediaServerId, page, take);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -41,9 +41,9 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpPost("Create")]
-        public ActionResult Create([FromBody] TranscodeSettingDto seasonDto)
+        public ActionResult Create([FromBody] TranscoderSettingsDto seasonDto)
         {
-            var response = _transcodeSettingService.Create(seasonDto);
+            var response = _transcoderSettingsService.Create(seasonDto);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -52,9 +52,9 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpPost("CreateList")]
-        public ActionResult CreateList([FromBody] List<TranscodeSettingDto> list)
+        public ActionResult CreateList([FromBody] List<TranscoderSettingsDto> list)
         {
-            var response = _transcodeSettingService.CreateList(list);
+            var response = _transcoderSettingsService.CreateList(list);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -63,9 +63,9 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpPut("Update")]
-        public ActionResult Update([FromBody] TranscodeSettingDto seasonDto)
+        public ActionResult Update([FromBody] TranscoderSettingsDto seasonDto)
         {
-            var response = _transcodeSettingService.Update(seasonDto);
+            var response = _transcoderSettingsService.Update(seasonDto);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -73,10 +73,10 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message);
         }
 
-        [HttpDelete("Delete/{transcodeSettingId}")]
-        public ActionResult Delete(int transcodeSettingId)
+        [HttpDelete("Delete/{transcoderSettingsId}")]
+        public ActionResult Delete(int transcoderSettingsId)
         {
-            var response = _transcodeSettingService.Delete(transcodeSettingId);
+            var response = _transcoderSettingsService.Delete(transcoderSettingsId);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -87,7 +87,7 @@ namespace SinovadDemoWebApi.Controllers.v1
         [HttpDelete("DeleteList/{listIds}")]
         public ActionResult DeleteList(string listIds)
         {
-            var response = _transcodeSettingService.DeleteList(listIds);
+            var response = _transcoderSettingsService.DeleteList(listIds);
             if (response.IsSuccess)
             {
                 return Ok(response);

@@ -2,15 +2,13 @@
 
 namespace SinovadDemo.Domain.Entities;
 
-public partial class Video : BaseAuditableEntity
+public partial class Video : BaseEntity
 {
-    public int Id { get; set; }
-
     public string Title { get; set; }
 
     public string PhysicalPath { get; set; }
 
-    public int? AccountStorageId { get; set; }
+    public int? StorageId { get; set; }
 
     public int? MovieId { get; set; }
 

@@ -8,7 +8,7 @@ namespace SinovadDemo.Application.DTO
     public class EpisodeDto
     {
         public int Id { get; set; }
-        public int AccountServerId { get; set; }
+        public int MediaServerId { get; set; }
         public int? EpisodeNumber { get; set; }
         public int SeasonNumber { get; set; }
         public string Name { get; set; }
@@ -25,7 +25,7 @@ namespace SinovadDemo.Application.DTO
         public int TvSerieId { get; set; }
         public string TvSerieName { get; set; }
         public int EpisodeId { get; set; }
-        public string HostUrl { get; set; }
+        public string Url { get; set; }
 
     }
 }

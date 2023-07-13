@@ -6,65 +6,45 @@ using SinovadDemo.Domain.Entities;
 using SinovadDemo.Transversal.Common;
 using SinovadDemo.Transversal.Mapping;
 
-namespace SinovadDemo.Application.UseCases.AccountServers
+namespace SinovadDemo.Application.UseCases.Storages
 {
-
-    public class AccountServerService : IAccountServerService
+    public class StorageService : IStorageService
     {
         private IUnitOfWork _unitOfWork;
 
         private readonly SharedService _sharedService;
 
-        public AccountServerService(IUnitOfWork unitOfWork, SharedService sharedService)
+        public StorageService(IUnitOfWork unitOfWork, SharedService sharedService)
         {
             _unitOfWork = unitOfWork;
             _sharedService = sharedService;
         }
 
-        public async Task<Response<AccountServerDto>> GetAsync(int id)
+        public async Task<Response<StorageDto>> GetAsync(int id)
         {
-            var response = new Response<AccountServerDto>();
+            var response = new Response<StorageDto>();
             try
             {
-                var accountServer = await _unitOfWork.AccountServers.GetAsync(id);
-                response.Data = accountServer.MapTo<AccountServerDto>();
+                var result = await _unitOfWork.Storages.GetAsync(id);
+                response.Data = result.MapTo<StorageDto>();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
             catch (Exception ex)
             {
-                response.Message = ex.StackTrace;
+                response.Message = ex.Message;
                 _sharedService._tracer.LogError(ex.StackTrace);
             }
             return response;
         }
 
-        public async Task<Response<AccountServerDto>> GetByAccountAndIpAddressAsync(string accountId, string ipAddress)
+        public async Task<ResponsePagination<List<StorageDto>>> GetAllWithPaginationByMediaServerAsync(int mediaServerId, int page, int take)
         {
-            var response = new Response<AccountServerDto>();
+            var response = new ResponsePagination<List<StorageDto>>();
             try
             {
-                var result = await _unitOfWork.AccountServers.GetByExpressionAsync(x => x.IpAddress == ipAddress && x.AccountId == accountId);
-                response.Data = result.MapTo<AccountServerDto>();
-                response.IsSuccess = true;
-                response.Message = "Successful";
-            }
-            catch (Exception ex)
-            {
-                response.Message = ex.StackTrace;
-                _sharedService._tracer.LogError(ex.StackTrace);
-            }
-            return response;
-        }
-
-
-        public async Task<ResponsePagination<List<AccountServerDto>>> GetAllWithPaginationByAccountAsync(string accountId, int page, int take)
-        {
-            var response = new ResponsePagination<List<AccountServerDto>>();
-            try
-            {
-                var result = await _unitOfWork.AccountServers.GetAllWithPaginationByExpressionAsync(page, take, "Id", true, x => x.AccountId == accountId);
-                response.Data = result.Items.MapTo<List<AccountServerDto>>();
+                var result = await _unitOfWork.Storages.GetAllWithPaginationByExpressionAsync(page, take, "Id", true, x => x.MediaServerId == mediaServerId);
+                response.Data = result.Items.MapTo<List<StorageDto>>();
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;
                 response.TotalCount = result.Total;
@@ -73,64 +53,65 @@ namespace SinovadDemo.Application.UseCases.AccountServers
             }
             catch (Exception ex)
             {
-                response.Message = ex.StackTrace;
+                response.Message = ex.Message;
                 _sharedService._tracer.LogError(ex.StackTrace);
             }
             return response;
         }
 
-        public Response<object> Create(AccountServerDto accountServerDto)
+
+        public Response<object> Create(StorageDto storageDto)
         {
             var response = new Response<object>();
             try
             {
-                var accountServer = accountServerDto.MapTo<AccountServer>();
-                _unitOfWork.AccountServers.Add(accountServer);
+                var storage = storageDto.MapTo<Storage>();
+                _unitOfWork.Storages.Add(storage);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
             catch (Exception ex)
             {
-                response.Message = ex.StackTrace;
+                response.Message = ex.Message;
                 _sharedService._tracer.LogError(ex.StackTrace);
             }
             return response;
         }
 
-        public Response<object> CreateList(List<AccountServerDto> listAccountServerDto)
+        public Response<object> CreateList(List<StorageDto> list)
         {
             var response = new Response<object>();
             try
             {
-                var accountServers = listAccountServerDto.MapTo<List<AccountServer>>();
-                _unitOfWork.AccountServers.AddList(accountServers);
+                var mediaServers = list.MapTo<List<Storage>>();
+                _unitOfWork.Storages.AddList(mediaServers);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
             catch (Exception ex)
             {
-                response.Message = ex.StackTrace;
+                response.Message = ex.Message;
                 _sharedService._tracer.LogError(ex.StackTrace);
             }
             return response;
         }
 
-        public Response<object> Update(AccountServerDto accountServerDto)
+        public Response<object> Update(StorageDto storageDto)
         {
             var response = new Response<object>();
             try
             {
-                var accountServer = accountServerDto.MapTo<AccountServer>();
-                _unitOfWork.AccountServers.Update(accountServer);
+                var storage = storageDto.MapTo<Storage>();
+                _unitOfWork.Storages.Update(storage);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
             catch (Exception ex)
             {
-                response.Message = ex.StackTrace;
+                response.Message = ex.Message;
                 _sharedService._tracer.LogError(ex.StackTrace);
             }
             return response;
@@ -141,14 +122,16 @@ namespace SinovadDemo.Application.UseCases.AccountServers
             var response = new Response<object>();
             try
             {
-                _unitOfWork.AccountServers.Delete(id);
+                _unitOfWork.VideoProfiles.DeleteByExpression(it=>it.Video.StorageId==id);
+                _unitOfWork.Videos.DeleteByExpression(it => it.StorageId == id);
+                _unitOfWork.Storages.Delete(id);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
             catch (Exception ex)
             {
-                response.Message = ex.StackTrace;
+                response.Message = ex.Message;
                 _sharedService._tracer.LogError(ex.StackTrace);
             }
             return response;
@@ -164,14 +147,14 @@ namespace SinovadDemo.Application.UseCases.AccountServers
                 {
                     listIds = ids.Split(",").Select(x => Convert.ToInt32(x)).ToList();
                 }
-                _unitOfWork.AccountServers.DeleteByExpression(x => listIds.Contains(x.Id));
+                _unitOfWork.Storages.DeleteByExpression(x => listIds.Contains(x.Id));
                 _unitOfWork.Save();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
             catch (Exception ex)
             {
-                response.Message = ex.StackTrace;
+                response.Message = ex.Message;
                 _sharedService._tracer.LogError(ex.StackTrace);
             }
             return response;

@@ -5,9 +5,9 @@ namespace SinovadDemo.Application.Interface.Persistence
     public interface IUnitOfWork : IDisposable
     {
         public IAppUserRepository AppUsers { get; }
-        public IGenericRepository<AppUser> Accounts { get; }
-        public IGenericRepository<AccountServer> AccountServers { get; }
-        public IGenericRepository<AccountStorage> AccountStorages { get; }
+        public IGenericRepository<User> Users { get; }
+        public IGenericRepository<MediaServer> MediaServers { get; }
+        public IGenericRepository<Storage> Storages { get; }
         public IGenericRepository<Catalog> Catalogs { get; }
         public IGenericRepository<CatalogDetail> CatalogDetails { get; }
         public IGenreRepository Genres { get; }
@@ -15,8 +15,8 @@ namespace SinovadDemo.Application.Interface.Persistence
         public IGenericRepository<MovieGenre> MovieGenres { get; }
         public IGenericRepository<Profile> Profiles { get; }
         public ISeasonRepository Seasons { get; }
-        public IGenericRepository<TranscodeSetting> TranscodeSettings { get; }
-        public IGenericRepository<TranscodeVideoProcess> TranscodeVideoProcesses { get; }
+        public IGenericRepository<TranscoderSettings> TranscoderSettings { get; }
+        public IGenericRepository<TranscodingProcess> TranscodingProcesses { get; }
         public ITvSerieRepository TvSeries { get; }
         public IGenericRepository<TvSerieGenre> TvSerieGenres { get; }
         public IVideoRepository Videos { get; }

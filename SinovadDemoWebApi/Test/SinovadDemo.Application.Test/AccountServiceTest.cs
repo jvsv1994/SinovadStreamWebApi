@@ -7,7 +7,7 @@ using SinovadDemo.Application.Interface.UseCases;
 namespace SinovadDemo.Application.Test
 {
     [TestClass]
-    public class AccountServiceTest
+    public class UserServiceTest
     {
 
         private static WebApplicationFactory<Program> _factory=null;
@@ -25,7 +25,7 @@ namespace SinovadDemo.Application.Test
         //public void Login_WhenParametersAreEmpty_ShowValidatorErrorMessage()
         //{
         //    using var scope = _scopeFactory.CreateScope();
-        //    var context = scope.ServiceProvider.GetService<IAccountService>();
+        //    var context = scope.ServiceProvider.GetService<IUserService>();
 
         //    //Arrange
         //    var accessUserDto = new AccessUserDto();
@@ -45,7 +45,7 @@ namespace SinovadDemo.Application.Test
         public void Login_WhenParametersAreRight_ShowSuccessMessage()
         {
             using var scope = _scopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetService<IAccountService>();
+            var context = scope.ServiceProvider.GetService<IUserService>();
 
             //Arrange
             var accessUserDto = new AccessUserDto();
@@ -65,7 +65,7 @@ namespace SinovadDemo.Application.Test
         //public void Login_WhenParametersAreIncorrect_ShowInvalidAccessMessage()
         //{
         //    using var scope = _scopeFactory.CreateScope();
-        //    var context = scope.ServiceProvider.GetService<IAccountService>();
+        //    var context = scope.ServiceProvider.GetService<IUserService>();
 
         //    //Arrange
         //    var accessUserDto = new AccessUserDto();

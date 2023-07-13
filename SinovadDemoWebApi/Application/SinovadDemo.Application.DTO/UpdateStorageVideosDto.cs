@@ -8,7 +8,7 @@ namespace SinovadDemo.Application.DTO
 {
     public class UpdateStorageVideosDto
     {
-        public List<AccountStorageDto> ListAccountStorages { get; set; }
+        public List<StorageDto> ListStorages { get; set; }
         public string LogIdentifier { get; set; }
 
     }

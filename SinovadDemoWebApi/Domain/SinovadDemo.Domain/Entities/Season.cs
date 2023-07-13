@@ -2,11 +2,9 @@
 
 namespace SinovadDemo.Domain.Entities;
 
-public partial class Season : BaseAuditableEntity
+public partial class Season : BaseEntity
 {
-    public int Id { get; set; }
-
-    public int? SeasonNumber { get; set; }
+    public int SeasonNumber { get; set; }
 
     public string? Name { get; set; }
 

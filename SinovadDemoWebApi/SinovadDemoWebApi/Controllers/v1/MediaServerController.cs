@@ -7,22 +7,22 @@ using System.ComponentModel.DataAnnotations;
 namespace SinovadDemoWebApi.Controllers.v1
 {
     [ApiController]
-    [Route("api/v{version:apiVersion}/accountServers")]
+    [Route("api/v{version:apiVersion}/mediaServers")]
     [Authorize]
     [ApiVersion("1.0", Deprecated = true)]
-    public class AccountServerController : Controller
+    public class MediaServerController : Controller
     {
-        private readonly IAccountServerService _accountServerService;
+        private readonly IMediaServerService _mediaServerService;
 
-        public AccountServerController(IAccountServerService accountServerService)
+        public MediaServerController(IMediaServerService mediaServerService)
         {
-            _accountServerService = accountServerService;
+            _mediaServerService = mediaServerService;
         }
 
-        [HttpGet("GetByAccountAndIpAddressAsync")]
-        public async Task<ActionResult> Get([Required] string accountId, [Required] string ipAddress)
+        [HttpGet("GetByUserAndIpAddressAsync")]
+        public async Task<ActionResult> Get([Required] int userId, [Required] string ipAddress)
         {
-            var response = await _accountServerService.GetByAccountAndIpAddressAsync(accountId, ipAddress);
+            var response = await _mediaServerService.GetByUserAndIpAddressAsync(userId, ipAddress);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -30,10 +30,10 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message); ;
         }
 
-        [HttpGet("GetAllWithPaginationByAccountAsync/{accountId}")]
-        public async Task<ActionResult> GetAllWithPaginationByAccountAsync(string accountId,[FromQuery] int page = 1,[FromQuery] int take = 1000)
+        [HttpGet("GetAllWithPaginationByUserAsync/{userId}")]
+        public async Task<ActionResult> GetAllWithPaginationByUserAsync(int userId,[FromQuery] int page = 1,[FromQuery] int take = 1000)
         {
-            var response = await _accountServerService.GetAllWithPaginationByAccountAsync(accountId, page, take);
+            var response = await _mediaServerService.GetAllWithPaginationByUserAsync(userId, page, take);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -42,13 +42,13 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpPost("Create")]
-        public ActionResult Create([FromBody] AccountServerDto accountServerDto)
+        public ActionResult Create([FromBody] MediaServerDto mediaServerDto)
         {
-            if (accountServerDto == null)
+            if (mediaServerDto == null)
             {
                 return BadRequest();
             }
-            var response = _accountServerService.Create(accountServerDto);
+            var response = _mediaServerService.Create(mediaServerDto);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -57,13 +57,13 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpPost("CreateList")]
-        public ActionResult CreateList([FromBody] List<AccountServerDto> list)
+        public ActionResult CreateList([FromBody] List<MediaServerDto> list)
         {
             if (list == null)
             {
                 return BadRequest();
             }
-            var response = _accountServerService.CreateList(list);
+            var response = _mediaServerService.CreateList(list);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -72,13 +72,13 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpPut("Update")]
-        public ActionResult Update([FromBody] AccountServerDto accountServerDto)
+        public ActionResult Update([FromBody] MediaServerDto mediaServerDto)
         {
-            if (accountServerDto == null)
+            if (mediaServerDto == null)
             {
                 return BadRequest();
             }
-            var response = _accountServerService.Update(accountServerDto);
+            var response = _mediaServerService.Update(mediaServerDto);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -86,14 +86,14 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message);
         }
 
-        [HttpDelete("Delete/{accountServerId}")]
-        public ActionResult Delete(int accountServerId)
+        [HttpDelete("Delete/{mediaServerId}")]
+        public ActionResult Delete(int mediaServerId)
         {
-            if (accountServerId == 0)
+            if (mediaServerId == 0)
             {
                 return BadRequest();
             }
-            var response = _accountServerService.Delete(accountServerId);
+            var response = _mediaServerService.Delete(mediaServerId);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -108,7 +108,7 @@ namespace SinovadDemoWebApi.Controllers.v1
             {
                 return BadRequest();
             }
-            var response = _accountServerService.DeleteList(listIds);
+            var response = _mediaServerService.DeleteList(listIds);
             if (response.IsSuccess)
             {
                 return Ok(response);

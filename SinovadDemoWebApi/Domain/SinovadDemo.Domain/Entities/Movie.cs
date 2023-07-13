@@ -2,10 +2,8 @@
 
 namespace SinovadDemo.Domain.Entities;
 
-public partial class Movie : BaseAuditableEntity
+public partial class Movie : BaseEntity
 {
-    public int Id { get; set; }
-
     public bool? Adult { get; set; }
 
     public int? TmdbId { get; set; }

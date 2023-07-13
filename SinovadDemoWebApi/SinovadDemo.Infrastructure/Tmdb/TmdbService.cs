@@ -53,8 +53,8 @@ namespace SinovadDemo.Infrastructure.Tmdb
                         if(indexEpisode == -1)
                         {
                             var episode = new EpisodeDto();
-                            episode.AccountServerId = video.AccountServerId;
-                            episode.HostUrl = video.HostUrl;
+                            episode.MediaServerId = video.MediaServerId;
+                            episode.Url = video.Url;
                             episode.TvSerieName = tvSerie.Name;
                             episode.EpisodeNumber = tse.EpisodeNumber;
                             episode.SeasonNumber = tse.SeasonNumber;

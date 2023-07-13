@@ -2,7 +2,7 @@
 
 namespace SinovadDemo.Application.Interface.Persistence
 {
-    public interface IAppUserRepository : IGenericRepository<AppUser>
+    public interface IAppUserRepository : IGenericRepository<User>
     {
 
     }

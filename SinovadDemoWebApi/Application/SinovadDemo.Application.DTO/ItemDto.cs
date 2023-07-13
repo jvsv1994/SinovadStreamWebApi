@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SinovadDemo.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,13 +30,13 @@ namespace SinovadDemo.Application.DTO
         public int MovieGenreId { get; set; }
         public int GenreId { get; set; }
         public int VideoId { get; set; }
-        public int AccountServerId { get; set; }
+        public int MediaServerId { get; set; }
         public int TvSerieGenreId { get; set; }
         public string GenreName { get; set; }
         public string IpAddress { get; set; }
-        public string HostUrl { get; set; }
-        public int HostState { get; set; }
-        public int AccountStorageTypeId { get; set; }
+        public string Url { get; set; }
+        public MediaServerState MediaServerState { get; set; }
+        public MediaType MediaType { get; set; }
         public DateTime Created { get; set; }
         public DateTime LastModified { get; set; }
         public Boolean ContinueVideo { get; set; }

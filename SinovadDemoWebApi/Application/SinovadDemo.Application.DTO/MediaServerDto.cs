@@ -1,17 +1,17 @@
 ﻿
 #nullable disable
 
-using SinovadDemo;
+using SinovadDemo.Domain.Enums;
 
 namespace SinovadDemo.Application.DTO
 {
-    public class AccountServerDto
+    public class MediaServerDto
     {
         public int Id { get; set; }
         public string IpAddress { get; set; }
-        public string AccountId { get; set; }
+        public int UserId { get; set; }
         public int StateCatalogId { get; set; }
         public int StateCatalogDetailId { get; set; }
-        public string HostUrl { get; set; }
+        public string Url { get; set; }
     }
 }

@@ -2,11 +2,9 @@
 
 namespace SinovadDemo.Domain.Entities;
 
-public partial class CatalogDetail : BaseAuditableEntity
+public partial class CatalogDetail : BaseEntity
 {
     public int CatalogId { get; set; }
-
-    public int Id { get; set; }
 
     public string Name { get; set; } = null!;
 

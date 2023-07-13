@@ -2,10 +2,8 @@
 
 namespace SinovadDemo.Domain.Entities;
 
-public partial class Genre : BaseAuditableEntity
+public class Genre : BaseEntity
 {
-    public int Id { get; set; }
-
     public string Name { get; set; } = null!;
 
     public int? TmdbId { get; set; }

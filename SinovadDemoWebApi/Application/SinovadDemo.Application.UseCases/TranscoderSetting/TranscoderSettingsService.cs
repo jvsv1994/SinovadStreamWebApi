@@ -6,27 +6,26 @@ using SinovadDemo.Domain.Entities;
 using SinovadDemo.Transversal.Common;
 using SinovadDemo.Transversal.Mapping;
 
-namespace SinovadDemo.Application.UseCases.AccountStorages
+namespace SinovadDemo.Application.UseCases.TranscoderSetting
 {
-    public class AccountStorageService : IAccountStorageService
+    public class TranscoderSettingsService : ITranscoderSettingsService
     {
         private IUnitOfWork _unitOfWork;
 
         private readonly SharedService _sharedService;
 
-        public AccountStorageService(IUnitOfWork unitOfWork, SharedService sharedService)
+        public TranscoderSettingsService(IUnitOfWork unitOfWork, SharedService sharedService)
         {
             _unitOfWork = unitOfWork;
             _sharedService = sharedService;
         }
-
-        public async Task<Response<AccountStorageDto>> GetAsync(int id)
+        public async Task<Response<TranscoderSettingsDto>> GetAsync(int id)
         {
-            var response = new Response<AccountStorageDto>();
+            var response = new Response<TranscoderSettingsDto>();
             try
             {
-                var result = await _unitOfWork.AccountStorages.GetAsync(id);
-                response.Data = result.MapTo<AccountStorageDto>();
+                var result = await _unitOfWork.TranscoderSettings.GetAsync(id);
+                response.Data = result.MapTo<TranscoderSettingsDto>();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -37,14 +36,33 @@ namespace SinovadDemo.Application.UseCases.AccountStorages
             }
             return response;
         }
-
-        public async Task<ResponsePagination<List<AccountStorageDto>>> GetAllWithPaginationByAccountServerAsync(int accountServerId, int page, int take)
+        public async Task<Response<TranscoderSettingsDto>> GetByMediaServerAsync(int mediaServerId)
         {
-            var response = new ResponsePagination<List<AccountStorageDto>>();
+            var response = new Response<TranscoderSettingsDto>();
             try
             {
-                var result = await _unitOfWork.AccountStorages.GetAllWithPaginationByExpressionAsync(page, take, "Id", true, x => x.AccountServerId == accountServerId);
-                response.Data = result.Items.MapTo<List<AccountStorageDto>>();
+                var result = await _unitOfWork.TranscoderSettings.GetByExpressionAsync(x => x.MediaServerId == mediaServerId);
+                if(result!=null)
+                {
+                    response.Data = result.MapTo<TranscoderSettingsDto>();
+                    response.Message = "Successful";
+                }
+                response.IsSuccess = true;
+            }catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _sharedService._tracer.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
+        public async Task<ResponsePagination<List<TranscoderSettingsDto>>> GetAllWithPaginationByMediaServerAsync(int mediaServerId, int page, int take)
+        {
+            var response = new ResponsePagination<List<TranscoderSettingsDto>>();
+            try
+            {
+                var result = await _unitOfWork.TranscoderSettings.GetAllWithPaginationByExpressionAsync(page, take, "Id", true, x => x.MediaServerId == mediaServerId);
+                response.Data = result.Items.MapTo<List<TranscoderSettingsDto>>();
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;
                 response.TotalCount = result.Total;
@@ -59,14 +77,13 @@ namespace SinovadDemo.Application.UseCases.AccountStorages
             return response;
         }
 
-
-        public Response<object> Create(AccountStorageDto accountStorageDto)
+        public Response<object> Create(TranscoderSettingsDto transcoderSettingsDto)
         {
             var response = new Response<object>();
             try
             {
-                var accountStorage = accountStorageDto.MapTo<AccountStorage>();
-                _unitOfWork.AccountStorages.Add(accountStorage);
+                var transcoderSettings = transcoderSettingsDto.MapTo<TranscoderSettings>();
+                _unitOfWork.TranscoderSettings.Add(transcoderSettings);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
                 response.Message = "Successful";
@@ -79,13 +96,13 @@ namespace SinovadDemo.Application.UseCases.AccountStorages
             return response;
         }
 
-        public Response<object> CreateList(List<AccountStorageDto> list)
+        public Response<object> CreateList(List<TranscoderSettingsDto> listTranscoderSettingsDto)
         {
             var response = new Response<object>();
             try
             {
-                var accountServers = list.MapTo<List<AccountStorage>>();
-                _unitOfWork.AccountStorages.AddList(accountServers);
+                var transcoderSettings = listTranscoderSettingsDto.MapTo<List<TranscoderSettings>>();
+                _unitOfWork.TranscoderSettings.AddList(transcoderSettings);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
                 response.Message = "Successful";
@@ -98,13 +115,13 @@ namespace SinovadDemo.Application.UseCases.AccountStorages
             return response;
         }
 
-        public Response<object> Update(AccountStorageDto accountStorageDto)
+        public Response<object> Update(TranscoderSettingsDto transcoderSettingsDto)
         {
             var response = new Response<object>();
             try
             {
-                var accountStorage = accountStorageDto.MapTo<AccountStorage>();
-                _unitOfWork.AccountStorages.Update(accountStorage);
+                var transcoderSettings = transcoderSettingsDto.MapTo<TranscoderSettings>();
+                _unitOfWork.TranscoderSettings.Update(transcoderSettings);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
                 response.Message = "Successful";
@@ -122,9 +139,7 @@ namespace SinovadDemo.Application.UseCases.AccountStorages
             var response = new Response<object>();
             try
             {
-                _unitOfWork.VideoProfiles.DeleteByExpression(it=>it.Video.AccountStorageId==id);
-                _unitOfWork.Videos.DeleteByExpression(it => it.AccountStorageId == id);
-                _unitOfWork.AccountStorages.Delete(id);
+                _unitOfWork.TranscoderSettings.Delete(id);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
                 response.Message = "Successful";
@@ -147,7 +162,7 @@ namespace SinovadDemo.Application.UseCases.AccountStorages
                 {
                     listIds = ids.Split(",").Select(x => Convert.ToInt32(x)).ToList();
                 }
-                _unitOfWork.AccountStorages.DeleteByExpression(x => listIds.Contains(x.Id));
+                _unitOfWork.TranscoderSettings.DeleteByExpression(x => listIds.Contains(x.Id));
                 _unitOfWork.Save();
                 response.IsSuccess = true;
                 response.Message = "Successful";

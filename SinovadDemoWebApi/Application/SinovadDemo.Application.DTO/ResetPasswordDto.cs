@@ -19,7 +19,7 @@ namespace SinovadDemo.Application.DTO
         [Compare("Password", ErrorMessage = "Password and Password confirmation do not match")]
         public string ConfirmPassword { get; set; }
         public string ResetPasswordToken { get; set; }
-        public string UserId { get; set; }
+        public int UserId { get; set; }
 
     }
 }

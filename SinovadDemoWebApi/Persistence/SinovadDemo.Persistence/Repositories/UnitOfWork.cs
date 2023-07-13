@@ -6,9 +6,9 @@ namespace SinovadDemo.Persistence.Repositories
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private ApplicationDbContext _context;
-        private IGenericRepository<AppUser> _accounts;
-        private IGenericRepository<AccountServer> _accountServers;
-        private IGenericRepository<AccountStorage> _accountStorages;
+        private IGenericRepository<User> _users;
+        private IGenericRepository<MediaServer> _mediaServers;
+        private IGenericRepository<Storage> _accountStorages;
         private IGenericRepository<Catalog> _catalogs;
         private IGenericRepository<CatalogDetail> _catalogDetails;
         private IGenreRepository _genres;
@@ -16,8 +16,8 @@ namespace SinovadDemo.Persistence.Repositories
         private IGenericRepository<MovieGenre> _movieGenres;
         private IGenericRepository<Profile> _profiles;
         private ISeasonRepository _seasons;
-        private IGenericRepository<TranscodeSetting> _transcodeSettings;
-        private IGenericRepository<TranscodeVideoProcess> _transcodeVideoProcesses;
+        private IGenericRepository<TranscoderSettings> _transcoderSettings;
+        private IGenericRepository<TranscodingProcess> _transcodingProcesses;
         private ITvSerieRepository _tvSeries;
         private IGenericRepository<TvSerieGenre> _tvSerieGenres;
         private IVideoRepository _videos;
@@ -51,32 +51,32 @@ namespace SinovadDemo.Persistence.Repositories
             }
         }
 
-        public IGenericRepository<AppUser> Accounts
+        public IGenericRepository<User> Users
         {
             get
             {
-                return _accounts == null ?
-                _accounts = new GenericRepository<AppUser>(_context) :
-                _accounts;
+                return _users == null ?
+                _users = new GenericRepository<User>(_context) :
+                _users;
             }
         }
 
-        public IGenericRepository<AccountServer> AccountServers
+        public IGenericRepository<MediaServer> MediaServers
         {
             get
             {
-                return _accountServers == null ?
-                _accountServers = new GenericRepository<AccountServer>(_context) :
-                _accountServers;
+                return _mediaServers == null ?
+                _mediaServers = new GenericRepository<MediaServer>(_context) :
+                _mediaServers;
             }
         }
 
-        public IGenericRepository<AccountStorage> AccountStorages
+        public IGenericRepository<Storage> Storages
         {
             get
             {
                 return _accountStorages == null ?
-                _accountStorages = new GenericRepository<AccountStorage>(_context) :
+                _accountStorages = new GenericRepository<Storage>(_context) :
                 _accountStorages;
             }
         }
@@ -151,23 +151,23 @@ namespace SinovadDemo.Persistence.Repositories
             }
         }
 
-        public IGenericRepository<TranscodeSetting> TranscodeSettings
+        public IGenericRepository<TranscoderSettings> TranscoderSettings
         {
             get
             {
-                return _transcodeSettings == null ?
-                _transcodeSettings = new GenericRepository<TranscodeSetting>(_context) :
-                _transcodeSettings;
+                return _transcoderSettings == null ?
+                _transcoderSettings = new GenericRepository<TranscoderSettings>(_context) :
+                _transcoderSettings;
             }
         }
 
-        public IGenericRepository<TranscodeVideoProcess> TranscodeVideoProcesses
+        public IGenericRepository<TranscodingProcess> TranscodingProcesses
         {
             get
             {
-                return _transcodeVideoProcesses == null ?
-                _transcodeVideoProcesses = new GenericRepository<TranscodeVideoProcess>(_context) :
-                _transcodeVideoProcesses;
+                return _transcodingProcesses == null ?
+                _transcodingProcesses = new GenericRepository<TranscodingProcess>(_context) :
+                _transcodingProcesses;
             }
         }
 

@@ -12,7 +12,7 @@ using SinovadDemo.Domain.Entities;
 namespace SinovadDemo.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230624165838_InitialCreation")]
+    [Migration("20230712210138_InitialCreation")]
     partial class InitialCreation
     {
         /// <inheritdoc />
@@ -25,13 +25,83 @@ namespace SinovadDemo.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+            modelBuilder.Entity("Generic.Core.Models.Menu", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Icon")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("IconTypeCatalogDetailId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IconTypeCatalogId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ParentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Menu");
+                });
+
+            modelBuilder.Entity("Generic.Core.Models.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -42,6 +112,9 @@ namespace SinovadDemo.Persistence.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
@@ -49,10 +122,37 @@ namespace SinovadDemo.Persistence.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("AspNetRoles", (string)null);
+                    b.ToTable("Role", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Generic.Core.Models.UserRole", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("UserRole", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -66,91 +166,17 @@ namespace SinovadDemo.Persistence.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims", (string)null);
+                    b.ToTable("RoleClaim", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
-
-                    b.UseTphMappingStrategy();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -164,18 +190,17 @@ namespace SinovadDemo.Persistence.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims", (string)null);
+                    b.ToTable("UserClaim", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -186,36 +211,20 @@ namespace SinovadDemo.Persistence.Migrations
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins", (string)null);
+                    b.ToTable("UserLogin", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("AspNetUserRoles", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -228,83 +237,16 @@ namespace SinovadDemo.Persistence.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens", (string)null);
+                    b.ToTable("UserToken", (string)null);
                 });
 
-            modelBuilder.Entity("SinovadDemo.Domain.Entities.AccountServer", b =>
+            modelBuilder.Entity("RoleMenu", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ID");
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AccountId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("Account_ID");
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("HostUrl")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(1000)");
-
-                    b.Property<string>("IpAddress")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(1000)");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("StateCatalogDetailId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("State_Catalog_Detail_ID")
-                        .HasDefaultValueSql("((2))");
-
-                    b.Property<int>("StateCatalogId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("State_Catalog_ID")
-                        .HasDefaultValueSql("((3))");
-
-                    b.HasKey("Id")
-                        .HasName("PK__AccountS__3214EC27FF56ACAD");
-
-                    b.HasIndex("AccountId");
-
-                    b.ToTable("AccountServer", (string)null);
-                });
-
-            modelBuilder.Entity("SinovadDemo.Domain.Entities.AccountStorage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ID");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AccountServerId")
-                        .HasColumnType("int")
-                        .HasColumnName("AccountServer_ID");
-
-                    b.Property<int>("AccountStorageTypeId")
-                        .HasColumnType("int")
-                        .HasColumnName("AccountStorageType_ID");
+                    b.Property<int>("MenuId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
@@ -318,30 +260,26 @@ namespace SinovadDemo.Persistence.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PhisicalPath")
-                        .HasMaxLength(1000)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(1000)");
+                    b.HasKey("RoleId", "MenuId");
 
-                    b.HasKey("Id")
-                        .HasName("PK__AccountS__3214EC27C8AEFD60");
+                    b.HasIndex("MenuId");
 
-                    b.HasIndex("AccountServerId");
-
-                    b.ToTable("AccountStorage", (string)null);
+                    b.ToTable("RoleMenu");
                 });
 
             modelBuilder.Entity("SinovadDemo.Domain.Entities.Catalog", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int")
-                        .HasColumnName("ID");
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("Deleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -364,18 +302,19 @@ namespace SinovadDemo.Persistence.Migrations
             modelBuilder.Entity("SinovadDemo.Domain.Entities.CatalogDetail", b =>
                 {
                     b.Property<int>("CatalogId")
-                        .HasColumnType("int")
-                        .HasColumnName("Catalog_ID");
+                        .HasColumnType("int");
 
                     b.Property<int>("Id")
-                        .HasColumnType("int")
-                        .HasColumnName("ID");
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("Deleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -407,8 +346,7 @@ namespace SinovadDemo.Persistence.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ID");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
@@ -418,7 +356,10 @@ namespace SinovadDemo.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("EpisodeNumber")
+                    b.Property<bool?>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("EpisodeNumber")
                         .HasColumnType("int");
 
                     b.Property<string>("ImageUrl")
@@ -433,8 +374,7 @@ namespace SinovadDemo.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SeasonId")
-                        .HasColumnType("int")
-                        .HasColumnName("Season_ID");
+                        .HasColumnType("int");
 
                     b.Property<string>("Summary")
                         .HasMaxLength(1000)
@@ -458,8 +398,7 @@ namespace SinovadDemo.Persistence.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ID");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
@@ -468,6 +407,9 @@ namespace SinovadDemo.Persistence.Migrations
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("Deleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -482,8 +424,7 @@ namespace SinovadDemo.Persistence.Migrations
                         .HasColumnType("varchar(255)");
 
                     b.Property<int?>("TmdbId")
-                        .HasColumnType("int")
-                        .HasColumnName("TMDbID");
+                        .HasColumnType("int");
 
                     b.HasKey("Id")
                         .HasName("PK__Genre__3214EC274FE83434");
@@ -491,12 +432,59 @@ namespace SinovadDemo.Persistence.Migrations
                     b.ToTable("Genre", (string)null);
                 });
 
+            modelBuilder.Entity("SinovadDemo.Domain.Entities.MediaServer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("IpAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StateCatalogDetailId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StateCatalogId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id")
+                        .HasName("PK__MediaServer__3214EC27FF56ACAD");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("MediaServer", (string)null);
+                });
+
             modelBuilder.Entity("SinovadDemo.Domain.Entities.Movie", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ID");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
@@ -521,6 +509,9 @@ namespace SinovadDemo.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool?>("Deleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Directors")
                         .HasMaxLength(1000)
                         .IsUnicode(false)
@@ -529,8 +520,7 @@ namespace SinovadDemo.Persistence.Migrations
                     b.Property<string>("Imdbid")
                         .HasMaxLength(1000)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(1000)")
-                        .HasColumnName("IMDBID");
+                        .HasColumnType("varchar(1000)");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -571,8 +561,7 @@ namespace SinovadDemo.Persistence.Migrations
                         .HasColumnType("varchar(255)");
 
                     b.Property<int?>("TmdbId")
-                        .HasColumnType("int")
-                        .HasColumnName("TMDbID");
+                        .HasColumnType("int");
 
                     b.HasKey("Id")
                         .HasName("PK__Movie__3214EC27293CDB91");
@@ -582,12 +571,11 @@ namespace SinovadDemo.Persistence.Migrations
 
             modelBuilder.Entity("SinovadDemo.Domain.Entities.MovieGenre", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ID");
+                    b.Property<int>("MovieId")
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<int>("GenreId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
@@ -595,26 +583,15 @@ namespace SinovadDemo.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("GenreId")
-                        .HasColumnType("int")
-                        .HasColumnName("Genre_ID");
-
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("MovieId")
-                        .HasColumnType("int")
-                        .HasColumnName("Movie_ID");
-
-                    b.HasKey("Id")
-                        .HasName("PK__MovieGen__3214EC277F0023A9");
+                    b.HasKey("MovieId", "GenreId");
 
                     b.HasIndex("GenreId");
-
-                    b.HasIndex("MovieId");
 
                     b.ToTable("MovieGenre", (string)null);
                 });
@@ -623,15 +600,9 @@ namespace SinovadDemo.Persistence.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ID");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AccountId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("Account_ID");
 
                     b.Property<string>("AvatarPath")
                         .HasMaxLength(1000)
@@ -643,6 +614,9 @@ namespace SinovadDemo.Persistence.Migrations
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("Deleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("FullName")
                         .IsRequired()
@@ -660,13 +634,15 @@ namespace SinovadDemo.Persistence.Migrations
                         .HasColumnType("bit");
 
                     b.Property<int?>("Pincode")
-                        .HasColumnType("int")
-                        .HasColumnName("PINCode");
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id")
                         .HasName("PK__Profile__3214EC27B7871CE4");
 
-                    b.HasIndex("AccountId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Profile", (string)null);
                 });
@@ -675,8 +651,7 @@ namespace SinovadDemo.Persistence.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ID");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
@@ -685,6 +660,9 @@ namespace SinovadDemo.Persistence.Migrations
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("Deleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -697,7 +675,7 @@ namespace SinovadDemo.Persistence.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(1000)");
 
-                    b.Property<int?>("SeasonNumber")
+                    b.Property<int>("SeasonNumber")
                         .HasColumnType("int");
 
                     b.Property<string>("Summary")
@@ -706,8 +684,7 @@ namespace SinovadDemo.Persistence.Migrations
                         .HasColumnType("varchar(1000)");
 
                     b.Property<int>("TvSerieId")
-                        .HasColumnType("int")
-                        .HasColumnName("TvSerie_ID");
+                        .HasColumnType("int");
 
                     b.HasKey("Id")
                         .HasName("PK__Season__3214EC27FB52A288");
@@ -717,18 +694,59 @@ namespace SinovadDemo.Persistence.Migrations
                     b.ToTable("Season", (string)null);
                 });
 
-            modelBuilder.Entity("SinovadDemo.Domain.Entities.TranscodeSetting", b =>
+            modelBuilder.Entity("SinovadDemo.Domain.Entities.Storage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ID");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AccountServerId")
-                        .HasColumnType("int")
-                        .HasColumnName("AccountServer_ID");
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MediaServerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MediaTypeCatalogDetailId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MediaTypeCatalogId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PhysicalPath")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(1000)");
+
+                    b.HasKey("Id")
+                        .HasName("PK__Storage__3214EC27C8AEFD60");
+
+                    b.HasIndex("MediaServerId");
+
+                    b.ToTable("Storage", (string)null);
+                });
+
+            modelBuilder.Entity("SinovadDemo.Domain.Entities.TranscoderSettings", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ConstantRateFactor")
                         .HasColumnType("int");
@@ -739,10 +757,8 @@ namespace SinovadDemo.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("DirectoryPhysicalPath")
-                        .HasMaxLength(1000)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(1000)");
+                    b.Property<bool?>("Deleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -750,42 +766,44 @@ namespace SinovadDemo.Persistence.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("MediaServerId")
+                        .HasColumnType("int");
+
                     b.Property<int>("PresetCatalogDetailId")
-                        .HasColumnType("int")
-                        .HasColumnName("Preset_Catalog_Detail_ID");
+                        .HasColumnType("int");
 
                     b.Property<int>("PresetCatalogId")
-                        .HasColumnType("int")
-                        .HasColumnName("Preset_Catalog_ID");
+                        .HasColumnType("int");
 
-                    b.Property<int>("TransmissionMethodCatalogDetailId")
-                        .HasColumnType("int")
-                        .HasColumnName("Transmission_Method_Catalog_Detail_ID");
+                    b.Property<string>("TemporaryFolder")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TransmissionMethodCatalogId")
-                        .HasColumnType("int")
-                        .HasColumnName("Transmission_Method_Catalog_ID");
+                    b.Property<int>("VideoTransmissionTypeCatalogDetailId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VideoTransmissionTypeCatalogId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id")
                         .HasName("PK__Transcod__3214EC279D19B237");
 
-                    b.HasIndex("AccountServerId");
+                    b.HasIndex("MediaServerId")
+                        .IsUnique();
 
-                    b.ToTable("TranscodeSettings");
+                    b.ToTable("TranscoderSettings");
                 });
 
-            modelBuilder.Entity("SinovadDemo.Domain.Entities.TranscodeVideoProcess", b =>
+            modelBuilder.Entity("SinovadDemo.Domain.Entities.TranscodingProcess", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ID");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AccountServerId")
-                        .HasColumnType("int")
-                        .HasColumnName("AccountServer_ID");
+                    b.Property<int?>("AdditionalSystemProcessIdentifier")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
@@ -793,12 +811,12 @@ namespace SinovadDemo.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Guid")
+                    b.Property<bool?>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("GeneratedTemporaryFolder")
                         .IsRequired()
-                        .HasMaxLength(1000)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(1000)")
-                        .HasColumnName("GUID");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -806,32 +824,32 @@ namespace SinovadDemo.Persistence.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TranscodeAudioVideoProcessId")
-                        .HasColumnType("int")
-                        .HasColumnName("TranscodeAudioVideoProcessID");
+                    b.Property<int>("MediaServerId")
+                        .HasColumnType("int");
 
-                    b.Property<int?>("TranscodeSubtitlesProcessId")
-                        .HasColumnType("int")
-                        .HasColumnName("TranscodeSubtitlesProcessID");
+                    b.Property<bool>("PendingDeletion")
+                        .HasColumnType("bit");
 
-                    b.Property<string>("WorkingDirectoryPath")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(1000)");
+                    b.Property<Guid>("RequestGuid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SystemProcessIdentifier")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VideoId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id")
                         .HasName("PK__Transcod__3214EC27DF052101");
 
-                    b.ToTable("TranscodeVideoProcess", (string)null);
+                    b.ToTable("TranscodingProcess", (string)null);
                 });
 
             modelBuilder.Entity("SinovadDemo.Domain.Entities.TvSerie", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ID");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
@@ -850,6 +868,9 @@ namespace SinovadDemo.Persistence.Migrations
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("Deleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Directors")
                         .HasMaxLength(1000)
@@ -898,8 +919,7 @@ namespace SinovadDemo.Persistence.Migrations
                         .HasColumnType("varchar(1000)");
 
                     b.Property<int?>("TmdbId")
-                        .HasColumnType("int")
-                        .HasColumnName("TMDbID");
+                        .HasColumnType("int");
 
                     b.HasKey("Id")
                         .HasName("PK__TvSerie__3214EC27895BB3B8");
@@ -909,22 +929,17 @@ namespace SinovadDemo.Persistence.Migrations
 
             modelBuilder.Entity("SinovadDemo.Domain.Entities.TvSerieGenre", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ID");
+                    b.Property<int>("TvSerieId")
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<int>("GenreId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("GenreId")
-                        .HasColumnType("int")
-                        .HasColumnName("Genre_ID");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -932,32 +947,45 @@ namespace SinovadDemo.Persistence.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TvSerieId")
-                        .HasColumnType("int")
-                        .HasColumnName("TvSerie_ID");
-
-                    b.HasKey("Id")
-                        .HasName("PK__TvSerieG__3214EC276D0EA328");
+                    b.HasKey("TvSerieId", "GenreId");
 
                     b.HasIndex("GenreId");
-
-                    b.HasIndex("TvSerieId");
 
                     b.ToTable("TvSerieGenre", (string)null);
                 });
 
-            modelBuilder.Entity("SinovadDemo.Domain.Entities.Video", b =>
+            modelBuilder.Entity("SinovadDemo.Domain.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ID");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AccountStorageId")
-                        .HasColumnType("int")
-                        .HasColumnName("AccountStorage_ID");
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Birthdate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("CountryCode")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
@@ -965,9 +993,95 @@ namespace SinovadDemo.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool?>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("User", (string)null);
+                });
+
+            modelBuilder.Entity("SinovadDemo.Domain.Entities.Video", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("Deleted")
+                        .HasColumnType("bit");
+
                     b.Property<int?>("EpisodeId")
-                        .HasColumnType("int")
-                        .HasColumnName("Episode_ID");
+                        .HasColumnType("int");
 
                     b.Property<int?>("EpisodeNumber")
                         .HasColumnType("int");
@@ -979,8 +1093,7 @@ namespace SinovadDemo.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("MovieId")
-                        .HasColumnType("int")
-                        .HasColumnName("Movie_ID");
+                        .HasColumnType("int");
 
                     b.Property<string>("PhysicalPath")
                         .IsRequired()
@@ -989,6 +1102,9 @@ namespace SinovadDemo.Persistence.Migrations
                         .HasColumnType("varchar(1000)");
 
                     b.Property<int?>("SeasonNumber")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StorageId")
                         .HasColumnType("int");
 
                     b.Property<string>("Subtitle")
@@ -1003,8 +1119,7 @@ namespace SinovadDemo.Persistence.Migrations
                         .HasColumnType("varchar(1000)");
 
                     b.Property<int?>("TvSerieId")
-                        .HasColumnType("int")
-                        .HasColumnName("TvSerie_ID");
+                        .HasColumnType("int");
 
                     b.HasKey("Id")
                         .HasName("PK__Video__3214EC2725862FD1");
@@ -1015,12 +1130,10 @@ namespace SinovadDemo.Persistence.Migrations
             modelBuilder.Entity("SinovadDemo.Domain.Entities.VideoProfile", b =>
                 {
                     b.Property<int>("VideoId")
-                        .HasColumnType("int")
-                        .HasColumnName("Video_ID");
+                        .HasColumnType("int");
 
                     b.Property<int>("ProfileId")
-                        .HasColumnType("int")
-                        .HasColumnName("Profile_ID");
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
@@ -1047,125 +1160,78 @@ namespace SinovadDemo.Persistence.Migrations
                     b.ToTable("VideoProfile", (string)null);
                 });
 
-            modelBuilder.Entity("SinovadDemo.Domain.Entities.AppUser", b =>
+            modelBuilder.Entity("Generic.Core.Models.UserRole", b =>
                 {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+                    b.HasOne("Generic.Core.Models.Role", "Role")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
+                    b.HasOne("SinovadDemo.Domain.Entities.User", "User")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Navigation("Role");
 
-                    b.Property<DateTime>("Birthdate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("CountryCode")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasDiscriminator().HasValue("AppUser");
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Generic.Core.Models.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("SinovadDemo.Domain.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("SinovadDemo.Domain.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("SinovadDemo.Domain.Entities.User", null)
                         .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("RoleMenu", b =>
+                {
+                    b.HasOne("Generic.Core.Models.Menu", "Menu")
+                        .WithMany("RoleMenus")
+                        .HasForeignKey("MenuId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Generic.Core.Models.Role", "Role")
+                        .WithMany("RoleMenus")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+                    b.Navigation("Menu");
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("SinovadDemo.Domain.Entities.AccountServer", b =>
-                {
-                    b.HasOne("SinovadDemo.Domain.Entities.AppUser", "Account")
-                        .WithMany("AccountServers")
-                        .HasForeignKey("AccountId")
-                        .IsRequired()
-                        .HasConstraintName("FK_AccountServer_Account_ID");
-
-                    b.Navigation("Account");
-                });
-
-            modelBuilder.Entity("SinovadDemo.Domain.Entities.AccountStorage", b =>
-                {
-                    b.HasOne("SinovadDemo.Domain.Entities.AccountServer", "AccountServer")
-                        .WithMany("AccountStorages")
-                        .HasForeignKey("AccountServerId")
-                        .IsRequired()
-                        .HasConstraintName("FK_AccountStorage_AccountServer_ID");
-
-                    b.Navigation("AccountServer");
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("SinovadDemo.Domain.Entities.CatalogDetail", b =>
@@ -1190,6 +1256,17 @@ namespace SinovadDemo.Persistence.Migrations
                     b.Navigation("Season");
                 });
 
+            modelBuilder.Entity("SinovadDemo.Domain.Entities.MediaServer", b =>
+                {
+                    b.HasOne("SinovadDemo.Domain.Entities.User", "User")
+                        .WithMany("MediaServers")
+                        .HasForeignKey("UserId")
+                        .IsRequired()
+                        .HasConstraintName("FK_MediaServer_User_ID");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("SinovadDemo.Domain.Entities.MovieGenre", b =>
                 {
                     b.HasOne("SinovadDemo.Domain.Entities.Genre", "Genre")
@@ -1211,13 +1288,13 @@ namespace SinovadDemo.Persistence.Migrations
 
             modelBuilder.Entity("SinovadDemo.Domain.Entities.Profile", b =>
                 {
-                    b.HasOne("SinovadDemo.Domain.Entities.AppUser", "Account")
+                    b.HasOne("SinovadDemo.Domain.Entities.User", "User")
                         .WithMany("Profiles")
-                        .HasForeignKey("AccountId")
+                        .HasForeignKey("UserId")
                         .IsRequired()
-                        .HasConstraintName("FK_Profile_Account_ID");
+                        .HasConstraintName("FK_Profile_User_ID");
 
-                    b.Navigation("Account");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("SinovadDemo.Domain.Entities.Season", b =>
@@ -1231,15 +1308,26 @@ namespace SinovadDemo.Persistence.Migrations
                     b.Navigation("TvSerie");
                 });
 
-            modelBuilder.Entity("SinovadDemo.Domain.Entities.TranscodeSetting", b =>
+            modelBuilder.Entity("SinovadDemo.Domain.Entities.Storage", b =>
                 {
-                    b.HasOne("SinovadDemo.Domain.Entities.AccountServer", "AccountServer")
-                        .WithMany("TranscodeSettings")
-                        .HasForeignKey("AccountServerId")
+                    b.HasOne("SinovadDemo.Domain.Entities.MediaServer", "MediaServer")
+                        .WithMany("Storages")
+                        .HasForeignKey("MediaServerId")
                         .IsRequired()
-                        .HasConstraintName("FK_TranscodeSettings_AccountServer_ID");
+                        .HasConstraintName("FK_Storage_MediaServer_ID");
 
-                    b.Navigation("AccountServer");
+                    b.Navigation("MediaServer");
+                });
+
+            modelBuilder.Entity("SinovadDemo.Domain.Entities.TranscoderSettings", b =>
+                {
+                    b.HasOne("SinovadDemo.Domain.Entities.MediaServer", "MediaServer")
+                        .WithOne("TranscoderSettings")
+                        .HasForeignKey("SinovadDemo.Domain.Entities.TranscoderSettings", "MediaServerId")
+                        .IsRequired()
+                        .HasConstraintName("FK_TranscoderSettings_MediaServer_ID");
+
+                    b.Navigation("MediaServer");
                 });
 
             modelBuilder.Entity("SinovadDemo.Domain.Entities.TvSerieGenre", b =>
@@ -1280,11 +1368,16 @@ namespace SinovadDemo.Persistence.Migrations
                     b.Navigation("Video");
                 });
 
-            modelBuilder.Entity("SinovadDemo.Domain.Entities.AccountServer", b =>
+            modelBuilder.Entity("Generic.Core.Models.Menu", b =>
                 {
-                    b.Navigation("AccountStorages");
+                    b.Navigation("RoleMenus");
+                });
 
-                    b.Navigation("TranscodeSettings");
+            modelBuilder.Entity("Generic.Core.Models.Role", b =>
+                {
+                    b.Navigation("RoleMenus");
+
+                    b.Navigation("UserRoles");
                 });
 
             modelBuilder.Entity("SinovadDemo.Domain.Entities.Catalog", b =>
@@ -1297,6 +1390,13 @@ namespace SinovadDemo.Persistence.Migrations
                     b.Navigation("MovieGenres");
 
                     b.Navigation("TvSerieGenres");
+                });
+
+            modelBuilder.Entity("SinovadDemo.Domain.Entities.MediaServer", b =>
+                {
+                    b.Navigation("Storages");
+
+                    b.Navigation("TranscoderSettings");
                 });
 
             modelBuilder.Entity("SinovadDemo.Domain.Entities.Movie", b =>
@@ -1321,16 +1421,18 @@ namespace SinovadDemo.Persistence.Migrations
                     b.Navigation("TvSerieGenres");
                 });
 
+            modelBuilder.Entity("SinovadDemo.Domain.Entities.User", b =>
+                {
+                    b.Navigation("MediaServers");
+
+                    b.Navigation("Profiles");
+
+                    b.Navigation("UserRoles");
+                });
+
             modelBuilder.Entity("SinovadDemo.Domain.Entities.Video", b =>
                 {
                     b.Navigation("VideoProfiles");
-                });
-
-            modelBuilder.Entity("SinovadDemo.Domain.Entities.AppUser", b =>
-                {
-                    b.Navigation("AccountServers");
-
-                    b.Navigation("Profiles");
                 });
 #pragma warning restore 612, 618
         }

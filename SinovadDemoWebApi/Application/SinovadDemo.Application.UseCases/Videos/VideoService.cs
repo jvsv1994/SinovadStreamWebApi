@@ -65,20 +65,20 @@ namespace SinovadDemo.Application.UseCases.Videos
             return response;
         }
 
-        private Response<object> RegisterVideos(int accountStorageTypeId, int accountStorageId, string paths, string logIdentifier)
+        private Response<object> RegisterVideos(MediaType mediaType, int storageId, string paths, string logIdentifier)
         {
             var response = new Response<object>();
             try
             {
                 _searchMediaLog = new SearchMediaLog(logIdentifier);
                 _searchMediaBuilder.AddSearchMediaLog(_searchMediaLog);
-                if (accountStorageTypeId == (int)StorageType.Movie)
+                if (mediaType == MediaType.Movie)
                 {
-                    RegisterMoviesAndVideos(accountStorageId, paths);
+                    RegisterMoviesAndVideos(storageId, paths);
                 }
-                if (accountStorageTypeId == (int)StorageType.TvSerie)
+                if (mediaType == MediaType.TvSerie)
                 {
-                    RegisterTvSeriesAndVideos(accountStorageId, paths);
+                    RegisterTvSeriesAndVideos(storageId, paths);
                 }
                 RemoveSearchMediaLog();
                 response.IsSuccess = true;
@@ -97,17 +97,17 @@ namespace SinovadDemo.Application.UseCases.Videos
             var response = new Response<object>();
             try
             {
-                foreach (var accountStorage in dto.ListAccountStorages)
+                foreach (var storage in dto.ListStorages)
                 {
-                    if(accountStorage.AccountStorageTypeId== (int)StorageType.Movie)
+                    if(storage.MediaTypeCatalogDetailId== (int)MediaType.Movie)
                     {
-                        var paths = string.Join(",",accountStorage.ListPaths);
-                        RegisterMoviesAndVideos(accountStorage.Id, paths);
+                        var paths = string.Join(",",storage.ListPaths);
+                        RegisterMoviesAndVideos(storage.Id, paths);
                     }
-                    if (accountStorage.AccountStorageTypeId == (int)StorageType.TvSerie)
+                    if (storage.MediaTypeCatalogDetailId == (int)MediaType.TvSerie)
                     {
-                        var paths = string.Join(",", accountStorage.ListPaths);
-                        RegisterTvSeriesAndVideos(accountStorage.Id, paths);
+                        var paths = string.Join(",", storage.ListPaths);
+                        RegisterTvSeriesAndVideos(storage.Id, paths);
                     }
                 }
                 response.IsSuccess = true;
@@ -120,7 +120,7 @@ namespace SinovadDemo.Application.UseCases.Videos
             return response;
         }
 
-        public Response<List<ItemsGroupDto>> GetVideosOrganized(string accountId, int profileId, bool searchMovies, bool searchTvSeries)
+        public Response<List<ItemsGroupDto>> GetVideosOrganized(int userId, int profileId, bool searchMovies, bool searchTvSeries)
         {
             var response = new Response<List<ItemsGroupDto>>();
             try
@@ -131,10 +131,10 @@ namespace SinovadDemo.Application.UseCases.Videos
                 if (searchMovies)
                 {
 
-                    List<ItemDto> listMovies = _unitOfWork.Movies.GetMoviesByAccount(accountId).MapTo<List<ItemDto>>();
+                    List<ItemDto> listMovies = _unitOfWork.Movies.GetMoviesByUser(userId).MapTo<List<ItemDto>>();
                     listItems = listItems.Concat(listMovies).ToList();
 
-                    List<ItemDto> listLastAddedMovies = _unitOfWork.Movies.GetRecentlyAddedMoviesByAccount(accountId).MapTo<List<ItemDto>>();
+                    List<ItemDto> listLastAddedMovies = _unitOfWork.Movies.GetRecentlyAddedMoviesByUser(userId).MapTo<List<ItemDto>>();
                     listLastAddedItems = listLastAddedItems.Concat(listLastAddedMovies).ToList();
 
                     List<ItemDto> listMoviesWatched = _unitOfWork.Movies.GetMoviesByProfile(profileId).MapTo<List<ItemDto>>();
@@ -142,10 +142,10 @@ namespace SinovadDemo.Application.UseCases.Videos
                 }
                 if (searchTvSeries)
                 {
-                    List<ItemDto> listTvSeries = _unitOfWork.TvSeries.GetTvSeriesByAccountId(accountId).MapTo<List<ItemDto>>();
+                    List<ItemDto> listTvSeries = _unitOfWork.TvSeries.GetTvSeriesByUserId(userId).MapTo<List<ItemDto>>();
                     listItems = listItems.Concat(listTvSeries).ToList();
 
-                    List<ItemDto> listLastAddedTvSeries = _unitOfWork.TvSeries.GetRecentlyTvSeriesAdded(accountId).MapTo<List<ItemDto>>();
+                    List<ItemDto> listLastAddedTvSeries = _unitOfWork.TvSeries.GetRecentlyTvSeriesAdded(userId).MapTo<List<ItemDto>>();
                     listLastAddedItems = listLastAddedItems.Concat(listLastAddedTvSeries).ToList();
 
                     List<ItemDto> listTvSeriesWatched = _unitOfWork.TvSeries.GetTvSeriesByProfileId(profileId).MapTo<List<ItemDto>>();
@@ -202,7 +202,7 @@ namespace SinovadDemo.Application.UseCases.Videos
             return response;
         }
 
-        public Response<List<ItemDto>> GetVideosByFilters(string accountId, bool searchMovies, bool searchTvSeries, string searchText)
+        public Response<List<ItemDto>> GetVideosByFilters(int userId, bool searchMovies, bool searchTvSeries, string searchText)
         {
             var response = new Response<List<ItemDto>>();
             try
@@ -210,12 +210,12 @@ namespace SinovadDemo.Application.UseCases.Videos
                 List<ItemDto> listItems = new List<ItemDto>();
                 if (searchMovies)
                 {
-                    List<ItemDto> listMovies = _unitOfWork.Movies.GetMoviesByAccountAndSearchText(accountId, searchText).MapTo<List<ItemDto>>();
+                    List<ItemDto> listMovies = _unitOfWork.Movies.GetMoviesByUserAndSearchText(userId, searchText).MapTo<List<ItemDto>>();
                     listItems = listItems.Concat(listMovies).ToList();
                 }
                 if (searchTvSeries)
                 {
-                    List<ItemDto> listTvSeries = _unitOfWork.TvSeries.GetTvSeriesByAccountIdAndSerchText(accountId, searchText).MapTo<List<ItemDto>>();
+                    List<ItemDto> listTvSeries = _unitOfWork.TvSeries.GetTvSeriesByUserIdAndSerchText(userId, searchText).MapTo<List<ItemDto>>();
                     listItems = listItems.Concat(listTvSeries).ToList();
                 }
                 response.Data = listItems;
@@ -261,7 +261,7 @@ namespace SinovadDemo.Application.UseCases.Videos
             return response;
         }
 
-        public async Task<Response<ItemDetailDto>> GetMovieDataByAccount(string accountId,int movieId)
+        public async Task<Response<ItemDetailDto>> GetMovieDataByUser(int userId,int movieId)
         {
             var response = new Response<ItemDetailDto>();
             try
@@ -281,7 +281,7 @@ namespace SinovadDemo.Application.UseCases.Videos
                 {
                     movieDetail = _imdbService.GetMovieDetail(movieDetail);
                 }
-                movieDetail.Item= _unitOfWork.Movies.GetMovieDataByAccount(accountId, movieId);
+                movieDetail.Item= _unitOfWork.Movies.GetMovieDataByUser(userId, movieId);
                 response.Data = movieDetail;
                 response.IsSuccess = true;
                 response.Message = "Successful";
@@ -294,14 +294,14 @@ namespace SinovadDemo.Application.UseCases.Videos
             return response;
         }
 
-        public async Task<Response<ItemDetailDto>> GetTvSerieDetail(string accountId, int tvSerieId)
+        public async Task<Response<ItemDetailDto>> GetTvSerieDetail(int userId, int tvSerieId)
         {
             var response = new Response<ItemDetailDto>();
             try
             {
                 TvSerie emstvserie = await _unitOfWork.TvSeries.GetAsync(tvSerieId);
                 ItemDetailDto tvSerieDetail = emstvserie.MapTo<ItemDetailDto>();
-                List<VideoDto> listVideos = _unitOfWork.Videos.GetVideosByTvSerieAndAccount(tvSerieId, accountId).MapTo<List<VideoDto>>();
+                List<VideoDto> listVideos = _unitOfWork.Videos.GetVideosByTvSerieAndUser(tvSerieId, userId).MapTo<List<VideoDto>>();
                 var seasonService = new SeasonService(_unitOfWork, _sharedService);
                 List<SeasonDto> listSeasons = seasonService.GetSeasonsByVideos(listVideos);
                 if (emstvserie.TmdbId != null && emstvserie.TmdbId > 0)
@@ -326,14 +326,14 @@ namespace SinovadDemo.Application.UseCases.Videos
             return response;
         }
 
-        public async Task<Response<ItemDetailDto>> GetTvSerieDataByAccount(string accountId, int tvSerieId)
+        public async Task<Response<ItemDetailDto>> GetTvSerieDataByUser(int userId, int tvSerieId)
         {
             var response = new Response<ItemDetailDto>();
             try
             {
                 TvSerie emstvserie = await _unitOfWork.TvSeries.GetAsync(tvSerieId);
                 ItemDetailDto tvSerieDetail = emstvserie.MapTo<ItemDetailDto>();
-                List<VideoDto> listVideos = _unitOfWork.Videos.GetVideosByTvSerieAndAccount(tvSerieId, accountId).MapTo<List<VideoDto>>();
+                List<VideoDto> listVideos = _unitOfWork.Videos.GetVideosByTvSerieAndUser(tvSerieId, userId).MapTo<List<VideoDto>>();
                 var seasonService = new SeasonService(_unitOfWork, _sharedService);
                 List<SeasonDto> listSeasons = seasonService.GetSeasonsByVideos(listVideos);
                 if (emstvserie.TmdbId != null && emstvserie.TmdbId > 0)
@@ -346,7 +346,7 @@ namespace SinovadDemo.Application.UseCases.Videos
                     tvSerieDetail = tvSerieService.GetTvSerieData(tvSerieDetail, listSeasons, listVideos);
                     tvSerieDetail.PosterPath = emstvserie.PosterPath;
                 }
-                tvSerieDetail.Item = _unitOfWork.TvSeries.GetTvSerieDataByAccount(accountId, tvSerieId);
+                tvSerieDetail.Item = _unitOfWork.TvSeries.GetTvSerieDataByUser(userId, tvSerieId);
                 response.Data = tvSerieDetail;
                 response.IsSuccess = true;
                 response.Message = "Successful";
@@ -385,13 +385,13 @@ namespace SinovadDemo.Application.UseCases.Videos
             }
         }
 
-        private void RegisterMoviesAndVideos(int accountStorageId, string paths)
+        private void RegisterMoviesAndVideos(int storageId, string paths)
         {
             AddMessage(LogType.Information, "Starting search movies");
             try
             {
-                var filesToAdd = GetFilesToAdd(accountStorageId, paths);
-                DeleteVideosNotFoundInStorage(accountStorageId, paths);
+                var filesToAdd = GetFilesToAdd(storageId, paths);
+                DeleteVideosNotFoundInStorage(storageId, paths);
                 if (filesToAdd != null && filesToAdd.Count > 0)
                 {
                     var listMoviesFinded = new List<MovieDto>();
@@ -419,7 +419,7 @@ namespace SinovadDemo.Application.UseCases.Videos
                                 var newVideo = new VideoDto();
                                 newVideo.PhysicalPath = physicalPath;
                                 newVideo.Title = movie.Title;
-                                newVideo.AccountStorageId = accountStorageId;
+                                newVideo.StorageId = storageId;
                                 newVideo.TmdbId = movie.TmdbId;
                                 newVideo.Imdbid = movie.Imdbid;
                                 listVideosTmp.Add(newVideo);
@@ -524,13 +524,13 @@ namespace SinovadDemo.Application.UseCases.Videos
             return listMovieGenreToAdd;
         }
 
-        private void RegisterTvSeriesAndVideos(int accountStorageId, string paths)
+        private void RegisterTvSeriesAndVideos(int storageId, string paths)
         {
             AddMessage(LogType.Information, "Starting search tv series");
             try
             {
-                var filesToAdd = GetFilesToAdd(accountStorageId, paths);
-                DeleteVideosNotFoundInStorage(accountStorageId, paths);
+                var filesToAdd = GetFilesToAdd(storageId, paths);
+                DeleteVideosNotFoundInStorage(storageId, paths);
                 var listTvSeriesTMDFinded = new List<TvSerieDto>();
                 var listVideosTmp = new List<VideoDto>();
                 object queryEpisodes = _unitOfWork.Episodes.GetEpisodesFromOwnDataBase();
@@ -564,7 +564,7 @@ namespace SinovadDemo.Application.UseCases.Videos
                                     newVideo.PhysicalPath = physicalPath;
                                     newVideo.Title = episodeBeanFinded.TvSerieName;
                                     newVideo.Subtitle = "T" + seasonNumber + ":E" + episodeNumber + " " + episodeBeanFinded.Name;
-                                    newVideo.AccountStorageId = accountStorageId;
+                                    newVideo.StorageId = storageId;
                                     newVideo.EpisodeNumber = episodeNumber;
                                     newVideo.SeasonNumber = seasonNumber;
                                     newVideo.EpisodeName = episodeBeanFinded.Name;
@@ -597,7 +597,7 @@ namespace SinovadDemo.Application.UseCases.Videos
                                             newVideo.PhysicalPath = physicalPath;
                                             newVideo.Title = tvShow.Name;
                                             newVideo.Subtitle = "T" + seasonNumber + ":E" + episodeNumber + " " + episodeName;
-                                            newVideo.AccountStorageId = accountStorageId;
+                                            newVideo.StorageId = storageId;
                                             newVideo.TmdbId = tvShow.TmdbId;
                                             newVideo.EpisodeNumber = episodeNumber;
                                             newVideo.SeasonNumber = seasonNumber;
@@ -692,7 +692,7 @@ namespace SinovadDemo.Application.UseCases.Videos
         }
 
 
-        private List<string> GetFilesToAdd(int accountStorageId, string paths)
+        private List<string> GetFilesToAdd(int storageId, string paths)
         {
             List<string> filesToAdd = new List<string>();
             try
@@ -707,7 +707,7 @@ namespace SinovadDemo.Application.UseCases.Videos
                 if (listAllFilesTmp.Count > 0)
                 {
                     AddMessage(LogType.Information, "Check if videos were already registered");
-                    Expression<Func<Video, bool>> expressionVideosToAvoidAdd = x => listAllFilesTmp.Contains(x.PhysicalPath) && x.AccountStorageId == accountStorageId;
+                    Expression<Func<Video, bool>> expressionVideosToAvoidAdd = x => listAllFilesTmp.Contains(x.PhysicalPath) && x.StorageId == storageId;
                     listVideosToAvoidAdd = _unitOfWork.Videos.GetAllByExpressionAsync(expressionVideosToAvoidAdd).Result.ToList();
                 }
                 if (listVideosToAvoidAdd.Count > 0)
@@ -727,7 +727,7 @@ namespace SinovadDemo.Application.UseCases.Videos
             return filesToAdd;
         }
 
-        private void DeleteVideosNotFoundInStorage(int accountStorageId, string paths)
+        private void DeleteVideosNotFoundInStorage(int storageId, string paths)
         {
             try
             {
@@ -738,7 +738,7 @@ namespace SinovadDemo.Application.UseCases.Videos
                     listAllFilesTmp = paths.Split(",").Select(x => x.ToString()).ToList();
                 }
                 List<Video> listVideosToDelete = new List<Video>();
-                Expression<Func<Video, bool>> expressionVideosToDelete = x => !listAllFilesTmp.Contains(x.PhysicalPath) && x.AccountStorageId == accountStorageId;
+                Expression<Func<Video, bool>> expressionVideosToDelete = x => !listAllFilesTmp.Contains(x.PhysicalPath) && x.StorageId == storageId;
                 listVideosToDelete = _unitOfWork.Videos.GetAllByExpressionAsync(expressionVideosToDelete).Result.ToList();
                 if (listVideosToDelete.Count > 0)
                 {

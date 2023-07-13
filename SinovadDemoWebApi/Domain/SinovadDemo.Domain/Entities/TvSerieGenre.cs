@@ -4,8 +4,6 @@ namespace SinovadDemo.Domain.Entities;
 
 public partial class TvSerieGenre : BaseAuditableEntity
 {
-    public int Id { get; set; }
-
     public int TvSerieId { get; set; }
 
     public int GenreId { get; set; }

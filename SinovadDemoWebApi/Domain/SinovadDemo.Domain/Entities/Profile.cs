@@ -2,11 +2,9 @@
 
 namespace SinovadDemo.Domain.Entities;
 
-public partial class Profile : BaseAuditableEntity
+public partial class Profile : BaseEntity
 {
-    public int Id { get; set; }
-
-    public string AccountId { get; set; }
+    public int UserId { get; set; }
 
     public string FullName { get; set; }
 
@@ -16,7 +14,7 @@ public partial class Profile : BaseAuditableEntity
 
     public string? AvatarPath { get; set; }
 
-    public virtual AppUser Account { get; set; } = null!;
+    public virtual User User { get; set; } = null!;
 
     public virtual ICollection<VideoProfile> VideoProfiles { get; set; } = new List<VideoProfile>();
 }

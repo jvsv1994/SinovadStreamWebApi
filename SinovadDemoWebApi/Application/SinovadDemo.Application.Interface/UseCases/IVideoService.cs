@@ -7,12 +7,12 @@ namespace SinovadDemo.Application.Interface.UseCases
     {
         Response<object> UpdateVideoProfile(VideoProfileDto videoProfileDto);
         Response<object> UpdateVideosInListStorages(UpdateStorageVideosDto dto);
-        Response<List<ItemsGroupDto>> GetVideosOrganized(string accountId, int profileId, bool searchMovies, bool searchTvSeries);
-        Response<List<ItemDto>> GetVideosByFilters(string accountId, bool searchMovies, bool searchTvSeries, string searchText);
+        Response<List<ItemsGroupDto>> GetVideosOrganized(int userId, int profileId, bool searchMovies, bool searchTvSeries);
+        Response<List<ItemDto>> GetVideosByFilters(int userId, bool searchMovies, bool searchTvSeries, string searchText);
         Task<Response<ItemDetailDto>> GetMovieDetail(int movieId);
-        Task<Response<ItemDetailDto>> GetMovieDataByAccount(string accountId,int movieId);
-        Task<Response<ItemDetailDto>> GetTvSerieDetail(string accountId, int tvSerieId);
-        Task<Response<ItemDetailDto>> GetTvSerieDataByAccount(string accountId, int tvSerieId);
+        Task<Response<ItemDetailDto>> GetMovieDataByUser(int userId,int movieId);
+        Task<Response<ItemDetailDto>> GetTvSerieDetail(int userId, int tvSerieId);
+        Task<Response<ItemDetailDto>> GetTvSerieDataByUser(int userId, int tvSerieId);
 
     }
 }

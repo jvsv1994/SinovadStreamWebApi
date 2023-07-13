@@ -1,6 +1,7 @@
 ﻿using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Domain.Entities;
+using SinovadDemo.Domain.Enums;
 
 namespace SinovadDemo.Persistence.Repositories
 {
@@ -23,13 +24,13 @@ namespace SinovadDemo.Persistence.Repositories
         }
 
 
-        public ItemDto GetMovieDataByAccount(string accountId,int movieId)
+        public ItemDto GetMovieDataByUser(int userId,int movieId)
         {
             var queryMovies = from movie in _context.Movies
                               join video in _context.Videos on movie.Id equals video.MovieId
-                              join accountstorage in _context.AccountStorages on video.AccountStorageId equals accountstorage.Id
-                              join accountserver in _context.AccountServers on accountstorage.AccountServerId equals accountserver.Id
-                              where accountserver.AccountId == accountId && movie.Id == movieId
+                              join storage in _context.Storages on video.StorageId equals storage.Id
+                              join mediaServer in _context.MediaServers on storage.MediaServerId equals mediaServer.Id
+                              where mediaServer.UserId == userId && movie.Id == movieId
                               select new ItemDto
                               {
                                   Title = movie.Title + " (" + movie.ReleaseDate.Value.Year + ")",
@@ -39,12 +40,12 @@ namespace SinovadDemo.Persistence.Repositories
                                   TmdbId = movie.TmdbId,
                                   PosterPath = movie.PosterPath,
                                   MovieId = movie.Id,
-                                  IpAddress = accountserver.IpAddress,
-                                  HostUrl = accountserver.HostUrl,
-                                  HostState = accountserver.StateCatalogDetailId,
+                                  IpAddress = mediaServer.IpAddress,
+                                  Url = mediaServer.Url,
+                                  MediaServerState = (MediaServerState)mediaServer.StateCatalogDetailId,
                                   VideoId = video.Id,
-                                  AccountServerId = accountserver.Id,
-                                  AccountStorageTypeId = accountstorage.AccountStorageTypeId,
+                                  MediaServerId = mediaServer.Id,
+                                  MediaType = (MediaType)storage.MediaTypeCatalogDetailId,
                                   PhysicalPath = video.PhysicalPath
                               } into x
                               group x by new { x.MovieId, x } into g
@@ -52,13 +53,13 @@ namespace SinovadDemo.Persistence.Repositories
             return queryMovies.ToList().FirstOrDefault();
         }
 
-        public object GetMoviesByAccountAndSearchText(string accountId, string searchText)
+        public object GetMoviesByUserAndSearchText(int userId, string searchText)
         {
             var queryMovies = from movie in _context.Movies
                               join video in _context.Videos on movie.Id equals video.MovieId
-                              join accountstorage in _context.AccountStorages on video.AccountStorageId equals accountstorage.Id
-                              join accountserver in _context.AccountServers on accountstorage.AccountServerId equals accountserver.Id
-                              where accountserver.AccountId == accountId && accountstorage.AccountStorageTypeId == 1 && movie.Title.ToLower().Contains(searchText.ToLower()) == true
+                              join storage in _context.Storages on video.StorageId equals storage.Id
+                              join mediaServer in _context.MediaServers on storage.MediaServerId equals mediaServer.Id
+                              where mediaServer.UserId == userId && storage.MediaTypeCatalogDetailId == (int)MediaType.TvSerie && movie.Title.ToLower().Contains(searchText.ToLower()) == true
                               select new ItemDto
                               {
                                   Title = movie.Title + " (" + movie.ReleaseDate.Value.Year + ")",
@@ -68,12 +69,12 @@ namespace SinovadDemo.Persistence.Repositories
                                   TmdbId = movie.TmdbId,
                                   PosterPath = movie.PosterPath,
                                   MovieId = movie.Id,
-                                  IpAddress = accountserver.IpAddress,
-                                  HostUrl = accountserver.HostUrl,
-                                  HostState = accountserver.StateCatalogDetailId,
+                                  IpAddress = mediaServer.IpAddress,
+                                  Url = mediaServer.Url,
+                                  MediaServerState = (MediaServerState)mediaServer.StateCatalogDetailId,
                                   VideoId = video.Id,
-                                  AccountServerId = accountserver.Id,
-                                  AccountStorageTypeId = accountstorage.AccountStorageTypeId,
+                                  MediaServerId = mediaServer.Id,
+                                  MediaType = (MediaType)storage.MediaTypeCatalogDetailId,
                                   PhysicalPath=video.PhysicalPath
                               } into x
                               group x by new { x.MovieId, x } into g
@@ -81,15 +82,15 @@ namespace SinovadDemo.Persistence.Repositories
             return queryMovies.ToList();
         }
 
-        public object GetMoviesByAccount(string accountId)
+        public object GetMoviesByUser(int userId)
         {
             var queryMovies = (from movieGenre in _context.MovieGenres
                                join genre in _context.Genres on movieGenre.GenreId equals genre.Id
                                join movie in _context.Movies on movieGenre.MovieId equals movie.Id
                                join video in _context.Videos on movie.Id equals video.MovieId
-                               join accountstorage in _context.AccountStorages on video.AccountStorageId equals accountstorage.Id
-                               join accountserver in _context.AccountServers on accountstorage.AccountServerId equals accountserver.Id
-                               where accountserver.AccountId == accountId && accountstorage.AccountStorageTypeId == 1
+                               join storage in _context.Storages on video.StorageId equals storage.Id
+                               join mediaServer in _context.MediaServers on storage.MediaServerId equals mediaServer.Id
+                               where mediaServer.UserId == userId && storage.MediaTypeCatalogDetailId == (int)MediaType.Movie
                                select new ItemDto
                                {
                                    Title = movie.Title + " (" + movie.ReleaseDate.Value.Year + ")",
@@ -102,26 +103,25 @@ namespace SinovadDemo.Persistence.Repositories
                                    MovieId = movie.Id,
                                    VideoId = video.Id,
                                    GenreId = movieGenre.GenreId,
-                                   MovieGenreId = movieGenre.Id,
                                    GenreName = genre.Name,
-                                   IpAddress = accountserver.IpAddress,
-                                   HostUrl = accountserver.HostUrl,
-                                   HostState = accountserver.StateCatalogDetailId,
-                                   AccountServerId = accountserver.Id,
-                                   AccountStorageTypeId = accountstorage.AccountStorageTypeId,
+                                   IpAddress = mediaServer.IpAddress,
+                                   Url = mediaServer.Url,
+                                   MediaServerState = (MediaServerState)mediaServer.StateCatalogDetailId,
+                                   MediaServerId = mediaServer.Id,
+                                   MediaType = (MediaType)storage.MediaTypeCatalogDetailId,
                                    PhysicalPath = video.PhysicalPath,
                                    Created = (DateTime)video.Created
                                }).ToList();
             return queryMovies;
         }
 
-        public object GetRecentlyAddedMoviesByAccount(string accountId)
+        public object GetRecentlyAddedMoviesByUser(int userId)
         {
             var queryMovies = (from movie in _context.Movies
                                join video in _context.Videos on movie.Id equals video.MovieId
-                               join accountstorage in _context.AccountStorages on video.AccountStorageId equals accountstorage.Id
-                               join accountserver in _context.AccountServers on accountstorage.AccountServerId equals accountserver.Id
-                               where accountserver.AccountId == accountId && accountstorage.AccountStorageTypeId == 1 && movie.Adult == false
+                               join storage in _context.Storages on video.StorageId equals storage.Id
+                               join mediaServer in _context.MediaServers on storage.MediaServerId equals mediaServer.Id
+                               where mediaServer.UserId == userId && storage.MediaTypeCatalogDetailId == (int)MediaType.Movie && movie.Adult == false
                                orderby video.Created descending
                                select new ItemDto
                                {
@@ -134,11 +134,11 @@ namespace SinovadDemo.Persistence.Repositories
                                    Imdbid = movie.Imdbid,
                                    PosterPath = movie.PosterPath,
                                    MovieId = movie.Id,
-                                   IpAddress = accountserver.IpAddress,
-                                   HostUrl = accountserver.HostUrl,
-                                   HostState = accountserver.StateCatalogDetailId,
-                                   AccountServerId = accountserver.Id,
-                                   AccountStorageTypeId = accountstorage.AccountStorageTypeId,
+                                   IpAddress = mediaServer.IpAddress,
+                                   Url = mediaServer.Url,
+                                   MediaServerState = (MediaServerState)mediaServer.StateCatalogDetailId,
+                                   MediaServerId = mediaServer.Id,
+                                   MediaType = (MediaType)storage.MediaTypeCatalogDetailId,
                                    PhysicalPath = video.PhysicalPath,
                                    Created = (DateTime)video.Created
                                }).AsEnumerable().GroupBy(a => a.MovieId).Take(10).Select(x => x.First()).ToList();
@@ -150,9 +150,9 @@ namespace SinovadDemo.Persistence.Repositories
             var result = (from movie in _context.Movies
                           join video in _context.Videos on movie.Id equals video.MovieId
                           join videoprofile in _context.VideoProfiles on video.Id equals videoprofile.VideoId
-                          join accountstorage in _context.AccountStorages on video.AccountStorageId equals accountstorage.Id
-                          join accountserver in _context.AccountServers on accountstorage.AccountServerId equals accountserver.Id
-                          where videoprofile.ProfileId == profileId && accountstorage.AccountStorageTypeId == 1
+                          join storage in _context.Storages on video.StorageId equals storage.Id
+                          join mediaServer in _context.MediaServers on storage.MediaServerId equals mediaServer.Id
+                          where videoprofile.ProfileId == profileId && storage.MediaTypeCatalogDetailId == (int)MediaType.Movie
                           orderby videoprofile.LastModified descending
                           select new ItemDto
                           {
@@ -168,12 +168,12 @@ namespace SinovadDemo.Persistence.Repositories
                               Imdbid = movie.Imdbid,
                               PosterPath = movie.PosterPath,
                               MovieId = movie.Id,
-                              IpAddress = accountserver.IpAddress,
-                              HostUrl = accountserver.HostUrl,
-                              HostState = accountserver.StateCatalogDetailId,
+                              IpAddress = mediaServer.IpAddress,
+                              Url = mediaServer.Url,
+                              MediaServerState = (MediaServerState)mediaServer.StateCatalogDetailId,
                               VideoId = video.Id,
-                              AccountServerId = accountserver.Id,
-                              AccountStorageTypeId = accountstorage.AccountStorageTypeId,
+                              MediaServerId = mediaServer.Id,
+                              MediaType = (MediaType)storage.MediaTypeCatalogDetailId,
                               ContinueVideo=true
                           }).AsEnumerable().GroupBy(a => a.MovieId).Select(x => x.First()).ToList();
             return result;

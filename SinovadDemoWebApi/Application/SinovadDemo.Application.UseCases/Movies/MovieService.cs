@@ -99,7 +99,6 @@ namespace SinovadDemo.Application.UseCases.Movies
                                       where mg.MovieId == id
                                       select new MovieGenreDto
                                       {
-                                          Id = mg.Id,
                                           MovieId = id,
                                           GenreId = g.Id,
                                           GenreName = g.Name

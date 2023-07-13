@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-#nullable disable
+﻿#nullable disable
 
 namespace SinovadDemo.Application.DTO
 {
-    public partial class AccountDto
+    public partial class UserDto
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
         public string FirstName { get; set; }

@@ -2,17 +2,17 @@
 using SinovadDemo.Application.Builder;
 using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Application.Shared;
-using SinovadDemo.Application.UseCases.Accounts;
-using SinovadDemo.Application.UseCases.AccountServers;
-using SinovadDemo.Application.UseCases.AccountStorages;
+using SinovadDemo.Application.UseCases.Users;
+using SinovadDemo.Application.UseCases.MediaServers;
+using SinovadDemo.Application.UseCases.Storages;
 using SinovadDemo.Application.UseCases.Catalogs;
 using SinovadDemo.Application.UseCases.Episodes;
 using SinovadDemo.Application.UseCases.Genres;
 using SinovadDemo.Application.UseCases.Movies;
 using SinovadDemo.Application.UseCases.Profiles;
 using SinovadDemo.Application.UseCases.Seasons;
-using SinovadDemo.Application.UseCases.TranscodeSettings;
-using SinovadDemo.Application.UseCases.TranscodeVideoProcesses;
+using SinovadDemo.Application.UseCases.TranscoderSetting;
+using SinovadDemo.Application.UseCases.TranscodingProcesses;
 using SinovadDemo.Application.UseCases.TvSeries;
 using SinovadDemo.Application.UseCases.Videos;
 using SinovadDemo.Application.Validator;
@@ -24,9 +24,9 @@ namespace SinovadDemo.Application.UseCases
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             //scoped services
-            services.AddScoped<IAccountService, AccountService>();
-            services.AddScoped<IAccountServerService, AccountServerService>();
-            services.AddScoped<IAccountStorageService, AccountStorageService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IMediaServerService, MediaServerService>();
+            services.AddScoped<IStorageService, StorageService>();
             services.AddScoped<IMovieService, MovieService>();
             services.AddScoped<ITvSerieService, TvSerieService>();
             services.AddScoped<ISeasonService, SeasonService>();
@@ -34,9 +34,9 @@ namespace SinovadDemo.Application.UseCases
             services.AddScoped<IGenreService, GenreService>();
             services.AddScoped<ICatalogService, CatalogService>();
             services.AddScoped<IProfileService, ProfileService>();
-            services.AddScoped<ITranscodeSettingService, TranscodeSettingService>();
+            services.AddScoped<ITranscoderSettingsService, TranscoderSettingsService>();
             services.AddScoped<IVideoService, VideoService>();
-            services.AddScoped<ITranscodeVideoProcessService, TranscodeVideoProcessService>();
+            services.AddScoped<ITranscodingProcessService, TranscodingProcessService>();
             services.AddScoped<SharedService>();
 
             //validators

@@ -20,9 +20,9 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpGet("GetAllTvProgramsOrganized")]
-        public ActionResult Get([Required]string accountId,[Required] int profileId,[Required] bool searchMovies,[Required] bool searchTvSeries)
+        public ActionResult Get([Required]int userId,[Required] int profileId,[Required] bool searchMovies,[Required] bool searchTvSeries)
         {
-            var response = _videoService.GetVideosOrganized(accountId, profileId, searchMovies, searchTvSeries);
+            var response = _videoService.GetVideosOrganized(userId, profileId, searchMovies, searchTvSeries);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -31,9 +31,9 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpGet("SearchTvPrograms")]
-        public ActionResult Search([Required] string accountId, [Required] bool searchMovies, [Required] bool searchTvSeries, [Required] string searchText)
+        public ActionResult Search([Required] int userId, [Required] bool searchMovies, [Required] bool searchTvSeries, [Required] string searchText)
         {
-            var response = _videoService.GetVideosByFilters(accountId, searchMovies, searchTvSeries, searchText);
+            var response = _videoService.GetVideosByFilters(userId, searchMovies, searchTvSeries, searchText);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -52,10 +52,10 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message);
         }
 
-        [HttpGet("GetMovieDataByAccount")]
-        public async Task<ActionResult> GetMovieDataByAccount([Required] string accountId,[Required] int movieId)
+        [HttpGet("GetMovieDataByUser")]
+        public async Task<ActionResult> GetMovieDataByUser([Required] int userId,[Required] int movieId)
         {
-            var response = await _videoService.GetMovieDataByAccount(accountId, movieId);
+            var response = await _videoService.GetMovieDataByUser(userId, movieId);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -64,9 +64,9 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpGet("GetTvSerieDetail")]
-        public async Task<ActionResult> GetTvSerieDetail([Required] string accountId,[Required] int tvSerieId)
+        public async Task<ActionResult> GetTvSerieDetail([Required] int userId,[Required] int tvSerieId)
         {
-            var response = await _videoService.GetTvSerieDetail(accountId, tvSerieId);
+            var response = await _videoService.GetTvSerieDetail(userId, tvSerieId);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -74,10 +74,10 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message);
         }
 
-        [HttpGet("GetTvSerieDataByAccount")]
-        public async Task<ActionResult> GetTvSerieDataByAccount([Required] string accountId, [Required] int tvSerieId)
+        [HttpGet("GetTvSerieDataByUser")]
+        public async Task<ActionResult> GetTvSerieDataByUser([Required] int userId, [Required] int tvSerieId)
         {
-            var response = await _videoService.GetTvSerieDataByAccount(accountId, tvSerieId);
+            var response = await _videoService.GetTvSerieDataByUser(userId, tvSerieId);
             if (response.IsSuccess)
             {
                 return Ok(response);

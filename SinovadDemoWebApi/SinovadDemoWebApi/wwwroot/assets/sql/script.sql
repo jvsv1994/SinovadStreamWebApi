@@ -9,7 +9,7 @@ DROP CONSTRAINT FK_MenuOption_Role_Role_ID;
 
 DROP TABLE IF EXISTS MenuOption_Role;
 DROP TABLE IF EXISTS MenuOption;
-DROP TABLE IF EXISTS Account;
+DROP TABLE IF EXISTS User;
 DROP TABLE IF EXISTS Role;
 /*Role*/
 
@@ -24,9 +24,9 @@ INSERT INTO Role(ID,Title) VALUES (1,'Administrador'),(2,'End User');
 
 Select * FROM Role;
 
-/*Account*/
+/*User*/
 
-CREATE TABLE Account (
+CREATE TABLE User (
   ID int NOT NULL PRIMARY KEY IDENTITY(1,1),
   FullName varchar(255) NOT NULL,
   Username varchar(255) NOT NULL,
@@ -37,54 +37,54 @@ CREATE TABLE Account (
     REFERENCES Role (ID)
 );
 
-ALTER TABLE Account
+ALTER TABLE User
 Add FirstName varchar(1000) NULL;
 
-ALTER TABLE Account
+ALTER TABLE User
 Add LastName varchar(1000) NULL;
 
-ALTER TABLE Account
+ALTER TABLE User
 Add Email varchar(1000) NULL;
 
-ALTER TABLE Account
+ALTER TABLE User
 Add Active BIT NOT NULL DEFAULT 0;
 
-ALTER TABLE Account
+ALTER TABLE User
 Add ConfirmationEmailToken varchar(1000) NULL;
 
-ALTER TABLE Account
+ALTER TABLE User
 Add ConfirmationEmailDate DATETIME NULL;
 
-ALTER TABLE Account
+ALTER TABLE User
 Add CreationDate DATETIME  NOT NULL DEFAULT (GETDATE());
 
-ALTER TABLE Account
+ALTER TABLE User
 Add LastUpdatingDate DATETIME  NOT NULL DEFAULT (GETDATE());
 
-SET IDENTITY_INSERT Account OFF
+SET IDENTITY_INSERT User OFF
 
-INSERT INTO Account(FullName,Username,Password,Role_ID) VALUES
+INSERT INTO User(FullName,Username,Password,Role_ID) VALUES
 ('JORGE VICTOR SOLIS VEGA','jvsv1994@gmail.com','1234',1);
 
-Select * FROM Account;
+Select * FROM User;
 
 /*RoleAccount*/
 CREATE TABLE RoleAccount (
   ID int NOT NULL PRIMARY KEY IDENTITY(1,1),
   Role_ID int  NOT NULL,
-  Account_ID int  NOT NULL,
+  User_ID int  NOT NULL,
   CONSTRAINT FK_RoleAccount_Role_ID
     FOREIGN KEY (Role_ID)
     REFERENCES Role (ID),
-  CONSTRAINT FK_RoleAccount_Account_ID
-    FOREIGN KEY (Account_ID)
+  CONSTRAINT FK_RoleAccount_User_ID
+    FOREIGN KEY (User_ID)
     REFERENCES Role (ID)
 );
 
 
 SET IDENTITY_INSERT RoleAccount ON
 
-INSERT INTO RoleAccount(ID,Role_ID,Account_ID) VALUES (1,1,1);
+INSERT INTO RoleAccount(ID,Role_ID,User_ID) VALUES (1,1,1);
 
 
 
@@ -282,33 +282,33 @@ CREATE TABLE FilmaffinityData (
 );
 
 
-/*Account Server*/
+/*User Server*/
 
-CREATE TABLE AccountServer (
+CREATE TABLE Host (
   ID int NOT NULL PRIMARY KEY IDENTITY(1,1),
   IpAddress varchar(1000) NULL,
-  Account_ID int NOT NULL,
-  CONSTRAINT FK_AccountServer_Account_ID
-    FOREIGN KEY (Account_ID)
-    REFERENCES Account (ID)
+  User_ID int NOT NULL,
+  CONSTRAINT FK_Host_User_ID
+    FOREIGN KEY (User_ID)
+    REFERENCES User (ID)
 );
 
-ALTER TABLE AccountServer
+ALTER TABLE Host
 Add State_Catalog_ID int NOT NULL Default 3,
 State_Catalog_Detail_ID int NOT NULL Default 2,
 HostUrl varchar(1000) NULL;
 
 
-/*Account Storage*/
+/*User Storage*/
 
-CREATE TABLE AccountStorage (
+CREATE TABLE Storage (
   ID int NOT NULL PRIMARY KEY IDENTITY(1,1),
-  AccountServer_ID int NOT NULL,
-  PhisicalPath varchar(1000) NULL,
-  AccountStorageType_ID int NOT NULL,
-  CONSTRAINT FK_AccountStorage_AccountServer_ID
-    FOREIGN KEY (AccountServer_ID)
-    REFERENCES AccountServer (ID)
+  Host_ID int NOT NULL,
+  PhysicalPath varchar(1000) NULL,
+  MediaType_ID int NOT NULL,
+  CONSTRAINT FK_Storage_Host_ID
+    FOREIGN KEY (Host_ID)
+    REFERENCES Host (ID)
 );
 
 
@@ -359,11 +359,11 @@ Select * FROM MovieGenre;
 
 CREATE TABLE Profile (
   ID int NOT NULL PRIMARY KEY IDENTITY(1,1),
-  Account_ID int NOT NULL,
+  User_ID int NOT NULL,
   FullName varchar(1000)  NULL,
-  CONSTRAINT FK_Profile_Account_ID
-    FOREIGN KEY (Account_ID)
-    REFERENCES Account (ID)
+  CONSTRAINT FK_Profile_User_ID
+    FOREIGN KEY (User_ID)
+    REFERENCES User (ID)
 );
 
 ALTER TABLE Profile
@@ -381,7 +381,7 @@ CREATE TABLE Video (
   ID int NOT NULL PRIMARY KEY IDENTITY(1,1),
   Title varchar(1000) NULL,
   PhysicalPath varchar(1000) NULL,
-  AccountStorage_ID int NULL,
+  Storage_ID int NULL,
   Movie_ID int NULL,
   Episode_ID int NULL,
   TvSerie_ID int NULL,
@@ -467,34 +467,34 @@ INSERT INTO CatalogDetail(Catalog_ID,ID,Name) VALUES (5,2,'Web');
 INSERT INTO CatalogDetail(Catalog_ID,ID,Name) VALUES (5,3,'Mobile');
 INSERT INTO CatalogDetail(Catalog_ID,ID,Name) VALUES (5,4,'TV');
  */
-/*TranscodeSettings*/
+/*TranscoderSettings*/
 
-CREATE TABLE TranscodeSettings (
+CREATE TABLE TranscoderSettings (
   ID int NOT NULL PRIMARY KEY IDENTITY(1,1),
-  AccountServer_ID int NOT NULL,
+  Host_ID int NOT NULL,
   Transmission_Method_Catalog_ID int NOT NULL,
   Transmission_Method_Catalog_Detail_ID int NOT NULL,
   Preset_Catalog_ID int NOT NULL,
   Preset_Catalog_Detail_ID int NOT NULL,
   DirectoryPhysicalPath varchar(1000) NULL,
-  CONSTRAINT FK_TranscodeSettings_AccountServer_ID
-    FOREIGN KEY (AccountServer_ID)
-    REFERENCES AccountServer (ID)
+  CONSTRAINT FK_TranscoderSettings_Host_ID
+    FOREIGN KEY (Host_ID)
+    REFERENCES Host (ID)
 );
 
-ALTER TABLE TranscodeSettings
+ALTER TABLE TranscoderSettings
 Add ConstantRateFactor int NOT NULL DEFAULT 0;
 
 
-/*TranscodeVideoProcess*/
+/*TranscodingProcess*/
 
-CREATE TABLE TranscodeVideoProcess (
+CREATE TABLE TranscodingProcess (
   ID int NOT NULL PRIMARY KEY IDENTITY(1,1),
   GUID varchar(1000) NOT NULL,
   TranscodeAudioVideoProcessID int NOT NULL,
   TranscodeSubtitlesProcessID int NULL,
   WorkingDirectoryPath varchar(1000) NOT NULL,
   CreationDate DATETIME  NOT NULL DEFAULT (GETDATE()),
-  AccountServer_ID int NOT NULL
+  Host_ID int NOT NULL
 );
 

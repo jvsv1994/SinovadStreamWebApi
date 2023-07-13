@@ -4,7 +4,7 @@ namespace SinovadDemo.Application.DTO
 {
     public class ValidateConfirmEmailTokenDto
     {
-        public string UserId { get; set; }
+        public int UserId { get; set; }
         public string ConfirmEmailToken { get; set; }
 
     }

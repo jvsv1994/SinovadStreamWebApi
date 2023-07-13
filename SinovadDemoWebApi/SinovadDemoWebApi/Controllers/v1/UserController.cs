@@ -7,17 +7,17 @@ using System.Security.Claims;
 
 namespace SinovadDemoWebApi.Controllers.v1
 {
-    [Route("api/v{version:apiVersion}/accounts")]
+    [Route("api/v{version:apiVersion}/users")]
     [ApiController]
     [Authorize]
     [ApiVersion("1.0",Deprecated = true)]
-    public class AccountController : ControllerBase
+    public class UserController : ControllerBase
     {
-        private readonly IAccountService _accountService;
+        private readonly IUserService _userService;
 
-        public AccountController(IAccountService accountService)
+        public UserController(IUserService userService)
         {
-            _accountService = accountService;
+            _userService = userService;
         }
 
         [HttpPost("Register")]
@@ -28,7 +28,7 @@ namespace SinovadDemoWebApi.Controllers.v1
             {
                 return BadRequest();
             }
-            var response = await _accountService.Register(dto);
+            var response = await _userService.Register(dto);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -46,7 +46,7 @@ namespace SinovadDemoWebApi.Controllers.v1
                 return BadRequest();
             }
             var username = claim.Value;
-            var response = await _accountService.GetAsync(username);
+            var response = await _userService.GetAsync(username);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -62,7 +62,7 @@ namespace SinovadDemoWebApi.Controllers.v1
             {
                 return BadRequest();
             }
-            var response = await _accountService.ValidateConfirmEmailToken(dto);
+            var response = await _userService.ValidateConfirmEmailToken(dto);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -78,7 +78,7 @@ namespace SinovadDemoWebApi.Controllers.v1
             {
                 return BadRequest();
             }
-            var response = await _accountService.Login(dto);
+            var response = await _userService.Login(dto);
             if (response.IsSuccess)
             {
                 if (response.Data != null)
@@ -101,7 +101,7 @@ namespace SinovadDemoWebApi.Controllers.v1
             {
                 return BadRequest();
             }
-            var response = await _accountService.RecoverPassword(dto);
+            var response = await _userService.RecoverPassword(dto);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -118,7 +118,7 @@ namespace SinovadDemoWebApi.Controllers.v1
             {
                 return BadRequest();
             }
-            var response = await _accountService.ValidateResetPasswordToken(dto);
+            var response = await _userService.ValidateResetPasswordToken(dto);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -134,7 +134,7 @@ namespace SinovadDemoWebApi.Controllers.v1
             {
                 return BadRequest();
             }
-            var response = await _accountService.ResetPassword(dto);
+            var response = await _userService.ResetPassword(dto);
             if (response.IsSuccess)
             {
                 return Ok(response);

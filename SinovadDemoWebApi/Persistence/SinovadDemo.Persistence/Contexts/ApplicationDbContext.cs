@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Generic.Core.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SinovadDemo.Persistence.Interceptors;
 
 namespace SinovadDemo.Domain.Entities;
 
-public partial class ApplicationDbContext : IdentityDbContext
+public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, IdentityUserClaim<int>, UserRole, IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>
 {
     public readonly AuditableEntitySaveChangesInterceptor _auditableEntitySaveChangesInterceptor;
 
@@ -18,11 +20,11 @@ public partial class ApplicationDbContext : IdentityDbContext
         _auditableEntitySaveChangesInterceptor = auditableEntitySaveChangesInterceptor;
     }
 
-    public DbSet<AppUser> Accounts { get; set; }
+    public DbSet<User> Users { get; set; }
 
-    public virtual DbSet<AccountServer> AccountServers { get; set; }
+    public virtual DbSet<MediaServer> MediaServers { get; set; }
 
-    public virtual DbSet<AccountStorage> AccountStorages { get; set; }
+    public virtual DbSet<Storage> Storages { get; set; }
 
     public virtual DbSet<Catalog> Catalogs { get; set; }
 
@@ -40,9 +42,9 @@ public partial class ApplicationDbContext : IdentityDbContext
 
     public virtual DbSet<Season> Seasons { get; set; }
 
-    public virtual DbSet<TranscodeSetting> TranscodeSettings { get; set; }
+    public virtual DbSet<TranscoderSettings> TranscoderSettings { get; set; }
 
-    public virtual DbSet<TranscodeVideoProcess> TranscodeVideoProcesses { get; set; }
+    public virtual DbSet<TranscodingProcess> TranscodingProcesses { get; set; }
 
     public virtual DbSet<TvSerie> TvSeries { get; set; }
 
@@ -56,7 +58,7 @@ public partial class ApplicationDbContext : IdentityDbContext
     {
        optionsBuilder.AddInterceptors(_auditableEntitySaveChangesInterceptor);
        optionsBuilder.EnableSensitiveDataLogging();
-        //optionsBuilder.UseSqlServer("Add Connection String");
+       optionsBuilder.UseSqlServer("Data Source=SQL8005.site4now.net;Initial Catalog=db_a87658_sinovad;User Id=db_a87658_sinovad_admin;Password=alfondo28V.");
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken=default)
@@ -68,50 +70,109 @@ public partial class ApplicationDbContext : IdentityDbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<AccountServer>(entity =>
+        modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__AccountS__3214EC27FF56ACAD");
-
-            entity.ToTable("AccountServer");
-
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.AccountId).HasColumnName("Account_ID");
-            entity.Property(e => e.HostUrl)
-                .HasMaxLength(1000)
-                .IsUnicode(false);
-            entity.Property(e => e.IpAddress)
-                .HasMaxLength(1000)
-                .IsUnicode(false);
-            entity.Property(e => e.StateCatalogDetailId)
-                .HasDefaultValueSql("((2))")
-                .HasColumnName("State_Catalog_Detail_ID");
-            entity.Property(e => e.StateCatalogId)
-                .HasDefaultValueSql("((3))")
-                .HasColumnName("State_Catalog_ID");
-
-            entity.HasOne(d => d.Account).WithMany(p => p.AccountServers)
-                .HasForeignKey(d => d.AccountId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_AccountServer_Account_ID");
+            entity.ToTable("User");
         });
 
-        modelBuilder.Entity<AccountStorage>(entity =>
+        modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__AccountS__3214EC27C8AEFD60");
+            entity.ToTable("Role");
+        });
 
-            entity.ToTable("AccountStorage");
+        modelBuilder.Entity<IdentityUserClaim<int>>(entity =>
+        {
+            entity.ToTable("UserClaim");
+        });
 
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.AccountServerId).HasColumnName("AccountServer_ID");
-            entity.Property(e => e.AccountStorageTypeId).HasColumnName("AccountStorageType_ID");
-            entity.Property(e => e.PhisicalPath)
+        modelBuilder.Entity<IdentityUserLogin<int>>(entity =>
+        {
+            entity.ToTable("UserLogin");
+        });
+
+        modelBuilder.Entity<IdentityRoleClaim<int>>(entity =>
+        {
+            entity.ToTable("RoleClaim");
+        });
+
+        modelBuilder.Entity<IdentityUserToken<int>>(entity =>
+        {
+            entity.ToTable("UserToken");
+        });
+
+        modelBuilder.Entity<UserRole>(userRole =>
+        {
+            userRole.ToTable("UserRole");
+
+            userRole.HasKey(ur => new { ur.UserId, ur.RoleId });
+
+            userRole.HasOne(ur => ur.Role)
+                .WithMany(r => r.UserRoles)
+                .HasForeignKey(ur => ur.RoleId)
+                .IsRequired();
+
+
+            userRole.HasOne(ur => ur.User)
+                .WithMany(r => r.UserRoles)
+                .HasForeignKey(ur => ur.UserId)
+                .IsRequired();
+        });
+
+        modelBuilder.Entity<RoleMenu>(roleMenu =>
+        {
+            roleMenu.HasKey(rm => new { rm.RoleId, rm.MenuId });
+
+            roleMenu.HasOne(rm => rm.Role)
+                .WithMany(r => r.RoleMenus)
+                .HasForeignKey(rm => rm.RoleId)
+                .IsRequired();
+
+            roleMenu.HasOne(rm => rm.Menu)
+                .WithMany(m => m.RoleMenus)
+                .HasForeignKey(rm => rm.MenuId)
+                .IsRequired();
+        });
+
+        modelBuilder.Entity<MediaServer>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__MediaServer__3214EC27FF56ACAD");
+
+            entity.ToTable("MediaServer");
+
+            entity.HasOne(d => d.User).WithMany(p => p.MediaServers)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_MediaServer_User_ID");
+            entity.HasOne(d => d.TranscoderSettings).WithOne(p => p.MediaServer)
+                .HasForeignKey<TranscoderSettings>(d => d.MediaServerId)
+             .OnDelete(DeleteBehavior.ClientSetNull)
+             .HasConstraintName("FK_MediaServer_User_ID");
+        });
+
+        modelBuilder.Entity<TranscoderSettings>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Transcod__3214EC279D19B237");
+
+            entity.HasOne(d => d.MediaServer).WithOne(p => p.TranscoderSettings)
+                .HasForeignKey<TranscoderSettings>(d => d.MediaServerId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TranscoderSettings_MediaServer_ID");
+        });
+
+        modelBuilder.Entity<Storage>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Storage__3214EC27C8AEFD60");
+
+            entity.ToTable("Storage");
+
+            entity.Property(e => e.PhysicalPath)
                 .HasMaxLength(1000)
                 .IsUnicode(false);
 
-            entity.HasOne(d => d.AccountServer).WithMany(p => p.AccountStorages)
-                .HasForeignKey(d => d.AccountServerId)
+            entity.HasOne(d => d.MediaServer).WithMany(p => p.Storages)
+                .HasForeignKey(d => d.MediaServerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_AccountStorage_AccountServer_ID");
+                .HasConstraintName("FK_Storage_MediaServer_ID");
         });
 
         modelBuilder.Entity<Catalog>(entity =>
@@ -121,8 +182,7 @@ public partial class ApplicationDbContext : IdentityDbContext
             entity.ToTable("Catalog");
 
             entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
+                .ValueGeneratedNever();
             entity.Property(e => e.Name)
                 .HasMaxLength(1000)
                 .IsUnicode(false);
@@ -134,8 +194,6 @@ public partial class ApplicationDbContext : IdentityDbContext
 
             entity.ToTable("CatalogDetail");
 
-            entity.Property(e => e.CatalogId).HasColumnName("Catalog_ID");
-            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Name)
                 .HasMaxLength(1000)
                 .IsUnicode(false);
@@ -155,11 +213,9 @@ public partial class ApplicationDbContext : IdentityDbContext
 
             entity.ToTable("Episode");
 
-            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.ImageUrl)
                 .HasMaxLength(1000)
                 .IsUnicode(false);
-            entity.Property(e => e.SeasonId).HasColumnName("Season_ID");
             entity.Property(e => e.Summary)
                 .HasMaxLength(1000)
                 .IsUnicode(false);
@@ -179,11 +235,9 @@ public partial class ApplicationDbContext : IdentityDbContext
 
             entity.ToTable("Genre");
 
-            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .IsUnicode(false);
-            entity.Property(e => e.TmdbId).HasColumnName("TMDbID");
         });
 
         modelBuilder.Entity<Movie>(entity =>
@@ -192,7 +246,6 @@ public partial class ApplicationDbContext : IdentityDbContext
 
             entity.ToTable("Movie");
 
-            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Actors)
                 .HasMaxLength(1000)
                 .IsUnicode(false);
@@ -205,8 +258,7 @@ public partial class ApplicationDbContext : IdentityDbContext
                 .IsUnicode(false);
             entity.Property(e => e.Imdbid)
                 .HasMaxLength(1000)
-                .IsUnicode(false)
-                .HasColumnName("IMDBID");
+                .IsUnicode(false);
             entity.Property(e => e.OriginalLanguage)
                 .HasMaxLength(1000)
                 .IsUnicode(false);
@@ -223,18 +275,14 @@ public partial class ApplicationDbContext : IdentityDbContext
             entity.Property(e => e.Title)
                 .HasMaxLength(255)
                 .IsUnicode(false);
-            entity.Property(e => e.TmdbId).HasColumnName("TMDbID");
         });
 
         modelBuilder.Entity<MovieGenre>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__MovieGen__3214EC277F0023A9");
+            entity.HasKey(mg => new { mg.MovieId, mg.GenreId });
 
             entity.ToTable("MovieGenre");
 
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.GenreId).HasColumnName("Genre_ID");
-            entity.Property(e => e.MovieId).HasColumnName("Movie_ID");
 
             entity.HasOne(d => d.Genre).WithMany(p => p.MovieGenres)
                 .HasForeignKey(d => d.GenreId)
@@ -253,20 +301,17 @@ public partial class ApplicationDbContext : IdentityDbContext
 
             entity.ToTable("Profile");
 
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.AccountId).HasColumnName("Account_ID");
             entity.Property(e => e.AvatarPath)
                 .HasMaxLength(1000)
                 .IsUnicode(false);
             entity.Property(e => e.FullName)
                 .HasMaxLength(1000)
                 .IsUnicode(false);
-            entity.Property(e => e.Pincode).HasColumnName("PINCode");
 
-            entity.HasOne(d => d.Account).WithMany(p => p.Profiles)
-                .HasForeignKey(d => d.AccountId)
+            entity.HasOne(d => d.User).WithMany(p => p.Profiles)
+                .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Profile_Account_ID");
+                .HasConstraintName("FK_Profile_User_ID");
         });
 
         modelBuilder.Entity<Season>(entity =>
@@ -275,14 +320,12 @@ public partial class ApplicationDbContext : IdentityDbContext
 
             entity.ToTable("Season");
 
-            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Name)
                 .HasMaxLength(1000)
                 .IsUnicode(false);
             entity.Property(e => e.Summary)
                 .HasMaxLength(1000)
                 .IsUnicode(false);
-            entity.Property(e => e.TvSerieId).HasColumnName("TvSerie_ID");
 
             entity.HasOne(d => d.TvSerie).WithMany(p => p.Seasons)
                 .HasForeignKey(d => d.TvSerieId)
@@ -290,43 +333,13 @@ public partial class ApplicationDbContext : IdentityDbContext
                 .HasConstraintName("FK_Season_TvSerie_ID");
         });
 
-        modelBuilder.Entity<TranscodeSetting>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Transcod__3214EC279D19B237");
 
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.AccountServerId).HasColumnName("AccountServer_ID");
-            entity.Property(e => e.DirectoryPhysicalPath)
-                .HasMaxLength(1000)
-                .IsUnicode(false);
-            entity.Property(e => e.PresetCatalogDetailId).HasColumnName("Preset_Catalog_Detail_ID");
-            entity.Property(e => e.PresetCatalogId).HasColumnName("Preset_Catalog_ID");
-            entity.Property(e => e.TransmissionMethodCatalogDetailId).HasColumnName("Transmission_Method_Catalog_Detail_ID");
-            entity.Property(e => e.TransmissionMethodCatalogId).HasColumnName("Transmission_Method_Catalog_ID");
-
-            entity.HasOne(d => d.AccountServer).WithMany(p => p.TranscodeSettings)
-                .HasForeignKey(d => d.AccountServerId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_TranscodeSettings_AccountServer_ID");
-        });
-
-        modelBuilder.Entity<TranscodeVideoProcess>(entity =>
+        modelBuilder.Entity<TranscodingProcess>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Transcod__3214EC27DF052101");
 
-            entity.ToTable("TranscodeVideoProcess");
+            entity.ToTable("TranscodingProcess");
 
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.AccountServerId).HasColumnName("AccountServer_ID");
-            entity.Property(e => e.Guid)
-                .HasMaxLength(1000)
-                .IsUnicode(false)
-                .HasColumnName("GUID");
-            entity.Property(e => e.TranscodeAudioVideoProcessId).HasColumnName("TranscodeAudioVideoProcessID");
-            entity.Property(e => e.TranscodeSubtitlesProcessId).HasColumnName("TranscodeSubtitlesProcessID");
-            entity.Property(e => e.WorkingDirectoryPath)
-                .HasMaxLength(1000)
-                .IsUnicode(false);
         });
 
         modelBuilder.Entity<TvSerie>(entity =>
@@ -335,7 +348,6 @@ public partial class ApplicationDbContext : IdentityDbContext
 
             entity.ToTable("TvSerie");
 
-            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Actors)
                 .HasMaxLength(1000)
                 .IsUnicode(false);
@@ -362,18 +374,13 @@ public partial class ApplicationDbContext : IdentityDbContext
             entity.Property(e => e.PosterPath)
                 .HasMaxLength(1000)
                 .IsUnicode(false);
-            entity.Property(e => e.TmdbId).HasColumnName("TMDbID");
         });
 
         modelBuilder.Entity<TvSerieGenre>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__TvSerieG__3214EC276D0EA328");
+            entity.HasKey(tvg => new { tvg.TvSerieId, tvg.GenreId });
 
             entity.ToTable("TvSerieGenre");
-
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.GenreId).HasColumnName("Genre_ID");
-            entity.Property(e => e.TvSerieId).HasColumnName("TvSerie_ID");
 
             entity.HasOne(d => d.Genre).WithMany(p => p.TvSerieGenres)
                 .HasForeignKey(d => d.GenreId)
@@ -392,10 +399,6 @@ public partial class ApplicationDbContext : IdentityDbContext
 
             entity.ToTable("Video");
 
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.AccountStorageId).HasColumnName("AccountStorage_ID");
-            entity.Property(e => e.EpisodeId).HasColumnName("Episode_ID");
-            entity.Property(e => e.MovieId).HasColumnName("Movie_ID");
             entity.Property(e => e.PhysicalPath)
                 .HasMaxLength(1000)
                 .IsUnicode(false);
@@ -405,7 +408,6 @@ public partial class ApplicationDbContext : IdentityDbContext
             entity.Property(e => e.Title)
                 .HasMaxLength(1000)
                 .IsUnicode(false);
-            entity.Property(e => e.TvSerieId).HasColumnName("TvSerie_ID");
         });
 
         modelBuilder.Entity<VideoProfile>(entity =>
@@ -413,9 +415,6 @@ public partial class ApplicationDbContext : IdentityDbContext
             entity.HasKey(e => new { e.VideoId, e.ProfileId });
 
             entity.ToTable("VideoProfile");
-
-            entity.Property(e => e.VideoId).HasColumnName("Video_ID");
-            entity.Property(e => e.ProfileId).HasColumnName("Profile_ID");
 
             entity.HasOne(d => d.Profile).WithMany(p => p.VideoProfiles)
                 .HasForeignKey(d => d.ProfileId)

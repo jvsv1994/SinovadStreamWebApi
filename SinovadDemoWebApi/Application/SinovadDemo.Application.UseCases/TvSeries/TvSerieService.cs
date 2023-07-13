@@ -74,7 +74,6 @@ namespace SinovadDemo.Application.UseCases.TvSeries
                                       where mg.TvSerieId == id
                                       select new TvSerieGenreDto
                                       {
-                                          Id = mg.Id,
                                           TvSerieId = id,
                                           GenreId = g.Id,
                                           GenreName = g.Name
@@ -216,8 +215,8 @@ namespace SinovadDemo.Application.UseCases.TvSeries
                     if (episodeems != null)
                     {
                         var episode = new EpisodeDto();
-                        episode.AccountServerId = video.AccountServerId;
-                        episode.HostUrl=video.HostUrl;
+                        episode.MediaServerId = video.MediaServerId;
+                        episode.Url=video.Url;
                         episode.TvSerieName = tvSerieDetail.Name;
                         episode.EpisodeNumber = (int)episodeems.EpisodeNumber;
                         episode.SeasonNumber = (int)seasonems.SeasonNumber;

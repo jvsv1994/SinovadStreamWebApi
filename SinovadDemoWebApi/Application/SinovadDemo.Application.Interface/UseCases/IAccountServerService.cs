@@ -4,14 +4,14 @@ using SinovadDemo.Transversal.Common;
 
 namespace SinovadDemo.Application.Interface.UseCases
 {
-    public interface IAccountServerService
+    public interface IMediaServerService
     {
-        Task<Response<AccountServerDto>> GetAsync(int id);
-        Task<Response<AccountServerDto>> GetByAccountAndIpAddressAsync(string accountId, string ipAddress);
-        Task<ResponsePagination<List<AccountServerDto>>> GetAllWithPaginationByAccountAsync(string accountId, int page, int take);
-        Response<object> Create(AccountServerDto accountServerDto);
-        Response<object> CreateList(List<AccountServerDto> listAccountServerDto);
-        Response<object> Update(AccountServerDto accountServerDto);
+        Task<Response<MediaServerDto>> GetAsync(int id);
+        Task<Response<MediaServerDto>> GetByUserAndIpAddressAsync(int userId, string ipAddress);
+        Task<ResponsePagination<List<MediaServerDto>>> GetAllWithPaginationByUserAsync(int userId, int page, int take);
+        Response<object> Create(MediaServerDto mediaServerDto);
+        Response<object> CreateList(List<MediaServerDto> listMediaServerDto);
+        Response<object> Update(MediaServerDto mediaServerDto);
         Response<object> Delete(int id);
         Response<object> DeleteList(string ids);
     }

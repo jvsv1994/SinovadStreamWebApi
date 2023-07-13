@@ -12,25 +12,25 @@ using SinovadDemo.Domain.Entities;
 using SinovadDemo.Transversal.Common;
 using SinovadDemo.Transversal.Mapping;
 
-namespace SinovadDemo.Application.UseCases.Accounts
+namespace SinovadDemo.Application.UseCases.Users
 {
-    public class AccountService : IAccountService
+    public class UserService : IUserService
     {
         private IUnitOfWork _unitOfWork;
 
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<User> _userManager;
 
         private readonly IEmailSenderService _emalSenderService;
 
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly SignInManager<User> _signInManager;
 
         private readonly AccessUserDtoValidator _accessUserDtoValidator;
 
-        private readonly IAppLogger<AccountService> _logger;
+        private readonly IAppLogger<UserService> _logger;
 
         private readonly IOptions<MyConfig> _config;
 
-        public AccountService(IUnitOfWork unitOfWork, IAppLogger<AccountService> logger, IOptions<MyConfig> config, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IEmailSenderService emalSenderService, AccessUserDtoValidator accessUserDtoValidator)
+        public UserService(IUnitOfWork unitOfWork, IAppLogger<UserService> logger, IOptions<MyConfig> config, UserManager<User> userManager, SignInManager<User> signInManager, IEmailSenderService emalSenderService, AccessUserDtoValidator accessUserDtoValidator)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
@@ -41,13 +41,13 @@ namespace SinovadDemo.Application.UseCases.Accounts
             _accessUserDtoValidator = accessUserDtoValidator;
         }
 
-        public async Task<ResponsePagination<List<AccountDto>>> GetAllAsync(int page, int take)
+        public async Task<ResponsePagination<List<UserDto>>> GetAllAsync(int page, int take)
         {
-            var response = new ResponsePagination<List<AccountDto>>();
+            var response = new ResponsePagination<List<UserDto>>();
             try
             {
-                var result = await _unitOfWork.Accounts.GetAllWithPaginationAsync(page, take, "Id", false);
-                response.Data = result.Items.MapTo<List<AccountDto>>();
+                var result = await _unitOfWork.Users.GetAllWithPaginationAsync(page, take, "Id", false);
+                response.Data = result.Items.MapTo<List<UserDto>>();
                 if (response.Data != null)
                 {
                     response.PageNumber = page;
@@ -65,14 +65,14 @@ namespace SinovadDemo.Application.UseCases.Accounts
             return response;
         }
 
-        public async Task<Response<AccountDto>> GetAsync(string username)
+        public async Task<Response<UserDto>> GetAsync(string username)
         {
-            var response = new Response<AccountDto>();
+            var response = new Response<UserDto>();
             try
             {
-                _logger.LogInformation("Getting account data from " + username);
-                var result = await _unitOfWork.Accounts.GetByExpressionAsync(x => x.UserName == username);
-                response.Data = result.MapTo<AccountDto>();
+                _logger.LogInformation("Getting user data from " + username);
+                var result = await _unitOfWork.Users.GetByExpressionAsync(x => x.UserName == username);
+                response.Data = result.MapTo<UserDto>();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -84,13 +84,13 @@ namespace SinovadDemo.Application.UseCases.Accounts
             return response;
         }
 
-        public async Task<Response<AccountDto>> GetAsync(int id)
+        public async Task<Response<UserDto>> GetAsync(int id)
         {
-            var response = new Response<AccountDto>();
+            var response = new Response<UserDto>();
             try
             {
-                var result = await _unitOfWork.Accounts.GetAsync(id);
-                response.Data = result.MapTo<AccountDto>();
+                var result = await _unitOfWork.Users.GetAsync(id);
+                response.Data = result.MapTo<UserDto>();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -107,8 +107,8 @@ namespace SinovadDemo.Application.UseCases.Accounts
             var response = new Response<bool>();
             try
             {
-                var user = await _userManager.FindByIdAsync(dto.UserId);
-                var appUser = (AppUser)user;
+                var user = await _userManager.FindByIdAsync(dto.UserId.ToString());
+                var appUser = (User)user;
                 appUser.Active = true;
                 var res = await _userManager.ResetPasswordAsync(appUser, dto.ResetPasswordToken, dto.Password);
                 if (res.Succeeded)
@@ -135,8 +135,8 @@ namespace SinovadDemo.Application.UseCases.Accounts
             var response = new Response<bool>();
             try
             {
-                var user = await _userManager.FindByIdAsync(dto.UserId);
-                var purpose = UserManager<AppUser>.ResetPasswordTokenPurpose;
+                var user = await _userManager.FindByIdAsync(dto.UserId.ToString());
+                var purpose = UserManager<User>.ResetPasswordTokenPurpose;
                 var isValidToken = await _userManager.VerifyUserTokenAsync(user, TokenOptions.DefaultProvider, purpose, dto.ResetPasswordToken);
                 if (isValidToken)
                 {
@@ -225,35 +225,38 @@ namespace SinovadDemo.Application.UseCases.Accounts
                 }
                 else
                 {
-                    var res = await _signInManager.PasswordSignInAsync(dto.UserName, dto.Password, true, true);
-                    if (res.Succeeded)
+                    var user = await _unitOfWork.Users.GetByExpressionAsync(u=>u.UserName== dto.UserName);
+                    if(user==null)
                     {
-                        var user = await _userManager.FindByNameAsync(dto.UserName);
-                        var appUser = user.MapTo<AppUser>();
-                        if (appUser.Active)
-                        {
-                            _logger.LogInformation("Successful autentication for the user " + dto.UserName);
-                            var jwtHelper = new JWTHelper(_config.Value.JwtSettings.Secret, _config.Value.JwtSettings.Issuer, _config.Value.JwtSettings.Audience);
-                            var token = jwtHelper.CreateToken(dto.UserName);
-                            _logger.LogInformation("Token generated for the user " + dto.UserName + " : " + token);
-                            response.Data = token;
-                            response.IsSuccess = true;
-                            response.Message = "Successful";
-                        }
-                        else
-                        {
-                            response.Message = "Inactive user, please confirm your email";
-                        }
-                    }
-                    else
+                        response.Message = "Invalid user";
+                    }else
                     {
-                        if (res.IsLockedOut)
+                        var res = await _signInManager.CheckPasswordSignInAsync(user, dto.Password, true);
+                        if (res.Succeeded)
                         {
-                            response.Message = "The user has exceeded the maximum number of attempts, please try again later";
-                        }
-                        else
+                            if (user.Active)
+                            {
+                                _logger.LogInformation("Successful autentication for the user " + dto.UserName);
+                                var jwtHelper = new JWTHelper(_config.Value.JwtSettings.Secret, _config.Value.JwtSettings.Issuer, _config.Value.JwtSettings.Audience);
+                                var token = jwtHelper.CreateToken(dto.UserName);
+                                _logger.LogInformation("Token generated for the user " + dto.UserName + " : " + token);
+                                response.Data = token;
+                                response.IsSuccess = true;
+                                response.Message = "Successful";
+                            }else
+                            {
+                                response.Message = "Inactive user, please confirm your email";
+                            }
+                        }else
                         {
-                            response.Message = "Invalid access";
+                            if (res.IsLockedOut)
+                            {
+                                response.Message = "The user has exceeded the maximum number of attempts, please try again later";
+                            }
+                            else
+                            {
+                                response.Message = "Invalid access";
+                            }
                         }
                     }
                 }
@@ -271,7 +274,7 @@ namespace SinovadDemo.Application.UseCases.Accounts
             var response = new Response<bool>();
             try
             {
-                AppUser user = (AppUser)await _userManager.FindByIdAsync(dto.UserId);
+                User user = (User)await _userManager.FindByIdAsync(dto.UserId.ToString());
                 user.Active = true;
                 var result = await _userManager.ConfirmEmailAsync(user, dto.ConfirmEmailToken);
                 if (result.Succeeded)
@@ -298,7 +301,7 @@ namespace SinovadDemo.Application.UseCases.Accounts
             var response = new Response<bool>();
             try
             {
-                var appUser = dto.MapTo<AppUser>();
+                var appUser = dto.MapTo<User>();
                 appUser.Created = DateTime.Now;
                 appUser.LastModified = DateTime.Now;
                 var mainProfile = new Profile();
@@ -344,7 +347,7 @@ namespace SinovadDemo.Application.UseCases.Accounts
                 {
                     response.Data = true;
                     response.IsSuccess = true;
-                    response.Message = "Account registered successfully";
+                    response.Message = "User registered successfully";
                 }
                 else
                 {
@@ -359,13 +362,13 @@ namespace SinovadDemo.Application.UseCases.Accounts
             return response;
         }
 
-        public Response<object> Create(AccountDto accountDto)
+        public Response<object> Create(UserDto userDto)
         {
             var response = new Response<object>();
             try
             {
-                var account = accountDto.MapTo<AppUser>();
-                _unitOfWork.Accounts.Add(account);
+                var user = userDto.MapTo<User>();
+                _unitOfWork.Users.Add(user);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
                 response.Message = "Successful";
@@ -378,13 +381,13 @@ namespace SinovadDemo.Application.UseCases.Accounts
             return response;
         }
 
-        public Response<object> Update(AccountDto accountDto)
+        public Response<object> Update(UserDto userDto)
         {
             var response = new Response<object>();
             try
             {
-                var account = accountDto.MapTo<AppUser>();
-                _unitOfWork.Accounts.Update(account);
+                var user = userDto.MapTo<User>();
+                _unitOfWork.Users.Update(user);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
                 response.Message = "Successful";
@@ -402,7 +405,7 @@ namespace SinovadDemo.Application.UseCases.Accounts
             var response = new Response<object>();
             try
             {
-                _unitOfWork.Accounts.Delete(id);
+                _unitOfWork.Users.Delete(id);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
                 response.Message = "Successful";
@@ -425,7 +428,7 @@ namespace SinovadDemo.Application.UseCases.Accounts
                 {
                     listIds = ids.Split(",").ToList();
                 }
-                _unitOfWork.Accounts.DeleteByExpression(x => listIds.Contains(x.Id));
+                _unitOfWork.Users.DeleteByExpression(x => listIds.Contains(x.Id.ToString()));
                 _unitOfWork.Save();
                 response.IsSuccess = true;
                 response.Message = "Successful";

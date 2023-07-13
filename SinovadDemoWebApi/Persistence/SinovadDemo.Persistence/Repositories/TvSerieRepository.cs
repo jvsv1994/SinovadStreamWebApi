@@ -1,6 +1,7 @@
 ﻿using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Domain.Entities;
+using SinovadDemo.Domain.Enums;
 
 namespace SinovadDemo.Persistence.Repositories
 {
@@ -22,13 +23,13 @@ namespace SinovadDemo.Persistence.Repositories
             return _context.TvSeries.Where(tvs => tvs.TmdbId != null && listTMDbIds.Contains(((int)tvs.TmdbId))).Select(tvs => tvs.TmdbId != null ? (int)tvs.TmdbId : 0).ToList();
         }
 
-        public ItemDto GetTvSerieDataByAccount(string accountId, int tvSerieId)
+        public ItemDto GetTvSerieDataByUser(int userId, int tvSerieId)
         {
             var query = from tvserie in _context.TvSeries
                         join video in _context.Videos on tvserie.Id equals video.TvSerieId
-                        join accountstorage in _context.AccountStorages on video.AccountStorageId equals accountstorage.Id
-                        join accountserver in _context.AccountServers on accountstorage.AccountServerId equals accountserver.Id
-                        where accountserver.AccountId == accountId && accountstorage.AccountStorageTypeId == 2 && tvserie.Id == tvSerieId
+                        join storage in _context.Storages on video.StorageId equals storage.Id
+                        join mediaServer in _context.MediaServers on storage.MediaServerId equals mediaServer.Id
+                        where mediaServer.UserId == userId && storage.MediaTypeCatalogDetailId == (int)MediaType.TvSerie && tvserie.Id == tvSerieId
                         select new ItemDto
                         {
                             Title = tvserie.Name + (tvserie.LastAirDate.Value.Year > tvserie.FirstAirDate.Value.Year ? " (" + tvserie.FirstAirDate.Value.Year + "-" + tvserie.LastAirDate.Value.Year + ")" : " (" + tvserie.FirstAirDate.Value.Year + ")"),
@@ -39,24 +40,24 @@ namespace SinovadDemo.Persistence.Repositories
                             TmdbId = tvserie.TmdbId,
                             PosterPath = tvserie.PosterPath,
                             TvSerieId = tvserie.Id,
-                            IpAddress = accountserver.IpAddress,
-                            HostUrl = accountserver.HostUrl,
-                            HostState = accountserver.StateCatalogDetailId,
-                            AccountServerId = accountserver.Id,
-                            AccountStorageTypeId = accountstorage.AccountStorageTypeId
+                            IpAddress = mediaServer.IpAddress,
+                            Url = mediaServer.Url,
+                            MediaServerState = (MediaServerState)mediaServer.StateCatalogDetailId,
+                            MediaServerId = mediaServer.Id,
+                            MediaType = (MediaType)storage.MediaTypeCatalogDetailId
                         } into x
                         group x by new { x.TvSerieId, x } into g
                         select g.Key.x;
             return query.ToList().FirstOrDefault();
         }
 
-        public object GetTvSeriesByAccountIdAndSerchText(string accountId, string searchText)
+        public object GetTvSeriesByUserIdAndSerchText(int userId, string searchText)
         {
             var query = from tvserie in _context.TvSeries
                         join video in _context.Videos on tvserie.Id equals video.TvSerieId
-                        join accountstorage in _context.AccountStorages on video.AccountStorageId equals accountstorage.Id
-                        join accountserver in _context.AccountServers on accountstorage.AccountServerId equals accountserver.Id
-                        where accountserver.AccountId == accountId && accountstorage.AccountStorageTypeId == 2 && tvserie.Name.ToLower().Contains(searchText.ToLower()) == true
+                        join storage in _context.Storages on video.StorageId equals storage.Id
+                        join mediaServer in _context.MediaServers on storage.MediaServerId equals mediaServer.Id
+                        where mediaServer.UserId == userId && storage.MediaTypeCatalogDetailId == (int)MediaType.TvSerie && tvserie.Name.ToLower().Contains(searchText.ToLower()) == true
                         select new ItemDto
                         {
                             Title = tvserie.Name + (tvserie.LastAirDate.Value.Year > tvserie.FirstAirDate.Value.Year ? " (" + tvserie.FirstAirDate.Value.Year + "-" + tvserie.LastAirDate.Value.Year + ")" : " (" + tvserie.FirstAirDate.Value.Year + ")"),
@@ -67,26 +68,26 @@ namespace SinovadDemo.Persistence.Repositories
                             TmdbId = tvserie.TmdbId,
                             PosterPath = tvserie.PosterPath,
                             TvSerieId = tvserie.Id,
-                            IpAddress = accountserver.IpAddress,
-                            HostUrl = accountserver.HostUrl,
-                            HostState = accountserver.StateCatalogDetailId,
-                            AccountServerId = accountserver.Id,
-                            AccountStorageTypeId = accountstorage.AccountStorageTypeId
+                            IpAddress = mediaServer.IpAddress,
+                            Url = mediaServer.Url,
+                            MediaServerState = (MediaServerState)mediaServer.StateCatalogDetailId,
+                            MediaServerId = mediaServer.Id,
+                            MediaType = (MediaType)storage.MediaTypeCatalogDetailId
                         } into x
                         group x by new { x.TvSerieId, x } into g
                         select g.Key.x;
             return query.ToList();
         }
 
-        public object GetTvSeriesByAccountId(string accountId)
+        public object GetTvSeriesByUserId(int userId)
         {
             var result = (from tvseriegenre in _context.TvSerieGenres
                           join genre in _context.Genres on tvseriegenre.GenreId equals genre.Id
                           join tvserie in _context.TvSeries on tvseriegenre.TvSerieId equals tvserie.Id
                           join video in _context.Videos on tvserie.Id equals video.TvSerieId
-                          join accountstorage in _context.AccountStorages on video.AccountStorageId equals accountstorage.Id
-                          join accountserver in _context.AccountServers on accountstorage.AccountServerId equals accountserver.Id
-                          where accountserver.AccountId == accountId && accountstorage.AccountStorageTypeId == 2
+                          join storage in _context.Storages on video.StorageId equals storage.Id
+                          join mediaServer in _context.MediaServers on storage.MediaServerId equals mediaServer.Id
+                          where mediaServer.UserId == userId && storage.MediaTypeCatalogDetailId == (int)MediaType.TvSerie
                           select new ItemDto
                           {
                               Title = tvserie.Name + (tvserie.LastAirDate.Value.Year > tvserie.FirstAirDate.Value.Year ? " (" + tvserie.FirstAirDate.Value.Year + "-" + tvserie.LastAirDate.Value.Year + ")" : " (" + tvserie.FirstAirDate.Value.Year + ")"),
@@ -98,25 +99,24 @@ namespace SinovadDemo.Persistence.Repositories
                               PosterPath=tvserie.PosterPath,
                               TvSerieId = tvserie.Id,
                               GenreId = tvseriegenre.GenreId,
-                              TvSerieGenreId = tvseriegenre.Id,
                               GenreName = genre.Name,
-                              IpAddress = accountserver.IpAddress,
-                              HostUrl = accountserver.HostUrl,
-                              HostState = accountserver.StateCatalogDetailId,
-                              AccountServerId = accountserver.Id,
-                              AccountStorageTypeId = accountstorage.AccountStorageTypeId,
+                              IpAddress = mediaServer.IpAddress,
+                              Url = mediaServer.Url,
+                              MediaServerState = (MediaServerState)mediaServer.StateCatalogDetailId,
+                              MediaServerId = mediaServer.Id,
+                              MediaType = (MediaType)storage.MediaTypeCatalogDetailId,
                               Created = (DateTime)video.Created
                           }).AsEnumerable().GroupBy(a => a.TvSerieGenreId).Select(x => x.First()).ToList();
             return result;
         }
 
-        public object GetRecentlyTvSeriesAdded(string accountId)
+        public object GetRecentlyTvSeriesAdded(int userId)
         {
             var result = (from tvserie in _context.TvSeries
                           join video in _context.Videos on tvserie.Id equals video.TvSerieId
-                          join accountstorage in _context.AccountStorages on video.AccountStorageId equals accountstorage.Id
-                          join accountserver in _context.AccountServers on accountstorage.AccountServerId equals accountserver.Id
-                          where accountserver.AccountId == accountId && accountstorage.AccountStorageTypeId == 2
+                          join storage in _context.Storages on video.StorageId equals storage.Id
+                          join mediaServer in _context.MediaServers on storage.MediaServerId equals mediaServer.Id
+                          where mediaServer.UserId == userId && storage.MediaTypeCatalogDetailId == (int)MediaType.TvSerie
                           orderby video.Created descending
                           select new ItemDto
                           {
@@ -128,11 +128,11 @@ namespace SinovadDemo.Persistence.Repositories
                               TmdbId = tvserie.TmdbId != null ? (int)tvserie.TmdbId : 0,
                               PosterPath = tvserie.PosterPath,
                               TvSerieId = tvserie.Id,
-                              IpAddress = accountserver.IpAddress,
-                              HostUrl = accountserver.HostUrl,
-                              HostState = accountserver.StateCatalogDetailId,
-                              AccountServerId = accountserver.Id,
-                              AccountStorageTypeId = accountstorage.AccountStorageTypeId,
+                              IpAddress = mediaServer.IpAddress,
+                              Url = mediaServer.Url,
+                              MediaServerState = (MediaServerState)mediaServer.StateCatalogDetailId,
+                              MediaServerId = mediaServer.Id,
+                              MediaType = (MediaType)storage.MediaTypeCatalogDetailId,
                               Created = (DateTime)video.Created
                           }).AsEnumerable().GroupBy(a => a.TvSerieId).Take(10).Select(x => x.First()).ToList();
             return result;
@@ -143,9 +143,9 @@ namespace SinovadDemo.Persistence.Repositories
             var result = (from tvserie in _context.TvSeries
                           join video in _context.Videos on tvserie.Id equals video.TvSerieId
                           join videoprofile in _context.VideoProfiles on video.Id equals videoprofile.VideoId
-                          join accountstorage in _context.AccountStorages on video.AccountStorageId equals accountstorage.Id
-                          join accountserver in _context.AccountServers on accountstorage.AccountServerId equals accountserver.Id
-                          where videoprofile.ProfileId == profileId && accountstorage.AccountStorageTypeId == 2
+                          join storage in _context.Storages on video.StorageId equals storage.Id
+                          join mediaServer in _context.MediaServers on storage.MediaServerId equals mediaServer.Id
+                          where videoprofile.ProfileId == profileId && storage.MediaTypeCatalogDetailId == (int)MediaType.TvSerie
                           orderby videoprofile.LastModified descending
                           select new ItemDto
                           {
@@ -164,12 +164,12 @@ namespace SinovadDemo.Persistence.Repositories
                               TmdbId = tvserie.TmdbId != null ? (int)tvserie.TmdbId : 0,
                               PosterPath = tvserie.PosterPath,
                               TvSerieId = tvserie.Id,
-                              IpAddress = accountserver.IpAddress,
-                              HostUrl = accountserver.HostUrl,
-                              HostState = accountserver.StateCatalogDetailId,
+                              IpAddress = mediaServer.IpAddress,
+                              Url = mediaServer.Url,
+                              MediaServerState = (MediaServerState)mediaServer.StateCatalogDetailId,
                               VideoId = video.Id,
-                              AccountServerId = accountserver.Id,
-                              AccountStorageTypeId = accountstorage.AccountStorageTypeId,
+                              MediaServerId = mediaServer.Id,
+                              MediaType = (MediaType)storage.MediaTypeCatalogDetailId,
                               ContinueVideo = true
                           }).AsEnumerable().GroupBy(a => a.TvSerieId).Select(x => x.First()).ToList();
             return result;

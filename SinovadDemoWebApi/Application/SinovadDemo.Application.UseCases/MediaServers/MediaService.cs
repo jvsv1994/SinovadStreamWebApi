@@ -6,63 +6,65 @@ using SinovadDemo.Domain.Entities;
 using SinovadDemo.Transversal.Common;
 using SinovadDemo.Transversal.Mapping;
 
-namespace SinovadDemo.Application.UseCases.TranscodeSettings
+namespace SinovadDemo.Application.UseCases.MediaServers
 {
-    public class TranscodeSettingService : ITranscodeSettingService
+
+    public class MediaServerService : IMediaServerService
     {
         private IUnitOfWork _unitOfWork;
 
         private readonly SharedService _sharedService;
 
-        public TranscodeSettingService(IUnitOfWork unitOfWork, SharedService sharedService)
+        public MediaServerService(IUnitOfWork unitOfWork, SharedService sharedService)
         {
             _unitOfWork = unitOfWork;
             _sharedService = sharedService;
         }
-        public async Task<Response<TranscodeSettingDto>> GetAsync(int id)
+
+        public async Task<Response<MediaServerDto>> GetAsync(int id)
         {
-            var response = new Response<TranscodeSettingDto>();
+            var response = new Response<MediaServerDto>();
             try
             {
-                var result = await _unitOfWork.TranscodeSettings.GetAsync(id);
-                response.Data = result.MapTo<TranscodeSettingDto>();
+                var mediaServer = await _unitOfWork.MediaServers.GetAsync(id);
+                response.Data = mediaServer.MapTo<MediaServerDto>();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
             catch (Exception ex)
             {
-                response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
-            }
-            return response;
-        }
-        public async Task<Response<TranscodeSettingDto>> GetByAccountServerAsync(int accountServerId)
-        {
-            var response = new Response<TranscodeSettingDto>();
-            try
-            {
-                var result = await _unitOfWork.TranscodeSettings.GetByExpressionAsync(x => x.AccountServerId == accountServerId);
-                if(result!=null)
-                {
-                    response.Data = result.MapTo<TranscodeSettingDto>();
-                    response.Message = "Successful";
-                }
-                response.IsSuccess = true;
-            }catch (Exception ex)
-            {
-                response.Message = ex.Message;
+                response.Message = ex.StackTrace;
                 _sharedService._tracer.LogError(ex.StackTrace);
             }
             return response;
         }
 
-        public async Task<ResponsePagination<List<TranscodeSettingDto>>> GetAllWithPaginationByAccountServerAsync(int accountServerId, int page, int take)
+        public async Task<Response<MediaServerDto>> GetByUserAndIpAddressAsync(int userId, string ipAddress)
         {
-            var response = new ResponsePagination<List<TranscodeSettingDto>>();
+            var response = new Response<MediaServerDto>();
             try
             {
-                var result = await _unitOfWork.TranscodeSettings.GetAllWithPaginationByExpressionAsync(page, take, "Id", true, x => x.AccountServerId == accountServerId);
-                response.Data = result.Items.MapTo<List<TranscodeSettingDto>>();
+                var result = await _unitOfWork.MediaServers.GetByExpressionAsync(x => x.IpAddress == ipAddress && x.UserId == userId);
+                response.Data = result.MapTo<MediaServerDto>();
+                response.IsSuccess = true;
+                response.Message = "Successful";
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.StackTrace;
+                _sharedService._tracer.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
+
+        public async Task<ResponsePagination<List<MediaServerDto>>> GetAllWithPaginationByUserAsync(int userId, int page, int take)
+        {
+            var response = new ResponsePagination<List<MediaServerDto>>();
+            try
+            {
+                var result = await _unitOfWork.MediaServers.GetAllWithPaginationByExpressionAsync(page, take, "Id", true, x => x.UserId == userId);
+                response.Data = result.Items.MapTo<List<MediaServerDto>>();
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;
                 response.TotalCount = result.Total;
@@ -71,64 +73,64 @@ namespace SinovadDemo.Application.UseCases.TranscodeSettings
             }
             catch (Exception ex)
             {
-                response.Message = ex.Message;
+                response.Message = ex.StackTrace;
                 _sharedService._tracer.LogError(ex.StackTrace);
             }
             return response;
         }
 
-        public Response<object> Create(TranscodeSettingDto transcodeSettingDto)
+        public Response<object> Create(MediaServerDto mediaServerDto)
         {
             var response = new Response<object>();
             try
             {
-                var transcodeSetting = transcodeSettingDto.MapTo<TranscodeSetting>();
-                _unitOfWork.TranscodeSettings.Add(transcodeSetting);
+                var mediaServer = mediaServerDto.MapTo<MediaServer>();
+                _unitOfWork.MediaServers.Add(mediaServer);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
             catch (Exception ex)
             {
-                response.Message = ex.Message;
+                response.Message = ex.StackTrace;
                 _sharedService._tracer.LogError(ex.StackTrace);
             }
             return response;
         }
 
-        public Response<object> CreateList(List<TranscodeSettingDto> listTranscodeSettingDto)
+        public Response<object> CreateList(List<MediaServerDto> listMediaServerDto)
         {
             var response = new Response<object>();
             try
             {
-                var transcodeSettings = listTranscodeSettingDto.MapTo<List<TranscodeSetting>>();
-                _unitOfWork.TranscodeSettings.AddList(transcodeSettings);
+                var mediaServers = listMediaServerDto.MapTo<List<MediaServer>>();
+                _unitOfWork.MediaServers.AddList(mediaServers);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
             catch (Exception ex)
             {
-                response.Message = ex.Message;
+                response.Message = ex.StackTrace;
                 _sharedService._tracer.LogError(ex.StackTrace);
             }
             return response;
         }
 
-        public Response<object> Update(TranscodeSettingDto transcodeSettingDto)
+        public Response<object> Update(MediaServerDto mediaServerDto)
         {
             var response = new Response<object>();
             try
             {
-                var transcodeSetting = transcodeSettingDto.MapTo<TranscodeSetting>();
-                _unitOfWork.TranscodeSettings.Update(transcodeSetting);
+                var mediaServer = mediaServerDto.MapTo<MediaServer>();
+                _unitOfWork.MediaServers.Update(mediaServer);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
             catch (Exception ex)
             {
-                response.Message = ex.Message;
+                response.Message = ex.StackTrace;
                 _sharedService._tracer.LogError(ex.StackTrace);
             }
             return response;
@@ -139,14 +141,14 @@ namespace SinovadDemo.Application.UseCases.TranscodeSettings
             var response = new Response<object>();
             try
             {
-                _unitOfWork.TranscodeSettings.Delete(id);
+                _unitOfWork.MediaServers.Delete(id);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
             catch (Exception ex)
             {
-                response.Message = ex.Message;
+                response.Message = ex.StackTrace;
                 _sharedService._tracer.LogError(ex.StackTrace);
             }
             return response;
@@ -162,14 +164,14 @@ namespace SinovadDemo.Application.UseCases.TranscodeSettings
                 {
                     listIds = ids.Split(",").Select(x => Convert.ToInt32(x)).ToList();
                 }
-                _unitOfWork.TranscodeSettings.DeleteByExpression(x => listIds.Contains(x.Id));
+                _unitOfWork.MediaServers.DeleteByExpression(x => listIds.Contains(x.Id));
                 _unitOfWork.Save();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
             catch (Exception ex)
             {
-                response.Message = ex.Message;
+                response.Message = ex.StackTrace;
                 _sharedService._tracer.LogError(ex.StackTrace);
             }
             return response;
