@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using SinovadDemo.Domain.Enums;
 using SinovadDemo.Persistence.Interceptors;
 
 namespace SinovadDemo.Domain.Entities;
@@ -69,6 +70,27 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Menu>(entity =>
+        {
+            entity.ToTable("Menu");
+        });
+
+        modelBuilder.Entity<Menu>().HasData(
+        new Menu { Id = 1, ParentId = 0, SortOrder = 1,Title="Media" },
+        new Menu { Id = 2, ParentId = 0, SortOrder = 2,Title = "Almacenamiento" },
+        new Menu { Id = 3, ParentId = 0, SortOrder = 3, Title = "Mantenimiento" },
+        new Menu { Id = 4, ParentId = 1, SortOrder = 1, Title = "Inicio",Path="/home",IconTypeCatalogId= (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-house", Enabled=true},
+        new Menu { Id = 5, ParentId = 1, SortOrder = 2, Title = "Peliculas",Path = "/movies", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-film", Enabled = true },
+        new Menu { Id = 6, ParentId = 1, SortOrder = 3, Title = "Series",Path = "/tvseries", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-tv", Enabled = true },
+        new Menu { Id = 7, ParentId = 2, SortOrder = 1, Title = "Almacenamiento", Path = "/storages", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-database", Enabled = true },
+        new Menu { Id = 8, ParentId = 2, SortOrder = 2, Title = "Transcodificacion", Path = "/transcoder", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-database", Enabled = true },
+        new Menu { Id = 9, ParentId = 3, SortOrder = 1, Title = "Peliculas", Path = "/movies-maintenance", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-film", Enabled = true },
+        new Menu { Id = 10, ParentId = 3, SortOrder = 2, Title = "Series", Path = "/tvseries-maintenance", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-tv", Enabled = true },
+        new Menu { Id = 11, ParentId = 3, SortOrder = 3, Title = "Generos", Path = "/genres-maintenance", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-check", Enabled = true },
+        new Menu { Id = 12, ParentId = 3, SortOrder = 4, Title = "Roles", Path = "/roles-maintenance", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-check", Enabled = true },
+        new Menu { Id = 13, ParentId = 3, SortOrder = 5, Title = "Usuarios", Path = "/users-maintenance", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-user", Enabled = true },
+        new Menu { Id = 14, ParentId = 3, SortOrder = 6, Title = "Opciones", Path = "/options-maintenance", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-check", Enabled = true });
 
         modelBuilder.Entity<User>(entity =>
         {

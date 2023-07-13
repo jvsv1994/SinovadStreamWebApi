@@ -1,11 +1,12 @@
 ﻿namespace SinovadDemo.Domain.Enums
 {
-    public enum Catalog
+    public enum CatalogEnum
     {
         MediaServerState = 1,
         MediaType = 2,
         VideoTransmissionType = 3,
-        TranscoderPreset=4
+        TranscoderPreset=4,
+        IconType = 5
     }
 
     public enum MediaServerState
@@ -56,4 +57,5 @@
         Image = 1,
         FontAwesome = 2
     }
+
 }

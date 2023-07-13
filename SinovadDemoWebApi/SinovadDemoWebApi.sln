@@ -11,8 +11,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Transversal", "Transversal"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{236BB10E-4455-4220-8A10-9ECD5EAA7BC9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Service", "Service", "{C1C130DD-FFD2-4885-A1F0-F9939D4F6A78}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{293CE400-1108-4747-9769-3B4F7A771BA2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SinovadDemo.Domain", "Domain\SinovadDemo.Domain\SinovadDemo.Domain.csproj", "{E044F465-28A0-4E43-AB47-389D08EABEB4}"
@@ -53,7 +51,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SinovadDemo.Persistence", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SinovadDemo.Application.UseCases", "Application\SinovadDemo.Application.UseCases\SinovadDemo.Application.UseCases.csproj", "{FA03FE90-08EC-4AB4-BD34-C4A599516DFE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SinovadDemo.Infrastructure", "SinovadDemo.Infrastructure\SinovadDemo.Infrastructure.csproj", "{34F4172D-C918-4292-8671-6A42C011F7CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SinovadDemo.Infrastructure", "SinovadDemo.Infrastructure\SinovadDemo.Infrastructure.csproj", "{34F4172D-C918-4292-8671-6A42C011F7CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
