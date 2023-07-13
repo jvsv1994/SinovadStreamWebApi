@@ -102,6 +102,73 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
             entity.ToTable("Role");
         });
 
+        modelBuilder.Entity<Role>().HasData(
+            new Role { Id = 1, Name = "Administrador", Enable = true});
+
+        modelBuilder.Entity<Catalog>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Catalog__3214EC275C8D2947");
+
+            entity.ToTable("Catalog");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever();
+            entity.Property(e => e.Name)
+                .HasMaxLength(1000)
+                .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<Catalog>().HasData(
+           new Catalog { Id = 1, Name = "Estado del Servidor Multimedia" },
+           new Catalog { Id = 2, Name = "Tipos de contenido Multimedia " },
+           new Catalog { Id = 3, Name = "Tipos de transmisión de Video" },
+           new Catalog { Id = 4, Name = "Preajuste del transcodificador" },
+           new Catalog { Id = 5, Name = "Tipo de Icono" });
+
+        modelBuilder.Entity<CatalogDetail>(entity =>
+        {
+            entity.HasKey(e => new { e.CatalogId, e.Id }).HasName("PK__CatalogD__5C6FE914EF292CEC");
+
+            entity.ToTable("CatalogDetail");
+
+            entity.Property(e => e.Name)
+                .HasMaxLength(1000)
+                .IsUnicode(false);
+            entity.Property(e => e.TextValue)
+                .HasMaxLength(1000)
+                .IsUnicode(false);
+
+            entity.HasOne(d => d.Catalog).WithMany(p => p.CatalogDetails)
+                .HasForeignKey(d => d.CatalogId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CatalogDetail_Catalog_ID");
+        });
+
+        modelBuilder.Entity<CatalogDetail>().HasData(
+        new CatalogDetail { CatalogId = 1, Id = 1, Name = "Iniciado"},
+        new CatalogDetail { CatalogId = 1, Id = 2, Name = "Pausado" },
+
+        new CatalogDetail { CatalogId = 2, Id = 1, Name = "Película" },
+        new CatalogDetail { CatalogId = 2, Id = 2, Name = "Serie de TV"},
+
+        new CatalogDetail { CatalogId = 3, Id = 1, Name = "Normal"},
+        new CatalogDetail { CatalogId = 3, Id = 2, Name = "MPEG-DASH" },
+        new CatalogDetail { CatalogId = 3, Id = 3, Name = "HLS" },
+
+        new CatalogDetail { CatalogId = 4, Id = 1, Name = "ultrafast",TextValue= "ultrafast" },
+        new CatalogDetail { CatalogId = 4, Id = 2, Name = "superfast",TextValue= "superfast" },
+        new CatalogDetail { CatalogId = 4, Id = 3, Name = "veryfast", TextValue = "veryfast" },
+        new CatalogDetail { CatalogId = 4, Id = 4, Name = "faster", TextValue = "faster" },
+        new CatalogDetail { CatalogId = 4, Id = 5, Name = "fast", TextValue = "fast" },
+        new CatalogDetail { CatalogId = 4, Id = 6, Name = "medium", TextValue = "medium" },
+        new CatalogDetail { CatalogId = 4, Id = 7, Name = "slow", TextValue = "slow" },
+        new CatalogDetail { CatalogId = 4, Id = 8, Name = "slower", TextValue = "slower" },
+        new CatalogDetail { CatalogId = 4, Id = 9, Name = "veryslow", TextValue = "veryslow" },
+
+        new CatalogDetail { CatalogId = 5, Id = 1, Name = "Font Awesome" },
+        new CatalogDetail { CatalogId = 5, Id = 2, Name = "Imagen" });
+
+
         modelBuilder.Entity<IdentityUserClaim<int>>(entity =>
         {
             entity.ToTable("UserClaim");
@@ -197,37 +264,7 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
                 .HasConstraintName("FK_Storage_MediaServer_ID");
         });
 
-        modelBuilder.Entity<Catalog>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Catalog__3214EC275C8D2947");
 
-            entity.ToTable("Catalog");
-
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever();
-            entity.Property(e => e.Name)
-                .HasMaxLength(1000)
-                .IsUnicode(false);
-        });
-
-        modelBuilder.Entity<CatalogDetail>(entity =>
-        {
-            entity.HasKey(e => new { e.CatalogId, e.Id }).HasName("PK__CatalogD__5C6FE914EF292CEC");
-
-            entity.ToTable("CatalogDetail");
-
-            entity.Property(e => e.Name)
-                .HasMaxLength(1000)
-                .IsUnicode(false);
-            entity.Property(e => e.TextValue)
-                .HasMaxLength(1000)
-                .IsUnicode(false);
-
-            entity.HasOne(d => d.Catalog).WithMany(p => p.CatalogDetails)
-                .HasForeignKey(d => d.CatalogId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_CatalogDetail_Catalog_ID");
-        });
 
         modelBuilder.Entity<Episode>(entity =>
         {
