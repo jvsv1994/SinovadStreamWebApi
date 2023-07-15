@@ -121,14 +121,14 @@ namespace SinovadDemo.Application.UseCases.Users
         {
           var result= await _unitOfWork.Menus.GetListMenusByUser(userId);
           var listMenus = result.MapTo<List<MenuDto>>();
-          var mainMenus = listMenus.Where(m => m.ParentId == 0).ToList();
+          var mainMenus = listMenus.Where(m => m.ParentId == 0).OrderBy(m => m.SortOrder).ToList();
           mainMenus.ForEach(m => m.ChildMenus = BuildMenuChilds(m.Id, listMenus));
           return mainMenus;
         }
 
         private List<MenuDto> BuildMenuChilds(int parentId,List<MenuDto> originalList)
         {
-           var listMenus=originalList.Where(m => m.ParentId == parentId).ToList();
+           var listMenus=originalList.Where(m => m.ParentId == parentId).OrderBy(m=>m.SortOrder).ToList();
            listMenus.ForEach(m => m.ChildMenus = BuildMenuChilds(m.Id, originalList));
            return listMenus;
         }
