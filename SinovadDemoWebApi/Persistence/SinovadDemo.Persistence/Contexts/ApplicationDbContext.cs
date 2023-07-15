@@ -103,7 +103,8 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
         });
 
         modelBuilder.Entity<Role>().HasData(
-            new Role { Id = 1, Name = "Administrador", Enabled = true});
+            new Role { Id = 1, Name = "Administrador", Enabled = true},
+            new Role { Id = 2, Name = "Registrado", Enabled = true });
 
         modelBuilder.Entity<Catalog>(entity =>
         {
@@ -238,7 +239,14 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
            new RoleMenu { RoleId = 1, MenuId = 11 },
            new RoleMenu { RoleId = 1, MenuId = 12 },
            new RoleMenu { RoleId = 1, MenuId = 13 },
-           new RoleMenu { RoleId = 1, MenuId = 14 });
+           new RoleMenu { RoleId = 1, MenuId = 14 },
+           new RoleMenu { RoleId = 2, MenuId = 1 },
+           new RoleMenu { RoleId = 2, MenuId = 2 },
+           new RoleMenu { RoleId = 2, MenuId = 4 },
+           new RoleMenu { RoleId = 2, MenuId = 5 },
+           new RoleMenu { RoleId = 2, MenuId = 6 },
+           new RoleMenu { RoleId = 2, MenuId = 7 },
+           new RoleMenu { RoleId = 2, MenuId = 8 });
 
 
         modelBuilder.Entity<MediaServer>(entity =>

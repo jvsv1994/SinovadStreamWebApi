@@ -8,6 +8,7 @@ namespace SinovadDemo.Persistence.Repositories
         private ApplicationDbContext _context;
         private IGenericRepository<User> _users;
         private IMenuRepository _menus;
+        private IRoleRepository _roles;
         private IGenericRepository<MediaServer> _mediaServers;
         private IGenericRepository<Storage> _accountStorages;
         private IGenericRepository<Catalog> _catalogs;
@@ -49,6 +50,15 @@ namespace SinovadDemo.Persistence.Repositories
                 return _menus == null ?
                 _menus = new MenuRepository(_context) :
                 _menus;
+            }
+        }
+        public IRoleRepository Roles
+        {
+            get
+            {
+                return _roles == null ?
+                _roles = new RoleRepository(_context) :
+                _roles;
             }
         }
 

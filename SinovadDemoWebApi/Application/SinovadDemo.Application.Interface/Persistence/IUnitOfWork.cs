@@ -8,6 +8,7 @@ namespace SinovadDemo.Application.Interface.Persistence
         public IAppUserRepository AppUsers { get; }
         public IGenericRepository<User> Users { get; }
         public IMenuRepository Menus { get; }
+        public IRoleRepository Roles { get; }
         public IGenericRepository<MediaServer> MediaServers { get; }
         public IGenericRepository<Storage> Storages { get; }
         public IGenericRepository<Catalog> Catalogs { get; }

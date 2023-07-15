@@ -16,6 +16,7 @@ using SinovadDemo.Application.UseCases.TranscodingProcesses;
 using SinovadDemo.Application.UseCases.TvSeries;
 using SinovadDemo.Application.UseCases.Videos;
 using SinovadDemo.Application.Validator;
+using SinovadDemo.Application.UseCases.Roles;
 
 namespace SinovadDemo.Application.UseCases
 {
@@ -26,6 +27,7 @@ namespace SinovadDemo.Application.UseCases
             //scoped services
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IMenuService, MenuService>();
+            services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IMediaServerService, MediaServerService>();
             services.AddScoped<IStorageService, StorageService>();
             services.AddScoped<IMovieService, MovieService>();
