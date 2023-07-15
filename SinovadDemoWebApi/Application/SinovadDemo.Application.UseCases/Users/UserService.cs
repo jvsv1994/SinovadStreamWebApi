@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Generic.Core.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using SinovadDemo.Application.Configuration;
@@ -9,6 +10,7 @@ using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Application.Validator;
 using SinovadDemo.Domain.Entities;
+using SinovadDemo.Domain.Enums;
 using SinovadDemo.Transversal.Common;
 using SinovadDemo.Transversal.Mapping;
 
@@ -308,6 +310,10 @@ namespace SinovadDemo.Application.UseCases.Users
                 mainProfile.FullName = dto.FirstName.Split(" ")[0];
                 mainProfile.Main = true;
                 appUser.Profiles.Add(mainProfile);
+                var userRole = new UserRole();
+                userRole.UserId = appUser.Id;
+                userRole.RoleId = (int)RoleType.Registered;
+                appUser.UserRoles.Add(userRole);
                 var result = await _userManager.CreateAsync(appUser, dto.Password);
                 var user = await _userManager.FindByNameAsync(dto.UserName);
                 var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);

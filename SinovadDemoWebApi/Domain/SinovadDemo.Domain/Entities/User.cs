@@ -22,7 +22,7 @@ namespace SinovadDemo.Domain.Entities
         public string? LastModifiedBy { get; set; }
         public bool? Deleted { get; set; }
 
-        public virtual ICollection<UserRole> UserRoles { get; set; }
+        public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
 
         [NotMapped]
         public virtual ICollection<String> RoleNames { get; set; }

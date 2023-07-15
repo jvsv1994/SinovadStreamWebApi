@@ -40,10 +40,10 @@
         Veryslow = 9
     }
 
-    public enum Rol
+    public enum RoleType
     {
         Administrator = 1,
-        User = 2
+        Registered = 2
     }
 
     public enum LogType
