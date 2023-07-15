@@ -5,7 +5,7 @@ namespace SinovadDemo.Application.Interface.UseCases
 {
     public interface IUserService
     {
-        Task<ResponsePagination<List<UserDto>>> GetAllAsync(int page, int take);
+        Task<ResponsePagination<List<UserDto>>> GetAllWithPaginationAsync(int page, int take);
         Task<Response<UserDto>> GetAsync(string username);
         Task<Response<UserDto>> GetAsync(int id);
         Task<Response<bool>> ResetPassword(ResetPasswordDto dto);

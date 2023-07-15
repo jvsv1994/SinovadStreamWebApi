@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.Interface.UseCases;
+using SinovadDemo.Application.UseCases.Users;
 using System.Security.Claims;
 
 namespace SinovadDemoWebApi.Controllers.v1
@@ -29,6 +30,17 @@ namespace SinovadDemoWebApi.Controllers.v1
                 return BadRequest();
             }
             var response = await _userService.Register(dto);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response.Message);
+        }
+
+        [HttpGet("GetAllWithPaginationAsync")]
+        public async Task<ActionResult> GetAllWithPaginationAsync(int page = 1, int take = 1000)
+        {
+            var response = await _userService.GetAllWithPaginationAsync(page, take);
             if (response.IsSuccess)
             {
                 return Ok(response);

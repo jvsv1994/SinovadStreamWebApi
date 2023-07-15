@@ -41,7 +41,7 @@ namespace SinovadDemo.Application.UseCases.Users
             _accessUserDtoValidator = accessUserDtoValidator;
         }
 
-        public async Task<ResponsePagination<List<UserDto>>> GetAllAsync(int page, int take)
+        public async Task<ResponsePagination<List<UserDto>>> GetAllWithPaginationAsync(int page, int take)
         {
             var response = new ResponsePagination<List<UserDto>>();
             try

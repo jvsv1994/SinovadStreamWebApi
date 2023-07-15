@@ -103,7 +103,7 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
         });
 
         modelBuilder.Entity<Role>().HasData(
-            new Role { Id = 1, Name = "Administrador", Enable = true});
+            new Role { Id = 1, Name = "Administrador", Enabled = true});
 
         modelBuilder.Entity<Catalog>(entity =>
         {

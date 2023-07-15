@@ -12,7 +12,7 @@ namespace Generic.Core.Models
         [NotMapped]
         public virtual ICollection<Menu> UnAssignedMenus { get; set; }
 
-        public bool Enable { get; set; }
+        public bool Enabled { get; set; }
         public DateTime? Created { get; set; }
         public string? CreatedBy { get; set; }
         public DateTime? LastModified { get; set; }
