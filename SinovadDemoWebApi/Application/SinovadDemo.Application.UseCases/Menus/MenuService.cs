@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Generic.Core.Models;
+using Microsoft.Extensions.Options;
 using SinovadDemo.Application.Configuration;
 using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.Interface.Persistence;
@@ -21,6 +22,82 @@ namespace SinovadDemo.Application.UseCases.Users
             _unitOfWork = unitOfWork;
             _logger = logger;
             _config = config;
+        }
+
+        public async Task<Response<List<MenuDto>>> GetAllAsync()
+        {
+            var response = new Response<List<MenuDto>>();
+            try
+            {
+                var result = await _unitOfWork.Menus.GetAllAsync();
+                response.Data = result.MapTo<List<MenuDto>>();
+                response.IsSuccess = true;
+                response.Message = "Successful";
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
+        public async Task<ResponsePagination<List<MenuDto>>> GetAllWithPaginationAsync(int page, int take)
+        {
+            var response = new ResponsePagination<List<MenuDto>>();
+            try
+            {
+                var result = await _unitOfWork.Menus.GetAllWithPaginationAsync(page, take, "Id", false);
+                response.Data = result.Items.MapTo<List<MenuDto>>();
+                response.PageNumber = page;
+                response.TotalPages = result.Pages;
+                response.TotalCount = result.Total;
+                response.IsSuccess = true;
+                response.Message = "Successful";
+            }catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
+        public Response<object> Create(MenuDto dto)
+        {
+            var response = new Response<object>();
+            try
+            {
+                var entity = dto.MapTo<Menu>();
+                _unitOfWork.Menus.Add(entity);
+                _unitOfWork.Save();
+                response.IsSuccess = true;
+                response.Message = "Successful";
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
+        public Response<object> Update(MenuDto dto)
+        {
+            var response = new Response<object>();
+            try
+            {
+                var entity = dto.MapTo<Menu>();
+                _unitOfWork.Menus.Update(entity);
+                _unitOfWork.Save();
+                response.IsSuccess = true;
+                response.Message = "Successful";
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return response;
         }
 
         public async Task<Response<List<MenuDto>>> GetListMenusByUser(int userId)

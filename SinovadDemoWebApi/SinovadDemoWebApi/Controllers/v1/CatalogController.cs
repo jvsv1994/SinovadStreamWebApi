@@ -85,6 +85,17 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message);
         }
 
+        [HttpGet("GetDetailsByCatalogAsync/{catalogId}")]
+        public async Task<ActionResult> GetDetailsByCatalogAsync(int catalogId)
+        {
+            var response = await _catalogService.GetDetailsByCatalogAsync(catalogId);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response.Message);
+        }
+
         [HttpGet("GetAllCatalogDetailsWithPaginationByCatalogIdsAsync")]
         public async Task<ActionResult> GetAllCatalogDetailsWithPaginationByCatalogIdsAsync([Required]string catalogIds, int page = 1, int take = 1000)
         {

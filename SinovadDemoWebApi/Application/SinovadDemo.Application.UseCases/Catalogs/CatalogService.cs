@@ -154,6 +154,24 @@ namespace SinovadDemo.Application.UseCases.Catalogs
             return response;
         }
 
+        public async Task<Response<List<CatalogDetailDto>>> GetDetailsByCatalogAsync(int catalogId)
+        {
+            var response = new Response<List<CatalogDetailDto>>();
+            try
+            {
+                var result = await _unitOfWork.CatalogDetails.GetAllByExpressionAsync(x => x.CatalogId == catalogId);
+                response.Data = result.MapTo<List<CatalogDetailDto>>();
+                response.IsSuccess = true;
+                response.Message = "Successful";
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _sharedService._tracer.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
         public async Task<ResponsePagination<List<CatalogDetailDto>>> GetAllCatalogDetailsWithPaginationByCatalogIdsAsync(string catalogIds, int page, int take)
         {
             var response = new ResponsePagination<List<CatalogDetailDto>>();
