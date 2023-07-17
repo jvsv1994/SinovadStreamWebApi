@@ -67,10 +67,4 @@
     <ProjectReference Include="..\Transversal\SinovadDemo.Transversal.Mapping\SinovadDemo.Transversal.Mapping.csproj" />
     <ProjectReference Include="..\Transversal\SinovadDemo.Transversal.Paging\SinovadDemo.Transversal.Paging.csproj" />
   </ItemGroup>
-	<ItemGroup>
-	  <None Update="wwwroot\**" CopyToOutputDirectory="PreserveNewest" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="wwwroot\app\data\logs\" />
-	</ItemGroup>
 </Project>

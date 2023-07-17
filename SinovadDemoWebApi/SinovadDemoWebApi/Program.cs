@@ -5,7 +5,6 @@ using SinovadDemo.Application.UseCases;
 using SinovadDemo.Infrastructure;
 using SinovadDemo.Persistence;
 using SinovadDemoWebApi.Modules.Authentication;
-using SinovadDemoWebApi.Modules.FileServer;
 using SinovadDemoWebApi.Modules.HealthCheck;
 using SinovadDemoWebApi.Modules.Identity;
 using SinovadDemoWebApi.Modules.Injection;
@@ -48,16 +47,17 @@ var app = builder.Build();
 if(app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
-        foreach (var description in provider.ApiVersionDescriptions)
-        {
-            c.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
-        }
-    });
 }
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+    foreach (var description in provider.ApiVersionDescriptions)
+    {
+        c.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
+    }
+});
 
 app.UseWatchDogExceptionLogger();
 
@@ -83,8 +83,6 @@ app.MapHealthChecks("/health", new HealthCheckOptions
     Predicate = _ => true,
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });
-app.UseDefaultFiles();
-app.AddFileServer();
 
 app.UseWatchDog(conf=> {
     conf.WatchPageUsername = builder.Configuration["WatchDog:WatchPageUsername"];
