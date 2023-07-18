@@ -18,6 +18,17 @@ namespace SinovadDemoWebApi.Controllers.v1
             _profileService = profileService;
         }
 
+        [HttpGet("GetAsync/{profileId}")]
+        public async Task<ActionResult> GetAsync(int profileId)
+        {
+            var response = await _profileService.GetAsync(profileId);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response.Message);
+        }
+
         [HttpGet("GetAllWithPaginationByUserAsync/{userId}")]
         public async Task<ActionResult> GetAll(int userId,[FromQuery] int page = 1,[FromQuery] int take = 1000)
         {

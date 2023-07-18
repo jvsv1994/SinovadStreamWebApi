@@ -2,21 +2,22 @@
 using SinovadDemo.Application.Builder;
 using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Application.Shared;
-using SinovadDemo.Application.UseCases.Users;
-using SinovadDemo.Application.UseCases.MediaServers;
-using SinovadDemo.Application.UseCases.Storages;
 using SinovadDemo.Application.UseCases.Catalogs;
+using SinovadDemo.Application.UseCases.Documents;
 using SinovadDemo.Application.UseCases.Episodes;
 using SinovadDemo.Application.UseCases.Genres;
+using SinovadDemo.Application.UseCases.MediaServers;
 using SinovadDemo.Application.UseCases.Movies;
 using SinovadDemo.Application.UseCases.Profiles;
+using SinovadDemo.Application.UseCases.Roles;
 using SinovadDemo.Application.UseCases.Seasons;
+using SinovadDemo.Application.UseCases.Storages;
 using SinovadDemo.Application.UseCases.TranscoderSetting;
 using SinovadDemo.Application.UseCases.TranscodingProcesses;
 using SinovadDemo.Application.UseCases.TvSeries;
+using SinovadDemo.Application.UseCases.Users;
 using SinovadDemo.Application.UseCases.Videos;
 using SinovadDemo.Application.Validator;
-using SinovadDemo.Application.UseCases.Roles;
 
 namespace SinovadDemo.Application.UseCases
 {
@@ -40,6 +41,7 @@ namespace SinovadDemo.Application.UseCases
             services.AddScoped<ITranscoderSettingsService, TranscoderSettingsService>();
             services.AddScoped<IVideoService, VideoService>();
             services.AddScoped<ITranscodingProcessService, TranscodingProcessService>();
+            services.AddScoped<IDocumentService, DocumentService>();
             services.AddScoped<SharedService>();
 
             //validators

@@ -15,6 +15,7 @@ namespace SinovadDemo.Application.Configuration
         public SmtpSettings SmtpSettings { get; set; }
         public JwtSettings JwtSettings { get; set; }
         public PaperTrailSettings PaperTrailSettings { get; set; }
+        public FtpSettings FtpSettings { get; set; }
 
     }
 }
