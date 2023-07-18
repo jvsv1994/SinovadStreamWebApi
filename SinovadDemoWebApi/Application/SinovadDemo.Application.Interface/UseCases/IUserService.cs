@@ -9,6 +9,7 @@ namespace SinovadDemo.Application.Interface.UseCases
         Task<Response<UserDto>> GetAsync(string username);
         Task<Response<UserDto>> GetAsync(int id);
         Task<Response<bool>> ResetPassword(ResetPasswordDto dto);
+        Task<Response<bool>> ChangePassword(ChangePasswordDto dto);
         Task<Response<bool>> ValidateResetPasswordToken(ValidateResetPasswordTokenDto dto);
         Task<Response<bool>> RecoverPassword(RecoverPasswordDto dto);
         Task<Response<string>> Login(AccessUserDto dto);

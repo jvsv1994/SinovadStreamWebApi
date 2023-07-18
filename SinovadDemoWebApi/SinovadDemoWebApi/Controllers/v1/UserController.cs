@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.Interface.UseCases;
-using SinovadDemo.Application.UseCases.Users;
 using System.Security.Claims;
 
 namespace SinovadDemoWebApi.Controllers.v1
@@ -154,6 +153,20 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message);
         }
 
+        [HttpPost("ChangePassword")]
+        public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
+        {
+            if (dto == null)
+            {
+                return BadRequest();
+            }
+            var response = await _userService.ChangePassword(dto);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response.Message);
+        }
 
     }
 

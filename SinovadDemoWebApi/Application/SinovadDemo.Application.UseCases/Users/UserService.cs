@@ -132,6 +132,32 @@ namespace SinovadDemo.Application.UseCases.Users
             return response;
         }
 
+        public async Task<Response<bool>> ChangePassword(ChangePasswordDto dto)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                var user = await _userManager.FindByIdAsync(dto.UserId.ToString());
+                var appUser = (User)user;
+                var res = await _userManager.ChangePasswordAsync(appUser, dto.CurrentPassword, dto.Password);
+                if (res.Succeeded)
+                {
+                    response.Data = true;
+                    response.IsSuccess = true;
+                    response.Message = "Successful";
+                }else
+                {
+                    response.Message = string.Join("\n", res.Errors.Select(err => err.Description));
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
         public async Task<Response<bool>> ValidateResetPasswordToken(ValidateResetPasswordTokenDto dto)
         {
             var response = new Response<bool>();
