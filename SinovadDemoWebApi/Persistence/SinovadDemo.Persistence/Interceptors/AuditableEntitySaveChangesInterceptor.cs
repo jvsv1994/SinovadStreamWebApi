@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Generic.Core.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using SinovadDemo.Domain.Common;
+using SinovadDemo.Domain.Entities;
 
 namespace SinovadDemo.Persistence.Interceptors
 {
@@ -23,6 +25,45 @@ namespace SinovadDemo.Persistence.Interceptors
             if (context == null) return;
 
             foreach (var entry in context.ChangeTracker.Entries<BaseAuditableEntity>())
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.CreatedBy = "system";
+                    entry.Entity.Created = DateTime.Now;
+                }
+                if (entry.State == EntityState.Modified)
+                {
+                    entry.Entity.LastModifiedBy = "system";
+                    entry.Entity.LastModified = DateTime.Now;
+                }
+            }
+            foreach (var entry in context.ChangeTracker.Entries<User>())
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.CreatedBy = "system";
+                    entry.Entity.Created = DateTime.Now;
+                }
+                if (entry.State == EntityState.Modified)
+                {
+                    entry.Entity.LastModifiedBy = "system";
+                    entry.Entity.LastModified = DateTime.Now;
+                }
+            }
+            foreach (var entry in context.ChangeTracker.Entries<Role>())
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.CreatedBy = "system";
+                    entry.Entity.Created = DateTime.Now;
+                }
+                if (entry.State == EntityState.Modified)
+                {
+                    entry.Entity.LastModifiedBy = "system";
+                    entry.Entity.LastModified = DateTime.Now;
+                }
+            }
+            foreach (var entry in context.ChangeTracker.Entries<UserRole>())
             {
                 if (entry.State == EntityState.Added)
                 {

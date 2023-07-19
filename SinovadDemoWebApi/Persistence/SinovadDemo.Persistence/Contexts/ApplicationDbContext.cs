@@ -74,44 +74,47 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
         modelBuilder.Entity<Menu>(entity =>
         {
             entity.ToTable("Menu");
+            entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
         });
 
         modelBuilder.Entity<Menu>().HasData(
-        new Menu { Id = 1, ParentId = 0, SortOrder = 1,Title="Media" },
-        new Menu { Id = 2, ParentId = 0, SortOrder = 2,Title = "Almacenamiento" },
-        new Menu { Id = 3, ParentId = 0, SortOrder = 3, Title = "Mantenimiento" },
-        new Menu { Id = 4, ParentId = 1, SortOrder = 1, Title = "Inicio",Path="/home",IconTypeCatalogId= (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-house", Enabled=true},
-        new Menu { Id = 5, ParentId = 1, SortOrder = 2, Title = "Peliculas",Path = "/movies", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-film", Enabled = true },
-        new Menu { Id = 6, ParentId = 1, SortOrder = 3, Title = "Series",Path = "/tvseries", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-tv", Enabled = true },
-        new Menu { Id = 7, ParentId = 2, SortOrder = 1, Title = "Almacenamiento", Path = "/storages", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-database", Enabled = true },
-        new Menu { Id = 8, ParentId = 2, SortOrder = 2, Title = "Transcodificacion", Path = "/transcoder", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-database", Enabled = true },
-        new Menu { Id = 9, ParentId = 3, SortOrder = 5, Title = "Peliculas", Path = "/movie-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-film", Enabled = true },
-        new Menu { Id = 10, ParentId = 3, SortOrder = 6, Title = "Series", Path = "/tvserie-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-tv", Enabled = true },
-        new Menu { Id = 11, ParentId = 3, SortOrder = 4, Title = "Generos", Path = "/genre-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-check", Enabled = true },
-        new Menu { Id = 12, ParentId = 3, SortOrder = 3, Title = "Roles", Path = "/role-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-check", Enabled = true },
-        new Menu { Id = 13, ParentId = 3, SortOrder = 2, Title = "Usuarios", Path = "/user-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-user", Enabled = true },
-        new Menu { Id = 14, ParentId = 3, SortOrder = 1, Title = "Menu", Path = "/menu-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-check", Enabled = true });
+        new Menu { Id = 1, ParentId = 0, SortOrder = 1,Title="Media",Guid=Guid.NewGuid()},
+        new Menu { Id = 2, ParentId = 0, SortOrder = 2,Title = "Almacenamiento", Guid = Guid.NewGuid() },
+        new Menu { Id = 3, ParentId = 0, SortOrder = 3, Title = "Mantenimiento" , Guid = Guid.NewGuid() },
+        new Menu { Id = 4, ParentId = 1, SortOrder = 1, Title = "Inicio",Path="/home",IconTypeCatalogId= (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-house", Enabled=true, Guid = Guid.NewGuid() },
+        new Menu { Id = 5, ParentId = 1, SortOrder = 2, Title = "Peliculas",Path = "/movies", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-film", Enabled = true, Guid = Guid.NewGuid() },
+        new Menu { Id = 6, ParentId = 1, SortOrder = 3, Title = "Series",Path = "/tvseries", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-tv", Enabled = true, Guid = Guid.NewGuid() },
+        new Menu { Id = 7, ParentId = 2, SortOrder = 1, Title = "Almacenamiento", Path = "/storages", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-database", Enabled = true, Guid = Guid.NewGuid() },
+        new Menu { Id = 8, ParentId = 2, SortOrder = 2, Title = "Transcodificacion", Path = "/transcoder", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-database", Enabled = true, Guid = Guid.NewGuid() },
+        new Menu { Id = 9, ParentId = 3, SortOrder = 5, Title = "Peliculas", Path = "/movie-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-film", Enabled = true, Guid = Guid.NewGuid() },
+        new Menu { Id = 10, ParentId = 3, SortOrder = 6, Title = "Series", Path = "/tvserie-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-tv", Enabled = true, Guid = Guid.NewGuid() },
+        new Menu { Id = 11, ParentId = 3, SortOrder = 4, Title = "Generos", Path = "/genre-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-check", Enabled = true, Guid = Guid.NewGuid() },
+        new Menu { Id = 12, ParentId = 3, SortOrder = 3, Title = "Roles", Path = "/role-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-check", Enabled = true, Guid = Guid.NewGuid() },
+        new Menu { Id = 13, ParentId = 3, SortOrder = 2, Title = "Usuarios", Path = "/user-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-user", Enabled = true, Guid = Guid.NewGuid() },
+        new Menu { Id = 14, ParentId = 3, SortOrder = 1, Title = "Menu", Path = "/menu-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-check", Enabled = true, Guid = Guid.NewGuid() });
 
         modelBuilder.Entity<User>(entity =>
         {
             entity.ToTable("User");
+            entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
         });
 
         modelBuilder.Entity<Role>(entity =>
         {
             entity.ToTable("Role");
+            entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
         });
 
         modelBuilder.Entity<Role>().HasData(
-            new Role { Id = 1, Name = "Administrador", Enabled = true},
-            new Role { Id = 2, Name = "Registrado", Enabled = true });
+            new Role { Id = 1, Name = "Administrador", Enabled = true, Guid = Guid.NewGuid() },
+            new Role { Id = 2, Name = "Registrado", Enabled = true, Guid = Guid.NewGuid() });
 
         modelBuilder.Entity<Catalog>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Catalog__3214EC275C8D2947");
 
             entity.ToTable("Catalog");
-
+            entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
             entity.Property(e => e.Id)
                 .ValueGeneratedNever();
             entity.Property(e => e.Name)
@@ -120,18 +123,18 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
         });
 
         modelBuilder.Entity<Catalog>().HasData(
-           new Catalog { Id = 1, Name = "Estado del Servidor Multimedia" },
-           new Catalog { Id = 2, Name = "Tipos de contenido Multimedia " },
-           new Catalog { Id = 3, Name = "Tipos de transmisión de Video" },
-           new Catalog { Id = 4, Name = "Preajuste del transcodificador" },
-           new Catalog { Id = 5, Name = "Tipo de Icono" });
+           new Catalog { Id = 1, Name = "Estado del Servidor Multimedia", Guid = Guid.NewGuid() },
+           new Catalog { Id = 2, Name = "Tipos de contenido Multimedia ", Guid = Guid.NewGuid() },
+           new Catalog { Id = 3, Name = "Tipos de transmisión de Video", Guid = Guid.NewGuid() },
+           new Catalog { Id = 4, Name = "Preajuste del transcodificador", Guid = Guid.NewGuid() },
+           new Catalog { Id = 5, Name = "Tipo de Icono", Guid = Guid.NewGuid() });
 
         modelBuilder.Entity<CatalogDetail>(entity =>
         {
             entity.HasKey(e => new { e.CatalogId, e.Id }).HasName("PK__CatalogD__5C6FE914EF292CEC");
 
             entity.ToTable("CatalogDetail");
-
+            entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
             entity.Property(e => e.Name)
                 .HasMaxLength(1000)
                 .IsUnicode(false);
@@ -146,28 +149,28 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
         });
 
         modelBuilder.Entity<CatalogDetail>().HasData(
-        new CatalogDetail { CatalogId = 1, Id = 1, Name = "Iniciado"},
-        new CatalogDetail { CatalogId = 1, Id = 2, Name = "Pausado" },
+        new CatalogDetail { CatalogId = 1, Id = 1, Name = "Iniciado", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 1, Id = 2, Name = "Pausado", Guid = Guid.NewGuid() },
 
-        new CatalogDetail { CatalogId = 2, Id = 1, Name = "Película" },
-        new CatalogDetail { CatalogId = 2, Id = 2, Name = "Serie de TV"},
+        new CatalogDetail { CatalogId = 2, Id = 1, Name = "Película", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 2, Id = 2, Name = "Serie de TV", Guid = Guid.NewGuid() },
 
-        new CatalogDetail { CatalogId = 3, Id = 1, Name = "Normal"},
-        new CatalogDetail { CatalogId = 3, Id = 2, Name = "MPEG-DASH" },
-        new CatalogDetail { CatalogId = 3, Id = 3, Name = "HLS" },
+        new CatalogDetail { CatalogId = 3, Id = 1, Name = "Normal", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 3, Id = 2, Name = "MPEG-DASH", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 3, Id = 3, Name = "HLS", Guid = Guid.NewGuid() },
 
-        new CatalogDetail { CatalogId = 4, Id = 1, Name = "ultrafast",TextValue= "ultrafast" },
-        new CatalogDetail { CatalogId = 4, Id = 2, Name = "superfast",TextValue= "superfast" },
-        new CatalogDetail { CatalogId = 4, Id = 3, Name = "veryfast", TextValue = "veryfast" },
-        new CatalogDetail { CatalogId = 4, Id = 4, Name = "faster", TextValue = "faster" },
-        new CatalogDetail { CatalogId = 4, Id = 5, Name = "fast", TextValue = "fast" },
-        new CatalogDetail { CatalogId = 4, Id = 6, Name = "medium", TextValue = "medium" },
-        new CatalogDetail { CatalogId = 4, Id = 7, Name = "slow", TextValue = "slow" },
-        new CatalogDetail { CatalogId = 4, Id = 8, Name = "slower", TextValue = "slower" },
-        new CatalogDetail { CatalogId = 4, Id = 9, Name = "veryslow", TextValue = "veryslow" },
+        new CatalogDetail { CatalogId = 4, Id = 1, Name = "ultrafast",TextValue= "ultrafast", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 4, Id = 2, Name = "superfast",TextValue= "superfast", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 4, Id = 3, Name = "veryfast", TextValue = "veryfast", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 4, Id = 4, Name = "faster", TextValue = "faster", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 4, Id = 5, Name = "fast", TextValue = "fast", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 4, Id = 6, Name = "medium", TextValue = "medium", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 4, Id = 7, Name = "slow", TextValue = "slow", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 4, Id = 8, Name = "slower", TextValue = "slower", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 4, Id = 9, Name = "veryslow", TextValue = "veryslow", Guid = Guid.NewGuid() },
 
-        new CatalogDetail { CatalogId = 5, Id = 1, Name = "Imagen" },
-        new CatalogDetail { CatalogId = 5, Id = 2, Name = "Font Awesome" });
+        new CatalogDetail { CatalogId = 5, Id = 1, Name = "Imagen", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 5, Id = 2, Name = "Font Awesome", Guid = Guid.NewGuid() });
 
         modelBuilder.Entity<IdentityUserClaim<int>>(entity =>
         {
@@ -263,6 +266,7 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
                 .HasForeignKey<TranscoderSettings>(d => d.MediaServerId)
              .OnDelete(DeleteBehavior.ClientSetNull)
              .HasConstraintName("FK_MediaServer_User_ID");
+            entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
         });
 
         modelBuilder.Entity<TranscoderSettings>(entity =>
@@ -273,6 +277,7 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
                 .HasForeignKey<TranscoderSettings>(d => d.MediaServerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TranscoderSettings_MediaServer_ID");
+            entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
         });
 
         modelBuilder.Entity<Storage>(entity =>
@@ -289,6 +294,7 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
                 .HasForeignKey(d => d.MediaServerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Storage_MediaServer_ID");
+            entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
         });
 
 
@@ -313,6 +319,7 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
                 .HasForeignKey(d => d.SeasonId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Episode_Season_ID");
+            entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
         });
 
         modelBuilder.Entity<Genre>(entity =>
@@ -324,6 +331,7 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .IsUnicode(false);
+            entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
         });
 
         modelBuilder.Entity<Movie>(entity =>
@@ -361,6 +369,7 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
             entity.Property(e => e.Title)
                 .HasMaxLength(255)
                 .IsUnicode(false);
+            entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
         });
 
         modelBuilder.Entity<MovieGenre>(entity =>
@@ -398,6 +407,7 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Profile_User_ID");
+            entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
         });
 
         modelBuilder.Entity<Season>(entity =>
@@ -417,6 +427,7 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
                 .HasForeignKey(d => d.TvSerieId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Season_TvSerie_ID");
+            entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
         });
 
 
@@ -425,7 +436,7 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
             entity.HasKey(e => e.Id).HasName("PK__Transcod__3214EC27DF052101");
 
             entity.ToTable("TranscodingProcess");
-
+            entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
         });
 
         modelBuilder.Entity<TvSerie>(entity =>
@@ -460,6 +471,7 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
             entity.Property(e => e.PosterPath)
                 .HasMaxLength(1000)
                 .IsUnicode(false);
+            entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
         });
 
         modelBuilder.Entity<TvSerieGenre>(entity =>
@@ -494,6 +506,7 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
             entity.Property(e => e.Title)
                 .HasMaxLength(1000)
                 .IsUnicode(false);
+            entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
         });
 
         modelBuilder.Entity<VideoProfile>(entity =>
