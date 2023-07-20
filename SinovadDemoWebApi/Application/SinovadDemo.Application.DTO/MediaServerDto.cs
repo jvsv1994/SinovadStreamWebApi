@@ -14,7 +14,8 @@ namespace SinovadDemo.Application.DTO
         public int StateCatalogId { get; set; }
         public int StateCatalogDetailId { get; set; }
         public string Url { get; set; }
-        public string Name { get; set; }
+        public string FamilyName { get; set; }
+        public string DeviceName { get; set; }
         public int Port { get; set; }
 
     }

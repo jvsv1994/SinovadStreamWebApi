@@ -12,6 +12,7 @@ namespace SinovadDemo.Application.DTO
         public string PhysicalPath { get; set; }
         public int MediaTypeCatalogId { get; set; }
         public int MediaTypeCatalogDetailId { get; set; }
+        public string Name { get; set; }
         public List<string> ListPaths { get; set; }
 
     }
