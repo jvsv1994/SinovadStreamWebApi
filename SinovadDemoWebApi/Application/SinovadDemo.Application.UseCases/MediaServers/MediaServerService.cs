@@ -8,7 +8,6 @@ using SinovadDemo.Transversal.Mapping;
 
 namespace SinovadDemo.Application.UseCases.MediaServers
 {
-
     public class MediaServerService : IMediaServerService
     {
         private IUnitOfWork _unitOfWork;
@@ -32,6 +31,23 @@ namespace SinovadDemo.Application.UseCases.MediaServers
                 response.Message = "Successful";
             }
             catch (Exception ex)
+            {
+                response.Message = ex.StackTrace;
+                _sharedService._tracer.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
+        public async Task<Response<List<MediaServerDto>>> GetAllByUserAsync(int userId)
+        {
+            var response = new Response<List<MediaServerDto>>();
+            try
+            {
+                var result = await _unitOfWork.MediaServers.GetAllByExpressionAsync(x => x.UserId == userId);
+                response.Data = result.MapTo<List<MediaServerDto>>();
+                response.IsSuccess = true;
+                response.Message = "Successful";
+            }catch (Exception ex)
             {
                 response.Message = ex.StackTrace;
                 _sharedService._tracer.LogError(ex.StackTrace);

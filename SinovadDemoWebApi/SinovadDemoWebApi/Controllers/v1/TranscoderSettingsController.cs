@@ -29,6 +29,17 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message);
         }
 
+        [HttpGet("GetByMediaServerGuidAsync/{mediaServerGuid}")]
+        public async Task<ActionResult> GetByMediaServerGuidAsync(string mediaServerGuid)
+        {
+            var response = await _transcoderSettingsService.GetByMediaServerGuidAsync(mediaServerGuid);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response.Message);
+        }
+
         [HttpGet("GetAllWithPaginationByMediaServerAsync/{mediaServerId}")]
         public async Task<ActionResult> GetAllWithPaginationByMediaServerAsync(int mediaServerId,[FromQuery] int page = 1,[FromQuery] int take = 1000)
         {

@@ -36,6 +36,24 @@ namespace SinovadDemo.Application.UseCases.TranscoderSetting
             }
             return response;
         }
+
+        public async Task<Response<TranscoderSettingsDto>> GetByMediaServerGuidAsync(string guid)
+        {
+            var response = new Response<TranscoderSettingsDto>();
+            try
+            {
+                var result = await _unitOfWork.TranscoderSettings.GetByExpressionAsync(x=>x.MediaServer.Guid.ToString()==guid);
+                response.Data = result.MapTo<TranscoderSettingsDto>();
+                response.IsSuccess = true;
+                response.Message = "Successful";
+            }catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _sharedService._tracer.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
         public async Task<Response<TranscoderSettingsDto>> GetByMediaServerAsync(int mediaServerId)
         {
             var response = new Response<TranscoderSettingsDto>();

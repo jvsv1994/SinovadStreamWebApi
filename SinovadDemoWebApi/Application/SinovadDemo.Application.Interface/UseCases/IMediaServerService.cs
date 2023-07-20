@@ -8,6 +8,7 @@ namespace SinovadDemo.Application.Interface.UseCases
     {
         Task<Response<MediaServerDto>> GetAsync(int id);
         Task<Response<MediaServerDto>> GetByUserAndIpAddressAsync(int userId, string ipAddress);
+        Task<Response<List<MediaServerDto>>> GetAllByUserAsync(int userId);
         Task<ResponsePagination<List<MediaServerDto>>> GetAllWithPaginationByUserAsync(int userId, int page, int take);
         Response<object> Create(MediaServerDto mediaServerDto);
         Response<object> CreateList(List<MediaServerDto> listMediaServerDto);

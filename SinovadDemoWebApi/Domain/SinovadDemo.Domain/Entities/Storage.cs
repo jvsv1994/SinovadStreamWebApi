@@ -8,6 +8,6 @@ public partial class Storage : BaseEntity
     public string PhysicalPath { get; set; }
     public int MediaTypeCatalogId { get; set; }
     public int MediaTypeCatalogDetailId { get; set; }
-
+    public string? Name { get; set; }
     public virtual MediaServer MediaServer { get; set; } = null!;
 }

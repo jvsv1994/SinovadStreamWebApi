@@ -30,6 +30,17 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message); ;
         }
 
+        [HttpGet("GetAllByUserAsync/{userId}")]
+        public async Task<ActionResult> GetAllByUserAsync(int userId)
+        {
+            var response = await _mediaServerService.GetAllByUserAsync(userId);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response.Message); ;
+        }
+
         [HttpGet("GetAllWithPaginationByUserAsync/{userId}")]
         public async Task<ActionResult> GetAllWithPaginationByUserAsync(int userId,[FromQuery] int page = 1,[FromQuery] int take = 1000)
         {

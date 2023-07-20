@@ -7,6 +7,7 @@ namespace SinovadDemo.Application.Interface.UseCases
     public interface ITranscoderSettingsService
     {
         Task<Response<TranscoderSettingsDto>> GetAsync(int id);
+        Task<Response<TranscoderSettingsDto>> GetByMediaServerGuidAsync(string guid);
         Task<Response<TranscoderSettingsDto>> GetByMediaServerAsync(int mediaServerId);
         Task<ResponsePagination<List<TranscoderSettingsDto>>> GetAllWithPaginationByMediaServerAsync(int mediaServerId, int page, int take);
         Response<object> Create(TranscoderSettingsDto transcoderSettingsDto);
