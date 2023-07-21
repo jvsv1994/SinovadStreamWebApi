@@ -38,16 +38,17 @@ namespace SinovadDemo.Application.UseCases.MediaServers
             return response;
         }
 
-        public async Task<Response<List<MediaServerDto>>> GetAllByUserAsync(int userId)
+        public async Task<Response<MediaServerDto>> GetByGuidAsync(string guid)
         {
-            var response = new Response<List<MediaServerDto>>();
+            var response = new Response<MediaServerDto>();
             try
             {
-                var result = await _unitOfWork.MediaServers.GetAllByExpressionAsync(x => x.UserId == userId);
-                response.Data = result.MapTo<List<MediaServerDto>>();
+                var result = await _unitOfWork.MediaServers.GetByExpressionAsync(x => x.Guid.ToString()==guid);
+                response.Data = result.MapTo<MediaServerDto>();
                 response.IsSuccess = true;
                 response.Message = "Successful";
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 response.Message = ex.StackTrace;
                 _sharedService._tracer.LogError(ex.StackTrace);
@@ -66,6 +67,23 @@ namespace SinovadDemo.Application.UseCases.MediaServers
                 response.Message = "Successful";
             }
             catch (Exception ex)
+            {
+                response.Message = ex.StackTrace;
+                _sharedService._tracer.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
+        public async Task<Response<List<MediaServerDto>>> GetAllByUserAsync(int userId)
+        {
+            var response = new Response<List<MediaServerDto>>();
+            try
+            {
+                var result = await _unitOfWork.MediaServers.GetAllByExpressionAsync(x => x.UserId == userId);
+                response.Data = result.MapTo<List<MediaServerDto>>();
+                response.IsSuccess = true;
+                response.Message = "Successful";
+            }catch (Exception ex)
             {
                 response.Message = ex.StackTrace;
                 _sharedService._tracer.LogError(ex.StackTrace);

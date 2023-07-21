@@ -19,6 +19,17 @@ namespace SinovadDemoWebApi.Controllers.v1
             _mediaServerService = mediaServerService;
         }
 
+        [HttpGet("GetByGuidAsync/{guid}")]
+        public async Task<ActionResult> Get([Required] string guid)
+        {
+            var response = await _mediaServerService.GetByGuidAsync(guid);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response.Message); ;
+        }
+
         [HttpGet("GetByUserAndIpAddressAsync")]
         public async Task<ActionResult> Get([Required] int userId, [Required] string ipAddress)
         {
