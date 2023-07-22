@@ -25,7 +25,7 @@ namespace SinovadDemo.Persistence.Repositories
                 .Join(_context.MediaServers, storage => storage.storage.MediaServerId, mediaServer => mediaServer.Id, (storage, mediaServer) =>
                 new VideoDto
                 {
-                    UserId = mediaServer.UserId,
+                    UserId = (int)mediaServer.UserId,
                     MediaServerId = mediaServer.Id,
                     MediaServerUrl=mediaServer.Url,
                     MediaType = (MediaType)storage.storage.MediaTypeCatalogDetailId,

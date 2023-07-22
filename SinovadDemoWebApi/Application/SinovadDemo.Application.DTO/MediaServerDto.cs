@@ -10,6 +10,8 @@ namespace SinovadDemo.Application.DTO
         public int Id { get; set; }
         public Guid Guid { get; set; }
         public string IpAddress { get; set; }
+        public string PublicIpAddress { get; set; }
+        public string SecurityIdentifier { get; set; }
         public int UserId { get; set; }
         public int StateCatalogId { get; set; }
         public int StateCatalogDetailId { get; set; }
