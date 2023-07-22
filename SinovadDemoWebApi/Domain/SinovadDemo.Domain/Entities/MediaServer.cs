@@ -8,7 +8,7 @@ public class MediaServer: BaseEntity
     public int? UserId { get; set; }
     public int StateCatalogId { get; set; }
     public int StateCatalogDetailId { get; set; }
-    public string FamilyName { get; set; }
+    public string? FamilyName { get; set; }
     public string DeviceName { get; set; }
     public int Port { get; set; }
     public string Url { get; set; }
