@@ -19,8 +19,20 @@ namespace SinovadDemoWebApi.Controllers.v1
             _mediaServerService = mediaServerService;
         }
 
+        [HttpGet("GetBySecurityIdentifierAsync/{sid}")]
+        [AllowAnonymous]
+        public async Task<ActionResult> GetBySecurityIdentifierAsync([Required] string sid)
+        {
+            var response = await _mediaServerService.GetBySecurityIdentifierAsync(sid);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response.Message); ;
+        }
+
         [HttpGet("GetByGuidAsync/{guid}")]
-        public async Task<ActionResult> Get([Required] string guid)
+        public async Task<ActionResult> GetByGuidAsync([Required] string guid)
         {
             var response = await _mediaServerService.GetByGuidAsync(guid);
             if (response.IsSuccess)
@@ -63,6 +75,7 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message); ;
         }
 
+        [AllowAnonymous]
         [HttpPost("Create")]
         public ActionResult Create([FromBody] MediaServerDto mediaServerDto)
         {

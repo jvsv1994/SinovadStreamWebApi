@@ -7,6 +7,7 @@ namespace SinovadDemo.Application.Interface.UseCases
     public interface IMediaServerService
     {
         Task<Response<MediaServerDto>> GetAsync(int id);
+        Task<Response<MediaServerDto>> GetBySecurityIdentifierAsync(string securityIdentifier);
         Task<Response<MediaServerDto>> GetByGuidAsync(string guid);
         Task<Response<MediaServerDto>> GetByUserAndIpAddressAsync(int userId, string ipAddress);
         Task<Response<List<MediaServerDto>>> GetAllByUserAsync(int userId);

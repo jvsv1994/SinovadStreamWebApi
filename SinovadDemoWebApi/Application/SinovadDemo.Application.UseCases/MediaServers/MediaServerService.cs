@@ -56,6 +56,24 @@ namespace SinovadDemo.Application.UseCases.MediaServers
             return response;
         }
 
+        public async Task<Response<MediaServerDto>> GetBySecurityIdentifierAsync(string securityIdentifier)
+        {
+            var response = new Response<MediaServerDto>();
+            try
+            {
+                var result = await _unitOfWork.MediaServers.GetByExpressionAsync(x => x.SecurityIdentifier.ToString() == securityIdentifier);
+                response.Data = result.MapTo<MediaServerDto>();
+                response.IsSuccess = true;
+                response.Message = "Successful";
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.StackTrace;
+                _sharedService._tracer.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
         public async Task<Response<MediaServerDto>> GetByUserAndIpAddressAsync(int userId, string ipAddress)
         {
             var response = new Response<MediaServerDto>();
