@@ -101,6 +101,7 @@ namespace SinovadDemo.Application.UseCases.Users
                     var user = await _unitOfWork.Users.GetByExpressionAsync(x => x.Id == mediaServer.UserId);
                     if(user!=null)
                     {
+                        user.MediaServers = null;
                         response.Data = user.MapTo<UserDto>();
                         response.Message = "Successful";
                     }
