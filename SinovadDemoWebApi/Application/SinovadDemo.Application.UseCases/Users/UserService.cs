@@ -1,6 +1,7 @@
 ﻿using Generic.Core.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using MySqlX.XDevAPI.Common;
 using Newtonsoft.Json;
 using SinovadDemo.Application.Configuration;
 using SinovadDemo.Application.DTO;
@@ -73,12 +74,39 @@ namespace SinovadDemo.Application.UseCases.Users
             try
             {
                 _logger.LogInformation("Getting user data from " + username);
-                var result = await _unitOfWork.Users.GetByExpressionAsync(x => x.UserName == username);
-                response.Data = result.MapTo<UserDto>();
+                var user = await _unitOfWork.Users.GetByExpressionAsync(x => x.UserName == username);
+                if(user!=null)
+                {
+                    response.Data = user.MapTo<UserDto>();
+                    response.Message = "Successful";
+                }
                 response.IsSuccess = true;
-                response.Message = "Successful";
             }
             catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
+        public async Task<Response<UserDto>> GetUserByMediaServerSecurityIdentifier(string securityIdentifier)
+        {
+            var response = new Response<UserDto>();
+            try
+            {
+                var mediaServer = await _unitOfWork.MediaServers.GetByExpressionAsync(x => x.SecurityIdentifier == securityIdentifier);
+                if(mediaServer!=null)
+                {
+                    var user = await _unitOfWork.Users.GetByExpressionAsync(x => x.Id == mediaServer.UserId);
+                    if(user!=null)
+                    {
+                        response.Data = user.MapTo<UserDto>();
+                        response.Message = "Successful";
+                    }
+                }
+                response.IsSuccess = true;
+            }catch (Exception ex)
             {
                 response.Message = ex.Message;
                 _logger.LogError(ex.StackTrace);

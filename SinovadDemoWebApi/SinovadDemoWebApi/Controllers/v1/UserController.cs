@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.Interface.UseCases;
+using SinovadDemo.Transversal.Common;
 using System.Security.Claims;
 
 namespace SinovadDemoWebApi.Controllers.v1
@@ -51,14 +52,24 @@ namespace SinovadDemoWebApi.Controllers.v1
         [HttpGet("GetUserData")]
         public async Task<ActionResult> GetUserData()
         {
-            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
-            if (claim == null)
+            Response<UserDto> response = null;
+            var claimUser = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (claimUser != null)
+            {
+                response = await _userService.GetAsync(claimUser.Value);
+            }else
+            {
+                var claimSID = User.FindFirst(ClaimTypes.Sid);
+                if(claimSID != null)
+                {
+                    response = await _userService.GetUserByMediaServerSecurityIdentifier(claimSID.Value);
+                }
+            }
+            if (response==null)
             {
                 return BadRequest();
             }
-            var username = claim.Value;
-            var response = await _userService.GetAsync(username);
-            if (response.IsSuccess)
+            if (response.IsSuccess && response.Data!=null)
             {
                 return Ok(response);
             }
