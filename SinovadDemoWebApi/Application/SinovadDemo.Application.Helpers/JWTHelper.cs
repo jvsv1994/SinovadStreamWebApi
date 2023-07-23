@@ -39,5 +39,23 @@ namespace SinovadDemo.Application.Helpers
             return tokenHandler.WriteToken(createdToken);
         }
 
+        public string CreateTokenWithSecurityIdentifier(string securityIdentifier)
+        {
+            var claims = new ClaimsIdentity();
+            claims.AddClaim(new Claim(ClaimTypes.Sid, securityIdentifier));
+
+            var tokenDescription = new SecurityTokenDescriptor()
+            {
+                Subject = claims,
+                Expires = DateTime.UtcNow.AddDays(30),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(_secret), SecurityAlgorithms.HmacSha256Signature),
+                Issuer = _issuer,
+                Audience = _audience
+            };
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var createdToken = tokenHandler.CreateToken(tokenDescription);
+            return tokenHandler.WriteToken(createdToken);
+        }
+
     }
 }

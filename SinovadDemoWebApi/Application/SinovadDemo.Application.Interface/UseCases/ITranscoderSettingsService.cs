@@ -1,6 +1,7 @@
 ﻿using SinovadDemo.Transversal.Collection;
 using SinovadDemo.Transversal.Common;
 using SinovadDemo.Application.DTO;
+using System.Threading.Tasks;
 
 namespace SinovadDemo.Application.Interface.UseCases
 {
@@ -13,6 +14,7 @@ namespace SinovadDemo.Application.Interface.UseCases
         Response<object> Create(TranscoderSettingsDto transcoderSettingsDto);
         Response<object> CreateList(List<TranscoderSettingsDto> listTranscoderSettingsDto);
         Response<object> Update(TranscoderSettingsDto transcoderSettingsDto);
+        Task<Response<TranscoderSettingsDto>> Save(TranscoderSettingsDto transcoderSettingsDto);
         Response<object> Delete(int id);
         Response<object> DeleteList(string ids);
     }

@@ -297,6 +297,61 @@ namespace SinovadDemo.Application.UseCases.Users
             return response;
         }
 
+        public async Task<Response<AuthenticationUserResponseDto>> ValidateUser(AccessUserDto dto)
+        {
+            var response = new Response<AuthenticationUserResponseDto>();
+            try
+            {
+                var validation = _accessUserDtoValidator.Validate(dto);
+                if (!validation.IsValid)
+                {
+                    response.Message = "Validation errors";
+                    response.Errors = validation.Errors;
+                }
+                else
+                {
+                    var user = await _unitOfWork.Users.GetByExpressionAsync(u => u.UserName == dto.UserName);
+                    if (user == null)
+                    {
+                        response.Message = "Invalid user";
+                    }else
+                    {
+                        var res = await _signInManager.CheckPasswordSignInAsync(user, dto.Password, true);
+                        if (res.Succeeded)
+                        {
+                            if (user.Active)
+                            {
+                                var data = new AuthenticationUserResponseDto();
+                                data.User= user.MapTo<UserDto>();
+                                var jwtHelper = new JWTHelper(_config.Value.JwtSettings.Secret, _config.Value.JwtSettings.Issuer, _config.Value.JwtSettings.Audience);
+                                var token = jwtHelper.CreateToken(dto.UserName);
+                                data.ApiToken = token;
+                                response.Data = data;
+                            }else{
+                                response.Message = "Inactive user, please confirm your email";
+                            }
+                        }else
+                        {
+                            if (res.IsLockedOut)
+                            {
+                                response.Message = "The user has exceeded the maximum number of attempts, please try again later";
+                            }
+                            else
+                            {
+                                response.Message = "Invalid access";
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
         public async Task<Response<bool>> ValidateConfirmEmailToken(ValidateConfirmEmailTokenDto dto)
         {
             var response = new Response<bool>();

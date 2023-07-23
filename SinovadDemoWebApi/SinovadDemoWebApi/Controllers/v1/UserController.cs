@@ -65,6 +65,21 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message);
         }
 
+        [HttpGet("GetByIdAsync/{id}")]
+        public async Task<ActionResult> GetByIdAsync([FromRoute] int id)
+        {
+            if (id == null)
+            {
+                return BadRequest();
+            }
+            var response = await _userService.GetAsync(id);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response.Message);
+        }
+
         [HttpPost("ValidateConfirmEmailToken")]
         [AllowAnonymous]
         public async Task<ActionResult> ValidateConfirmEmailToken([FromBody] ValidateConfirmEmailTokenDto dto)
@@ -167,6 +182,7 @@ namespace SinovadDemoWebApi.Controllers.v1
             }
             return BadRequest(response.Message);
         }
+
 
     }
 

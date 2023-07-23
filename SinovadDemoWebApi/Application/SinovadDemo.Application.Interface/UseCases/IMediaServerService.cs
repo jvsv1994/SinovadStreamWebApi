@@ -8,6 +8,7 @@ namespace SinovadDemo.Application.Interface.UseCases
     {
         Task<Response<MediaServerDto>> GetAsync(int id);
         Task<Response<MediaServerDto>> GetBySecurityIdentifierAsync(string securityIdentifier);
+        Task<Response<string>> AuthenticateBySecurityIdentifierAsync(string securityIdentifier);
         Task<Response<MediaServerDto>> GetByGuidAsync(string guid);
         Task<Response<MediaServerDto>> GetByUserAndIpAddressAsync(int userId, string ipAddress);
         Task<Response<List<MediaServerDto>>> GetAllByUserAsync(int userId);
@@ -15,6 +16,7 @@ namespace SinovadDemo.Application.Interface.UseCases
         Response<object> Create(MediaServerDto mediaServerDto);
         Response<object> CreateList(List<MediaServerDto> listMediaServerDto);
         Response<object> Update(MediaServerDto mediaServerDto);
+        Task<Response<MediaServerDto>> Save(MediaServerDto mediaServerDto);
         Response<object> Delete(int id);
         Response<object> DeleteList(string ids);
     }

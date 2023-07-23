@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.Interface.UseCases;
+using SinovadDemo.Application.UseCases.MediaServers;
 
 namespace SinovadDemoWebApi.Controllers.v1
 {
@@ -52,9 +53,9 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpPost("Create")]
-        public ActionResult Create([FromBody] TranscoderSettingsDto seasonDto)
+        public ActionResult Create([FromBody] TranscoderSettingsDto transcoderSettingsDto)
         {
-            var response = _transcoderSettingsService.Create(seasonDto);
+            var response = _transcoderSettingsService.Create(transcoderSettingsDto);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -74,9 +75,24 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpPut("Update")]
-        public ActionResult Update([FromBody] TranscoderSettingsDto seasonDto)
+        public ActionResult Update([FromBody] TranscoderSettingsDto transcoderSettingsDto)
         {
-            var response = _transcoderSettingsService.Update(seasonDto);
+            var response = _transcoderSettingsService.Update(transcoderSettingsDto);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response.Message);
+        }
+
+        [HttpPut("Save")]
+        public async Task<ActionResult> Save([FromBody] TranscoderSettingsDto transcoderSettingsDto)
+        {
+            if (transcoderSettingsDto == null)
+            {
+                return BadRequest();
+            }
+            var response = await _transcoderSettingsService.Save(transcoderSettingsDto);
             if (response.IsSuccess)
             {
                 return Ok(response);

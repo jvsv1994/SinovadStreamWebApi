@@ -46,7 +46,7 @@ namespace SinovadDemo.Persistence.Repositories
 
         public async Task<TEntity> GetByExpressionAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         {
-            return await _table.AsNoTracking().SingleOrDefaultAsync(predicate, cancellationToken);
+            return await _table.SingleOrDefaultAsync(predicate, cancellationToken);
         }
 
         public IEnumerable<TEntity> GetAll()
@@ -83,14 +83,16 @@ namespace SinovadDemo.Persistence.Repositories
             return await _table.AsNoTracking().Where(predicate).GetPagedAsync(page, take, orderByColumnName, isAscending, cancellationToken);
         }
 
-        public void Add(TEntity data)
+        public TEntity Add(TEntity data)
         {
-            _table.Add(data);
+            var entry = _table.Add(data);
+            return entry.Entity;
         }
 
-        public async Task AddAsync(TEntity data, CancellationToken cancellationToken = default)
+        public async Task<TEntity> AddAsync(TEntity data, CancellationToken cancellationToken = default)
         {
-            await _table.AddAsync(data, cancellationToken);
+            var entry= await _table.AddAsync(data, cancellationToken);
+            return entry.Entity;
         }
 
 

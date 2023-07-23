@@ -152,6 +152,32 @@ namespace SinovadDemo.Application.UseCases.TranscoderSetting
             return response;
         }
 
+        public async Task<Response<TranscoderSettingsDto>> Save(TranscoderSettingsDto transcoderSettingsDto)
+        {
+            var response = new Response<TranscoderSettingsDto>();
+            try
+            {
+                var ts = await _unitOfWork.TranscoderSettings.GetByExpressionAsync(x => x.MediaServerId == transcoderSettingsDto.MediaServerId);
+                if (ts != null)
+                { 
+                    _unitOfWork.TranscoderSettings.Update(ts);
+                }else
+                {
+                    var transcoderSettings = transcoderSettingsDto.MapTo<TranscoderSettings>();
+                    ts = await _unitOfWork.TranscoderSettings.AddAsync(transcoderSettings);
+                }
+                await _unitOfWork.SaveAsync();
+                response.Data = ts.MapTo<TranscoderSettingsDto>();
+                response.IsSuccess = true;
+                response.Message = "Successful";
+            }catch (Exception ex)
+            {
+                response.Message = ex.StackTrace;
+                _sharedService._tracer.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
         public Response<object> Delete(int id)
         {
             var response = new Response<object>();

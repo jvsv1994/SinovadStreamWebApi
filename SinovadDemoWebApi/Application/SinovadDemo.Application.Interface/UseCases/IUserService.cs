@@ -12,6 +12,7 @@ namespace SinovadDemo.Application.Interface.UseCases
         Task<Response<bool>> ChangePassword(ChangePasswordDto dto);
         Task<Response<bool>> ValidateResetPasswordToken(ValidateResetPasswordTokenDto dto);
         Task<Response<bool>> RecoverPassword(RecoverPasswordDto dto);
+        Task<Response<AuthenticationUserResponseDto>> ValidateUser(AccessUserDto dto);
         Task<Response<string>> Login(AccessUserDto dto);
         Task<Response<bool>> ValidateConfirmEmailToken(ValidateConfirmEmailTokenDto dto);
         Task<Response<bool>> Register(RegisterUserDto dto);

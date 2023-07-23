@@ -20,7 +20,6 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpGet("GetBySecurityIdentifierAsync/{sid}")]
-        [AllowAnonymous]
         public async Task<ActionResult> GetBySecurityIdentifierAsync([Required] string sid)
         {
             var response = await _mediaServerService.GetBySecurityIdentifierAsync(sid);
@@ -75,7 +74,6 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message); ;
         }
 
-        [AllowAnonymous]
         [HttpPost("Create")]
         public ActionResult Create([FromBody] MediaServerDto mediaServerDto)
         {
@@ -114,6 +112,21 @@ namespace SinovadDemoWebApi.Controllers.v1
                 return BadRequest();
             }
             var response = _mediaServerService.Update(mediaServerDto);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response.Message);
+        }
+
+        [HttpPut("Save")]
+        public async Task<ActionResult> Save([FromBody] MediaServerDto mediaServerDto)
+        {
+            if (mediaServerDto == null)
+            {
+                return BadRequest();
+            }
+            var response = await _mediaServerService.Save(mediaServerDto);
             if (response.IsSuccess)
             {
                 return Ok(response);
