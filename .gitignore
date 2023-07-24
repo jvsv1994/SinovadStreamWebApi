@@ -95,3 +95,9 @@
 /SinovadDemoWebApi/obj
 /SinovadDemoWebApi/Test/SinovadDemo.Application.Test/appsettings.json
 /SinovadDemoWebApi/SinovadDemoWebApi/appsettings.json
+/SinovadDemoWebApi/Infrastructure/SinovadDemo.Infrastructure/bin
+/SinovadDemoWebApi/Infrastructure/SinovadDemo.Infrastructure/obj
+/SinovadDemoWebApi/Service/SinovadDemoWebApi/.config
+/SinovadDemoWebApi/Service/SinovadDemoWebApi/bin
+/SinovadDemoWebApi/Service/SinovadDemoWebApi/obj
+/SinovadDemoWebApi/Service/SinovadDemoWebApi/appsettings.json

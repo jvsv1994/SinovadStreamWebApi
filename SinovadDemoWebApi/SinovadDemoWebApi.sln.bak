@@ -3,19 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SinovadDemoWebApi", "SinovadDemoWebApi\SinovadDemoWebApi.csproj", "{E39A4416-740B-4C53-8A50-90B61D4BE44E}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{70DDF799-B0E9-43AA-AC12-D6CECA4E3F83}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Transversal", "Transversal", "{D858493D-F1C2-4CFC-A474-51226B46F78E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{236BB10E-4455-4220-8A10-9ECD5EAA7BC9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Service", "Service", "{C1C130DD-FFD2-4885-A1F0-F9939D4F6A78}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{293CE400-1108-4747-9769-3B4F7A771BA2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SinovadDemo.Domain", "Domain\SinovadDemo.Domain.Entity\SinovadDemo.Domain.csproj", "{E044F465-28A0-4E43-AB47-389D08EABEB4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SinovadDemo.Domain", "Domain\SinovadDemo.Domain\SinovadDemo.Domain.csproj", "{E044F465-28A0-4E43-AB47-389D08EABEB4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SinovadDemo.Application.DTO", "Application\SinovadDemo.Application.DTO\SinovadDemo.Application.DTO.csproj", "{648B4356-7732-4948-BB37-CF16A72F45C2}"
 EndProject
@@ -31,8 +27,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SinovadDemo.Application.Int
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SinovadDemo.Application.Builder", "Application\SinovadDemo.Application.Builder\SinovadDemo.Application.Builder.csproj", "{73FE2EC6-6CE7-4D68-8E5E-D28E7995BB77}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SinovadDemo.Application.Enums", "Application\SinovadDemo.Application.Enums\SinovadDemo.Application.Enums.csproj", "{B1395A12-7022-4194-913D-AB5F5E96A512}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SinovadDemo.Application.Helpers", "Application\SinovadDemo.Application.Helpers\SinovadDemo.Application.Helpers.csproj", "{8B1E61C0-C307-4A1C-8E78-A1248937CB62}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SinovadDemo.Application.Encryption", "Application\SinovadDemo.Application.Encryption\SinovadDemo.Application.Encryption.csproj", "{724AFF6B-7726-410C-A88F-AEB45F46620B}"
@@ -42,11 +36,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SinovadDemo.Application.Shared", "Application\SinovadDemo.Application.Shared\SinovadDemo.Application.Shared.csproj", "{E69C1405-6D78-49A2-9E9B-3A350C5BF2C7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SinovadDemo.Transversal.Common", "Transversal\SinovadDemo.Transversal.Common\SinovadDemo.Transversal.Common.csproj", "{F4D36D64-5F2E-486D-A641-7239FC169546}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{780DE780-3C60-4595-A658-CEE95AA5E5A6}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SinovadDemo.Application.Validator", "Application\SinovadDemo.Application.Validator\SinovadDemo.Application.Validator.csproj", "{9547A7F6-51A7-43D9-984C-64B55779373B}"
 EndProject
@@ -60,16 +49,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SinovadDemo.Persistence", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SinovadDemo.Application.UseCases", "Application\SinovadDemo.Application.UseCases\SinovadDemo.Application.UseCases.csproj", "{FA03FE90-08EC-4AB4-BD34-C4A599516DFE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Service", "Service", "{17375297-CFF1-462C-ABD0-B7FC5516EC3C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SinovadDemoWebApi", "Service\SinovadDemoWebApi\SinovadDemoWebApi.csproj", "{D04E9E56-6BD0-41E6-BFC6-2452C9175383}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E39A4416-740B-4C53-8A50-90B61D4BE44E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E39A4416-740B-4C53-8A50-90B61D4BE44E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E39A4416-740B-4C53-8A50-90B61D4BE44E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E39A4416-740B-4C53-8A50-90B61D4BE44E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E044F465-28A0-4E43-AB47-389D08EABEB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E044F465-28A0-4E43-AB47-389D08EABEB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E044F465-28A0-4E43-AB47-389D08EABEB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -102,10 +91,6 @@ Global
 		{73FE2EC6-6CE7-4D68-8E5E-D28E7995BB77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73FE2EC6-6CE7-4D68-8E5E-D28E7995BB77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{73FE2EC6-6CE7-4D68-8E5E-D28E7995BB77}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B1395A12-7022-4194-913D-AB5F5E96A512}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B1395A12-7022-4194-913D-AB5F5E96A512}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B1395A12-7022-4194-913D-AB5F5E96A512}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B1395A12-7022-4194-913D-AB5F5E96A512}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8B1E61C0-C307-4A1C-8E78-A1248937CB62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8B1E61C0-C307-4A1C-8E78-A1248937CB62}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B1E61C0-C307-4A1C-8E78-A1248937CB62}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -142,6 +127,14 @@ Global
 		{FA03FE90-08EC-4AB4-BD34-C4A599516DFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA03FE90-08EC-4AB4-BD34-C4A599516DFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA03FE90-08EC-4AB4-BD34-C4A599516DFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34F4172D-C918-4292-8671-6A42C011F7CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34F4172D-C918-4292-8671-6A42C011F7CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34F4172D-C918-4292-8671-6A42C011F7CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34F4172D-C918-4292-8671-6A42C011F7CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D04E9E56-6BD0-41E6-BFC6-2452C9175383}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D04E9E56-6BD0-41E6-BFC6-2452C9175383}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D04E9E56-6BD0-41E6-BFC6-2452C9175383}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D04E9E56-6BD0-41E6-BFC6-2452C9175383}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -155,7 +148,6 @@ Global
 		{E7B470E9-69EB-40D8-B1BC-1DCC62F0D852} = {D858493D-F1C2-4CFC-A474-51226B46F78E}
 		{0EEFD3D3-DE59-4736-BA0E-065DB7FE9CFB} = {70DDF799-B0E9-43AA-AC12-D6CECA4E3F83}
 		{73FE2EC6-6CE7-4D68-8E5E-D28E7995BB77} = {70DDF799-B0E9-43AA-AC12-D6CECA4E3F83}
-		{B1395A12-7022-4194-913D-AB5F5E96A512} = {70DDF799-B0E9-43AA-AC12-D6CECA4E3F83}
 		{8B1E61C0-C307-4A1C-8E78-A1248937CB62} = {70DDF799-B0E9-43AA-AC12-D6CECA4E3F83}
 		{724AFF6B-7726-410C-A88F-AEB45F46620B} = {70DDF799-B0E9-43AA-AC12-D6CECA4E3F83}
 		{FC194777-726A-473D-8B0C-7199EB842AE7} = {70DDF799-B0E9-43AA-AC12-D6CECA4E3F83}
@@ -165,6 +157,8 @@ Global
 		{F3EF918D-3D70-46EE-90E2-AF87392F5E8C} = {646D73A8-44D1-4F89-8066-0E81D3A5F32D}
 		{00E040B4-3577-4211-8D26-CF33465BF47A} = {B313A752-63E2-471E-B871-AE3E4C9A54F3}
 		{FA03FE90-08EC-4AB4-BD34-C4A599516DFE} = {70DDF799-B0E9-43AA-AC12-D6CECA4E3F83}
+		{34F4172D-C918-4292-8671-6A42C011F7CF} = {236BB10E-4455-4220-8A10-9ECD5EAA7BC9}
+		{D04E9E56-6BD0-41E6-BFC6-2452C9175383} = {17375297-CFF1-462C-ABD0-B7FC5516EC3C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2299EF94-63BA-420B-8B15-DF8F61AB753D}

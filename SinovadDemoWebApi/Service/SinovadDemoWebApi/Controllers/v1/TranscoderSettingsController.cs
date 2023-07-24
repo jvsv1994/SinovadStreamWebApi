@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.Interface.UseCases;
-using SinovadDemo.Application.UseCases.MediaServers;
 
 namespace SinovadDemoWebApi.Controllers.v1
 {

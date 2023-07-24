@@ -15,10 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Application\SinovadDemo.Application.Configuration\SinovadDemo.Application.Configuration.csproj" />
-    <ProjectReference Include="..\Application\SinovadDemo.Application.DTO\SinovadDemo.Application.DTO.csproj" />
-    <ProjectReference Include="..\Application\SinovadDemo.Application.Interface\SinovadDemo.Application.Interface.csproj" />
-    <ProjectReference Include="..\Application\SinovadDemo.Application.Shared\SinovadDemo.Application.Shared.csproj" />
+    <ProjectReference Include="..\..\Application\SinovadDemo.Application.Configuration\SinovadDemo.Application.Configuration.csproj" />
+    <ProjectReference Include="..\..\Application\SinovadDemo.Application.DTO\SinovadDemo.Application.DTO.csproj" />
+    <ProjectReference Include="..\..\Application\SinovadDemo.Application.Interface\SinovadDemo.Application.Interface.csproj" />
+    <ProjectReference Include="..\..\Application\SinovadDemo.Application.Shared\SinovadDemo.Application.Shared.csproj" />
   </ItemGroup>
 
 </Project>
