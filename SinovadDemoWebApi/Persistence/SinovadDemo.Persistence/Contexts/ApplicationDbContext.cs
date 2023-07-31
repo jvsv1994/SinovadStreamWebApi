@@ -78,7 +78,7 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
         });
 
         modelBuilder.Entity<Menu>().HasData(
-        new Menu { Id = 1, ParentId = 0, SortOrder = 1,Title="Administrador",Guid=Guid.NewGuid(), Enabled = true },
+        new Menu { Id = 1, ParentId = 0, SortOrder = 1,Title="General",Guid=Guid.NewGuid(), Enabled = true },
         new Menu { Id = 2, ParentId = 0, SortOrder = 2,Title = "Movie Data Base", Guid = Guid.NewGuid(), Enabled = true },    
         new Menu { Id = 3, ParentId = 1, SortOrder = 1, Title = "Roles", Path = "/role-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-check", Enabled = true, Guid = Guid.NewGuid() },
         new Menu { Id = 4, ParentId = 1, SortOrder = 2, Title = "Usuarios", Path = "/user-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-user", Enabled = true, Guid = Guid.NewGuid() },

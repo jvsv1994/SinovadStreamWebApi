@@ -42,8 +42,8 @@
 
     public enum RoleType
     {
-        Administrator = 1,
-        Registered = 2
+        MainAdministrator = 1,
+        MediaAdministrator = 2
     }
 
     public enum LogType

@@ -430,10 +430,6 @@ namespace SinovadDemo.Application.UseCases.Users
                         mainProfile.FullName = dto.FirstName.Split(" ")[0];
                         mainProfile.Main = true;
                         appUser.Profiles.Add(mainProfile);
-                        var userRole = new UserRole();
-                        userRole.UserId = appUser.Id;
-                        userRole.RoleId = (int)RoleType.Registered;
-                        appUser.UserRoles.Add(userRole);
                         var result = await _userManager.CreateAsync(appUser, dto.Password);
                         user = await _userManager.FindByNameAsync(dto.UserName);
                         var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
