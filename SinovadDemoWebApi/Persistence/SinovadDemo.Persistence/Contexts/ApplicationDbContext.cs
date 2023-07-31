@@ -78,20 +78,14 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
         });
 
         modelBuilder.Entity<Menu>().HasData(
-        new Menu { Id = 1, ParentId = 0, SortOrder = 1,Title="Media",Guid=Guid.NewGuid()},
-        new Menu { Id = 2, ParentId = 0, SortOrder = 2,Title = "Almacenamiento", Guid = Guid.NewGuid() },
-        new Menu { Id = 3, ParentId = 0, SortOrder = 3, Title = "Mantenimiento" , Guid = Guid.NewGuid() },
-        new Menu { Id = 4, ParentId = 1, SortOrder = 1, Title = "Inicio",Path="/home",IconTypeCatalogId= (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-house", Enabled=true, Guid = Guid.NewGuid() },
-        new Menu { Id = 5, ParentId = 1, SortOrder = 2, Title = "Peliculas",Path = "/movies", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-film", Enabled = true, Guid = Guid.NewGuid() },
-        new Menu { Id = 6, ParentId = 1, SortOrder = 3, Title = "Series",Path = "/tvseries", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-tv", Enabled = true, Guid = Guid.NewGuid() },
-        new Menu { Id = 7, ParentId = 2, SortOrder = 1, Title = "Almacenamiento", Path = "/storages", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-database", Enabled = true, Guid = Guid.NewGuid() },
-        new Menu { Id = 8, ParentId = 2, SortOrder = 2, Title = "Transcodificacion", Path = "/transcoder", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-database", Enabled = true, Guid = Guid.NewGuid() },
-        new Menu { Id = 9, ParentId = 3, SortOrder = 5, Title = "Peliculas", Path = "/movie-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-film", Enabled = true, Guid = Guid.NewGuid() },
-        new Menu { Id = 10, ParentId = 3, SortOrder = 6, Title = "Series", Path = "/tvserie-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-tv", Enabled = true, Guid = Guid.NewGuid() },
-        new Menu { Id = 11, ParentId = 3, SortOrder = 4, Title = "Generos", Path = "/genre-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-check", Enabled = true, Guid = Guid.NewGuid() },
-        new Menu { Id = 12, ParentId = 3, SortOrder = 3, Title = "Roles", Path = "/role-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-check", Enabled = true, Guid = Guid.NewGuid() },
-        new Menu { Id = 13, ParentId = 3, SortOrder = 2, Title = "Usuarios", Path = "/user-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-user", Enabled = true, Guid = Guid.NewGuid() },
-        new Menu { Id = 14, ParentId = 3, SortOrder = 1, Title = "Menu", Path = "/menu-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-check", Enabled = true, Guid = Guid.NewGuid() });
+        new Menu { Id = 1, ParentId = 0, SortOrder = 1,Title="Administrador",Guid=Guid.NewGuid(), Enabled = true },
+        new Menu { Id = 2, ParentId = 0, SortOrder = 2,Title = "Movie Data Base", Guid = Guid.NewGuid(), Enabled = true },    
+        new Menu { Id = 3, ParentId = 1, SortOrder = 1, Title = "Roles", Path = "/role-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-check", Enabled = true, Guid = Guid.NewGuid() },
+        new Menu { Id = 4, ParentId = 1, SortOrder = 2, Title = "Usuarios", Path = "/user-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-user", Enabled = true, Guid = Guid.NewGuid() },
+        new Menu { Id = 5, ParentId = 1, SortOrder = 3, Title = "Menu", Path = "/menu-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-check", Enabled = true, Guid = Guid.NewGuid() },
+        new Menu { Id = 6, ParentId = 2, SortOrder = 1, Title = "Peliculas", Path = "/movie-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-film", Enabled = true, Guid = Guid.NewGuid() },
+        new Menu { Id = 7, ParentId = 2, SortOrder = 2, Title = "Series", Path = "/tvserie-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-tv", Enabled = true, Guid = Guid.NewGuid() },
+        new Menu { Id = 8, ParentId = 2, SortOrder = 3, Title = "Generos", Path = "/genre-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-check", Enabled = true, Guid = Guid.NewGuid()});
 
         modelBuilder.Entity<User>(entity =>
         {
@@ -106,8 +100,8 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
         });
 
         modelBuilder.Entity<Role>().HasData(
-            new Role { Id = 1, Name = "Administrador", Enabled = true, Guid = Guid.NewGuid() },
-            new Role { Id = 2, Name = "Registrado", Enabled = true, Guid = Guid.NewGuid() });
+            new Role { Id = 1, Name = "Administrador Principal", Enabled = true, Guid = Guid.NewGuid() },
+            new Role { Id = 2, Name = "Administrador de Medios", Enabled = true, Guid = Guid.NewGuid() });
 
         modelBuilder.Entity<Catalog>(entity =>
         {
@@ -237,16 +231,7 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
            new RoleMenu { RoleId = 1, MenuId = 6 },
            new RoleMenu { RoleId = 1, MenuId = 7 },
            new RoleMenu { RoleId = 1, MenuId = 8 },
-           new RoleMenu { RoleId = 1, MenuId = 9 },
-           new RoleMenu { RoleId = 1, MenuId = 10 },
-           new RoleMenu { RoleId = 1, MenuId = 11 },
-           new RoleMenu { RoleId = 1, MenuId = 12 },
-           new RoleMenu { RoleId = 1, MenuId = 13 },
-           new RoleMenu { RoleId = 1, MenuId = 14 },
-           new RoleMenu { RoleId = 2, MenuId = 1 },
            new RoleMenu { RoleId = 2, MenuId = 2 },
-           new RoleMenu { RoleId = 2, MenuId = 4 },
-           new RoleMenu { RoleId = 2, MenuId = 5 },
            new RoleMenu { RoleId = 2, MenuId = 6 },
            new RoleMenu { RoleId = 2, MenuId = 7 },
            new RoleMenu { RoleId = 2, MenuId = 8 });
