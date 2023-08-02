@@ -51,6 +51,28 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message);
         }
 
+        [HttpDelete("Delete/{roleId}")]
+        public ActionResult Delete([FromRoute] int roleId)
+        {
+            var response = _roleService.Delete(roleId);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response.Message);
+        }
+
+        [HttpDelete("DeleteList/{listIds}")]
+        public ActionResult DeleteList(string listIds)
+        {
+            var response = _roleService.DeleteList(listIds);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response.Message);
+        }
+
     }
 
 }

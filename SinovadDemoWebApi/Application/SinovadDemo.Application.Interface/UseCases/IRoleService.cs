@@ -8,6 +8,8 @@ namespace SinovadDemo.Application.Interface.UseCases
         Task<ResponsePagination<List<RoleDto>>> GetAllWithPaginationAsync(int page, int take);
         Response<object> Create(RoleDto dto);
         Response<object> Update(RoleDto dto);
+        Response<object> Delete(int id);
+        Response<object> DeleteList(string ids);
 
     }
 
