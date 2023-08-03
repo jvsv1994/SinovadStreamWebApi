@@ -9,10 +9,11 @@ namespace SinovadDemo.Transversal.Paging
     {
         public static async Task<DataCollection<T>> GetPagedAsync<T>(this IQueryable<T> query, int pageIndex, int pageSize, string sortBy, string sortDirection,string searchText,string searchBy,CancellationToken cancellationToken = default)
         {
+            var searchQuery =  query.SearchBy(searchText, searchBy);
             var result = new DataCollection<T>
             {
-                Items = await query.SearchBy(searchText,searchBy).OrderBy(sortBy, sortDirection).Skip((pageIndex - 1)* pageSize).Take(pageSize).ToListAsync(cancellationToken),
-                Total = await query.CountAsync(cancellationToken),
+                Items = await searchQuery.OrderBy(sortBy, sortDirection).Skip((pageIndex - 1)* pageSize).Take(pageSize).ToListAsync(cancellationToken),
+                Total = await searchQuery.CountAsync(cancellationToken),
                 Page = pageIndex
             };
             if (result.Total > 0)
