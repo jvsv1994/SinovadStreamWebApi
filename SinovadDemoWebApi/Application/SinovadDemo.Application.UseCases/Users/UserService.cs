@@ -49,7 +49,7 @@ namespace SinovadDemo.Application.UseCases.Users
             var response = new ResponsePagination<List<UserDto>>();
             try
             {
-                var result = await _unitOfWork.Users.GetAllWithPaginationAsync(page, take, "Id", false);
+                var result = await _unitOfWork.Users.GetAllWithPaginationAsync(page, take, "Id", "desc", "", "");
                 response.Data = result.Items.MapTo<List<UserDto>>();
                 if (response.Data != null)
                 {

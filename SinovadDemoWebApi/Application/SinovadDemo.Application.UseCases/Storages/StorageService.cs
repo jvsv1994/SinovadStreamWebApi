@@ -43,7 +43,7 @@ namespace SinovadDemo.Application.UseCases.Storages
             var response = new ResponsePagination<List<StorageDto>>();
             try
             {
-                var result = await _unitOfWork.Storages.GetAllWithPaginationByExpressionAsync(page, take, "Id", true, x => x.MediaServerId == mediaServerId);
+                var result = await _unitOfWork.Storages.GetAllWithPaginationByExpressionAsync(page, take, "Id", "desc", "", "", x => x.MediaServerId == mediaServerId);
                 response.Data = result.Items.MapTo<List<StorageDto>>();
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;

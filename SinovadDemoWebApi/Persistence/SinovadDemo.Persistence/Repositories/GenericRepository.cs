@@ -73,14 +73,14 @@ namespace SinovadDemo.Persistence.Repositories
             return  _table.Where(function);
         }
 
-        public async Task<DataCollection<TEntity>> GetAllWithPaginationAsync(int page, int take, string orderByColumnName, bool isAscending, CancellationToken cancellationToken = default)
+        public async Task<DataCollection<TEntity>> GetAllWithPaginationAsync(int page, int take, string sortBy, string sortDirection,string searchText,string searchBy, CancellationToken cancellationToken = default)
         {
-            return await _table.AsNoTracking().GetPagedAsync(page, take, orderByColumnName, isAscending, cancellationToken);
+            return await _table.AsNoTracking().GetPagedAsync(page, take, sortBy, sortDirection,searchText, searchBy, cancellationToken);
         }
 
-        public async Task<DataCollection<TEntity>> GetAllWithPaginationByExpressionAsync(int page, int take, string orderByColumnName, bool isAscending, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+        public async Task<DataCollection<TEntity>> GetAllWithPaginationByExpressionAsync(int page, int take, string sortBy, string sortDirection, string searchText, string searchBy, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         {
-            return await _table.AsNoTracking().Where(predicate).GetPagedAsync(page, take, orderByColumnName, isAscending, cancellationToken);
+            return await _table.AsNoTracking().Where(predicate).GetPagedAsync(page, take, sortBy, sortDirection, searchText, searchBy, cancellationToken);
         }
 
         public TEntity Add(TEntity data)

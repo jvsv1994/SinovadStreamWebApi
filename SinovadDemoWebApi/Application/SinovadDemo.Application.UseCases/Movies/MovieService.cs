@@ -69,7 +69,7 @@ namespace SinovadDemo.Application.UseCases.Movies
             var response = new ResponsePagination<List<MovieDto>>();
             try
             {
-                var result = await _unitOfWork.Movies.GetAllWithPaginationAsync(page, take, "Id", false);
+                var result = await _unitOfWork.Movies.GetAllWithPaginationAsync(page, take, "Id", "desc", "", "");
                 response.Data = result.Items.MapTo<List<MovieDto>>();
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;

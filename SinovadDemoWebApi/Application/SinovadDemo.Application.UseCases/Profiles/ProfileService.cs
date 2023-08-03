@@ -43,7 +43,7 @@ namespace SinovadDemo.Application.UseCases.Profiles
             var response = new ResponsePagination<List<ProfileDto>>();
             try
             {
-                var result = await _unitOfWork.Profiles.GetAllWithPaginationByExpressionAsync(page, take, "Id", true, x => x.UserId == userId);
+                var result = await _unitOfWork.Profiles.GetAllWithPaginationByExpressionAsync(page, take, "Id", "desc", "", "", x => x.UserId == userId);
                 response.Data = result.Items.MapTo<List<ProfileDto>>();
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;

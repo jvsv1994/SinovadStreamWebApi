@@ -25,12 +25,12 @@ namespace SinovadDemo.Application.UseCases.Roles
             _config = config;
         }
      
-        public async Task<ResponsePagination<List<RoleDto>>> GetAllWithPaginationAsync(int page, int take)
+        public async Task<ResponsePagination<List<RoleDto>>> GetAllWithPaginationAsync(int page, int take,string sortBy,string sortDirection,string searchText,string searchBy)
         {
             var response = new ResponsePagination<List<RoleDto>>();
             try
             {
-                var result = await _unitOfWork.Roles.GetAllWithPaginationAsync(page, take, "Id", false);
+                var result = await _unitOfWork.Roles.GetAllWithPaginationAsync(page, take, sortBy, sortDirection, searchText, searchBy);
                 response.Data = result.Items.MapTo<List<RoleDto>>();
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;

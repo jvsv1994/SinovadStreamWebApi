@@ -79,7 +79,7 @@ namespace SinovadDemo.Application.UseCases.TranscoderSetting
             var response = new ResponsePagination<List<TranscoderSettingsDto>>();
             try
             {
-                var result = await _unitOfWork.TranscoderSettings.GetAllWithPaginationByExpressionAsync(page, take, "Id", true, x => x.MediaServerId == mediaServerId);
+                var result = await _unitOfWork.TranscoderSettings.GetAllWithPaginationByExpressionAsync(page, take, "Id", "desc", "", "", x => x.MediaServerId == mediaServerId);
                 response.Data = result.Items.MapTo<List<TranscoderSettingsDto>>();
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;

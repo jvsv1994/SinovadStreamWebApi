@@ -13,8 +13,8 @@ namespace SinovadDemo.Application.Interface.Persistence
         Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);
         IEnumerable<TEntity> GetAllByExpression(Expression<Func<TEntity, bool>> predicate);
         Task<IEnumerable<TEntity>> GetAllByExpressionAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
-        Task<DataCollection<TEntity>> GetAllWithPaginationAsync(int page, int take, string orderColumnName, bool isAscending, CancellationToken cancellationToken = default);
-        Task<DataCollection<TEntity>> GetAllWithPaginationByExpressionAsync(int page, int take, string orderColumnName, bool isAscending, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
+        Task<DataCollection<TEntity>> GetAllWithPaginationAsync(int page, int take, string sortBy, string sortDirection, string searchText, string searchBy, CancellationToken cancellationToken = default);
+        Task<DataCollection<TEntity>> GetAllWithPaginationByExpressionAsync(int page, int take, string sortBy, string sortDirection, string searchText, string searchBy, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
         TEntity Add(TEntity data);
         Task<TEntity> AddAsync(TEntity data, CancellationToken cancellationToken = default);
         void AddList(List<TEntity> list);

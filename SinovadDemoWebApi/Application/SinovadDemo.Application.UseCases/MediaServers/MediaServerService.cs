@@ -147,7 +147,7 @@ namespace SinovadDemo.Application.UseCases.MediaServers
             var response = new ResponsePagination<List<MediaServerDto>>();
             try
             {
-                var result = await _unitOfWork.MediaServers.GetAllWithPaginationByExpressionAsync(page, take, "Id", true, x => x.UserId == userId);
+                var result = await _unitOfWork.MediaServers.GetAllWithPaginationByExpressionAsync(page, take, "Id", "desc", "", "", x => x.UserId == userId);
                 response.Data = result.Items.MapTo<List<MediaServerDto>>();
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;

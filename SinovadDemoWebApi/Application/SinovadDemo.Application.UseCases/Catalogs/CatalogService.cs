@@ -41,7 +41,7 @@ namespace SinovadDemo.Application.UseCases.Catalogs
             var response = new ResponsePagination<List<CatalogDto>>();
             try
             {
-                var result = await _unitOfWork.Catalogs.GetAllWithPaginationAsync(page, take, "Id", false);
+                var result = await _unitOfWork.Catalogs.GetAllWithPaginationAsync(page, take, "Id", "desc","","");
                 response.Data = result.Items.MapTo<List<CatalogDto>>();
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;
@@ -182,7 +182,7 @@ namespace SinovadDemo.Application.UseCases.Catalogs
                 {
                     listIds = catalogIds.Split(",").Select(x => Convert.ToInt32(x)).ToList();
                 }
-                var result = await _unitOfWork.CatalogDetails.GetAllWithPaginationByExpressionAsync(page, take, "Id", false, x => listIds.Contains(x.CatalogId));
+                var result = await _unitOfWork.CatalogDetails.GetAllWithPaginationByExpressionAsync(page, take, "Id", "desc","","", x => listIds.Contains(x.CatalogId));
                 response.Data = result.Items.MapTo<List<CatalogDetailDto>>();
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;

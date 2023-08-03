@@ -5,7 +5,7 @@ namespace SinovadDemo.Application.Interface.UseCases
 {
     public interface IRoleService
     {
-        Task<ResponsePagination<List<RoleDto>>> GetAllWithPaginationAsync(int page, int take);
+        Task<ResponsePagination<List<RoleDto>>> GetAllWithPaginationAsync(int page, int take,string sortBy,string sortDirection, string searchText, string searchBy);
         Response<object> Create(RoleDto dto);
         Response<object> Update(RoleDto dto);
         Response<object> Delete(int id);

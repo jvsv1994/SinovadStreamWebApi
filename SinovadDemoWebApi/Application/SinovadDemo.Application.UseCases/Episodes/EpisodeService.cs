@@ -43,7 +43,7 @@ namespace SinovadDemo.Application.UseCases.Episodes
             var response = new ResponsePagination<List<EpisodeDto>>();
             try
             {
-                var result = await _unitOfWork.Episodes.GetAllWithPaginationByExpressionAsync(page, take, "EpisodeNumber", true, x => x.SeasonId == seasonId);
+                var result = await _unitOfWork.Episodes.GetAllWithPaginationByExpressionAsync(page, take, "EpisodeNumber", "desc", "", "", x => x.SeasonId == seasonId);
                 response.Data = result.Items.MapTo<List<EpisodeDto>>();
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;

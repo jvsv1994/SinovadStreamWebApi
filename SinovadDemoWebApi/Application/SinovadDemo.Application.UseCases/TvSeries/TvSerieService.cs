@@ -44,7 +44,7 @@ namespace SinovadDemo.Application.UseCases.TvSeries
             var response = new ResponsePagination<List<TvSerieDto>>();
             try
             {
-                var result = await _unitOfWork.TvSeries.GetAllWithPaginationAsync(page, take, "Id", false);
+                var result = await _unitOfWork.TvSeries.GetAllWithPaginationAsync(page, take, "Id", "desc", "", "");
                 response.Data = result.Items.MapTo<List<TvSerieDto>>();
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;

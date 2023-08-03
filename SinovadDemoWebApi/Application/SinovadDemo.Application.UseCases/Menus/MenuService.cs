@@ -47,7 +47,7 @@ namespace SinovadDemo.Application.UseCases.Users
             var response = new ResponsePagination<List<MenuDto>>();
             try
             {
-                var result = await _unitOfWork.Menus.GetAllWithPaginationAsync(page, take, "Id", false);
+                var result = await _unitOfWork.Menus.GetAllWithPaginationAsync(page, take, "Id", "desc", "", "");
                 response.Data = result.Items.MapTo<List<MenuDto>>();
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;

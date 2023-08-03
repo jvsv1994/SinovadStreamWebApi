@@ -47,7 +47,7 @@ namespace SinovadDemo.Application.UseCases.Genres
             var response = new ResponsePagination<List<GenreDto>>();
             try
             {
-                var result = await _unitOfWork.Genres.GetAllWithPaginationAsync(page, take, "Name", true);
+                var result = await _unitOfWork.Genres.GetAllWithPaginationAsync(page, take, "Name","asc","","");
                 response.Data = result.Items.MapTo<List<GenreDto>>();
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;
