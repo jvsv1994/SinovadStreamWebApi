@@ -142,12 +142,12 @@ namespace SinovadDemo.Application.UseCases.MediaServers
         }
 
 
-        public async Task<ResponsePagination<List<MediaServerDto>>> GetAllWithPaginationByUserAsync(int userId, int page, int take)
+        public async Task<ResponsePagination<List<MediaServerDto>>> GetAllWithPaginationByUserAsync(int userId, int page, int take, string sortBy, string sortDirection, string searchText, string searchBy)
         {
             var response = new ResponsePagination<List<MediaServerDto>>();
             try
             {
-                var result = await _unitOfWork.MediaServers.GetAllWithPaginationByExpressionAsync(page, take, "Id", "desc", "", "", x => x.UserId == userId);
+                var result = await _unitOfWork.MediaServers.GetAllWithPaginationByExpressionAsync(page, take, sortBy, sortDirection, searchText, searchBy, x => x.UserId == userId);
                 response.Data = result.Items.MapTo<List<MediaServerDto>>();
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;

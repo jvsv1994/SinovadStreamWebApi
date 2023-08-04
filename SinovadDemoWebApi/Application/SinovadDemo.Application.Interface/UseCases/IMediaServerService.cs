@@ -12,7 +12,7 @@ namespace SinovadDemo.Application.Interface.UseCases
         Task<Response<MediaServerDto>> GetByGuidAsync(string guid);
         Task<Response<MediaServerDto>> GetByUserAndIpAddressAsync(int userId, string ipAddress);
         Task<Response<List<MediaServerDto>>> GetAllByUserAsync(int userId);
-        Task<ResponsePagination<List<MediaServerDto>>> GetAllWithPaginationByUserAsync(int userId, int page, int take);
+        Task<ResponsePagination<List<MediaServerDto>>> GetAllWithPaginationByUserAsync(int userId, int page, int take, string sortBy, string sortDirection, string searchText, string searchBy);
         Response<object> Create(MediaServerDto mediaServerDto);
         Response<object> CreateList(List<MediaServerDto> listMediaServerDto);
         Response<object> Update(MediaServerDto mediaServerDto);

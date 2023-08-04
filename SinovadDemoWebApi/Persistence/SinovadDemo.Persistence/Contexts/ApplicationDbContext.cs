@@ -80,12 +80,12 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
         modelBuilder.Entity<Menu>().HasData(
         new Menu { Id = 1, ParentId = 0, SortOrder = 1,Title="General",Guid=Guid.NewGuid(), Enabled = true },
         new Menu { Id = 2, ParentId = 0, SortOrder = 2,Title = "Movie Data Base", Guid = Guid.NewGuid(), Enabled = true },    
-        new Menu { Id = 3, ParentId = 1, SortOrder = 1, Title = "Roles", Path = "/role-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-check", Enabled = true, Guid = Guid.NewGuid() },
-        new Menu { Id = 4, ParentId = 1, SortOrder = 2, Title = "Usuarios", Path = "/user-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-user", Enabled = true, Guid = Guid.NewGuid() },
-        new Menu { Id = 5, ParentId = 1, SortOrder = 3, Title = "Menu", Path = "/menu-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-check", Enabled = true, Guid = Guid.NewGuid() },
-        new Menu { Id = 6, ParentId = 2, SortOrder = 1, Title = "Peliculas", Path = "/movie-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-film", Enabled = true, Guid = Guid.NewGuid() },
-        new Menu { Id = 7, ParentId = 2, SortOrder = 2, Title = "Series", Path = "/tvserie-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-tv", Enabled = true, Guid = Guid.NewGuid() },
-        new Menu { Id = 8, ParentId = 2, SortOrder = 3, Title = "Generos", Path = "/genre-list", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-check", Enabled = true, Guid = Guid.NewGuid()});
+        new Menu { Id = 3, ParentId = 1, SortOrder = 1, Title = "Roles", Path = "/manage/roles", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-check", Enabled = true, Guid = Guid.NewGuid() },
+        new Menu { Id = 4, ParentId = 1, SortOrder = 2, Title = "Usuarios", Path = "/manage/users", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-user", Enabled = true, Guid = Guid.NewGuid() },
+        new Menu { Id = 5, ParentId = 1, SortOrder = 3, Title = "Menu", Path = "/manage/menus", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-check", Enabled = true, Guid = Guid.NewGuid() },
+        new Menu { Id = 6, ParentId = 2, SortOrder = 1, Title = "Peliculas", Path = "/manage/movies", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-film", Enabled = true, Guid = Guid.NewGuid() },
+        new Menu { Id = 7, ParentId = 2, SortOrder = 2, Title = "Series", Path = "/manage/tvseries", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-tv", Enabled = true, Guid = Guid.NewGuid() },
+        new Menu { Id = 8, ParentId = 2, SortOrder = 3, Title = "Generos", Path = "/manage/genres", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-check", Enabled = true, Guid = Guid.NewGuid()});
 
         modelBuilder.Entity<User>(entity =>
         {
