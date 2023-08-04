@@ -1,7 +1,5 @@
-﻿using Generic.Core.Models;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using MySqlX.XDevAPI.Common;
 using Newtonsoft.Json;
 using SinovadDemo.Application.Configuration;
 using SinovadDemo.Application.DTO;
@@ -11,7 +9,6 @@ using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Application.Validator;
 using SinovadDemo.Domain.Entities;
-using SinovadDemo.Domain.Enums;
 using SinovadDemo.Transversal.Common;
 using SinovadDemo.Transversal.Mapping;
 
@@ -44,12 +41,12 @@ namespace SinovadDemo.Application.UseCases.Users
             _accessUserDtoValidator = accessUserDtoValidator;
         }
 
-        public async Task<ResponsePagination<List<UserDto>>> GetAllWithPaginationAsync(int page, int take)
+        public async Task<ResponsePagination<List<UserDto>>> GetAllWithPaginationAsync(int page, int take, string sortBy, string sortDirection, string searchText, string searchBy)
         {
             var response = new ResponsePagination<List<UserDto>>();
             try
             {
-                var result = await _unitOfWork.Users.GetAllWithPaginationAsync(page, take, "Id", "desc", "", "");
+                var result = await _unitOfWork.Users.GetAllWithPaginationAsync(page, take, sortBy, sortDirection, searchText, searchBy);
                 response.Data = result.Items.MapTo<List<UserDto>>();
                 if (response.Data != null)
                 {

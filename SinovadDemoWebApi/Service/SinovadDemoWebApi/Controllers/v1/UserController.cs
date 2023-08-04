@@ -38,9 +38,9 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpGet("GetAllWithPaginationAsync")]
-        public async Task<ActionResult> GetAllWithPaginationAsync(int page = 1, int take = 1000)
+        public async Task<ActionResult> GetAllWithPaginationAsync(int page = 1, int take = 1000, string sortBy = "Id", string sortDirection = "asc", string searchText = "", string searchBy = "")
         {
-            var response = await _userService.GetAllWithPaginationAsync(page, take);
+            var response = await _userService.GetAllWithPaginationAsync(page, take, sortBy, sortDirection, searchText, searchBy);
             if (response.IsSuccess)
             {
                 return Ok(response);

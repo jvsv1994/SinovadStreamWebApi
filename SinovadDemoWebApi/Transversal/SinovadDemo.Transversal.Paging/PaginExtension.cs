@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SinovadDemo.Transversal.Collection;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace SinovadDemo.Transversal.Paging
 {
@@ -51,20 +50,35 @@ namespace SinovadDemo.Transversal.Paging
                 return source;
             }
             ParameterExpression parameter = Expression.Parameter(source.ElementType, "");
-            List<string> listColumns = new List<string>();
+            List<string> listColumnNames = new List<string>();
             if (!string.IsNullOrEmpty(searchBy))
             {
-                listColumns = searchBy.Split("|").ToList();
+                listColumnNames = searchBy.Split("|").ToList();
             }
-            foreach (var propertyName in listColumns)
+            Expression fullExpression=null;
+            foreach (var columnName in listColumnNames)
             {
-               var propertyExp = Expression.Property(parameter, propertyName);//Column name in the table
-               var constantExpression = Expression.Constant(searchText);//Value to compare
-               MethodInfo method = typeof(string).GetMethod("Contains", new[] { typeof(string) });
-               var someValue = Expression.Constant(searchText, typeof(string));
-               var containsMethodExp = Expression.Call(propertyExp, method, someValue);
-               Expression<Func<T, bool>> lambda = Expression.Lambda<Func<T, bool>>(containsMethodExp, parameter);
-               source= source.Where(lambda);
+                try
+                {
+                    var propertyExp = Expression.Property(parameter, columnName);//Column name in the table
+                    var someValue = Expression.Constant(searchText, typeof(string));//Value to compare
+                    var ex = Expression.Call(propertyExp, "Contains", Type.EmptyTypes, someValue);
+                    if (fullExpression == null)
+                    {
+                        fullExpression = ex;
+                    }
+                    else
+                    {
+                        fullExpression = Expression.Or(fullExpression, ex);
+                    }
+                } catch(Exception e){
+                    Console.WriteLine(e.ToString());
+                }
+            }
+            if (fullExpression!=null)
+            {
+                var lambda = Expression.Lambda<Func<T, bool>>(fullExpression, parameter);
+                source = source.Where(lambda);
             }
             return source;
         }
