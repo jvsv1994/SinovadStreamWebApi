@@ -38,12 +38,12 @@ namespace SinovadDemo.Application.UseCases.Storages
             return response;
         }
 
-        public async Task<ResponsePagination<List<StorageDto>>> GetAllWithPaginationByMediaServerAsync(int mediaServerId, int page, int take)
+        public async Task<ResponsePagination<List<StorageDto>>> GetAllWithPaginationByMediaServerAsync(int mediaServerId, int page, int take, string sortBy, string sortDirection, string searchText, string searchBy)
         {
             var response = new ResponsePagination<List<StorageDto>>();
             try
             {
-                var result = await _unitOfWork.Storages.GetAllWithPaginationByExpressionAsync(page, take, "Id", "desc", "", "", x => x.MediaServerId == mediaServerId);
+                var result = await _unitOfWork.Storages.GetAllWithPaginationByExpressionAsync(page, take, sortBy, sortDirection, searchText, searchBy, x => x.MediaServerId == mediaServerId);
                 response.Data = result.Items.MapTo<List<StorageDto>>();
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;

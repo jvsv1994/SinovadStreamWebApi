@@ -19,9 +19,9 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpGet("GetAllWithPaginationByMediaServerAsync/{mediaServerId}")]
-        public async Task<ActionResult> GetAllWithPaginationByMediaServerAsync(int mediaServerId, [FromQuery] int page = 1,[FromQuery] int take = 1000)
+        public async Task<ActionResult> GetAllWithPaginationByMediaServerAsync(int mediaServerId, [FromQuery] int page = 1,[FromQuery] int take = 1000, [FromQuery] string sortBy = "Id", [FromQuery] string sortDirection = "asc", [FromQuery] string searchText = "", [FromQuery] string searchBy = "")
         {
-            var response = await _storageService.GetAllWithPaginationByMediaServerAsync(mediaServerId, page, take);
+            var response = await _storageService.GetAllWithPaginationByMediaServerAsync(mediaServerId, page, take, sortBy, sortDirection, searchText, searchBy);
             if (response.IsSuccess)
             {
                 return Ok(response);
