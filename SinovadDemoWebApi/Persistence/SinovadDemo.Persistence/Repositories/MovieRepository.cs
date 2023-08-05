@@ -59,7 +59,7 @@ namespace SinovadDemo.Persistence.Repositories
                               join video in _context.Videos on movie.Id equals video.MovieId
                               join storage in _context.Storages on video.StorageId equals storage.Id
                               join mediaServer in _context.MediaServers on storage.MediaServerId equals mediaServer.Id
-                              where mediaServer.UserId == userId && storage.MediaTypeCatalogDetailId == (int)MediaType.TvSerie && movie.Title.ToLower().Contains(searchText.ToLower()) == true
+                              where mediaServer.UserId == userId && storage.MediaTypeCatalogDetailId == (int)MediaType.Movie && movie.Title.ToLower().Contains(searchText.ToLower()) == true
                               select new ItemDto
                               {
                                   Title = movie.Title + " (" + movie.ReleaseDate.Value.Year + ")",
