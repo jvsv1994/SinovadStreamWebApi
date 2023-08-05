@@ -30,9 +30,9 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpGet("GetAllWithPaginationByTvSerieAsync/{tvSerieId}")]
-        public async Task<ActionResult> GetAllWithPaginationByTvSerieAsync(int tvSerieId,[FromQuery] int page = 1,[FromQuery] int take = 1000)
+        public async Task<ActionResult> GetAllWithPaginationByTvSerieAsync(int tvSerieId, [FromQuery] int page = 1, [FromQuery] int take = 1000, [FromQuery] string sortBy = "SeasonNumber", [FromQuery] string sortDirection = "asc", [FromQuery] string searchText = "", [FromQuery] string searchBy = "")
         {
-            var response = await _seasonService.GetAllWithPaginationByTvSerieAsync(tvSerieId,page, take);
+            var response = await _seasonService.GetAllWithPaginationByTvSerieAsync(tvSerieId,page, take, sortBy, sortDirection, searchText, searchBy);
             if (response.IsSuccess)
             {
                 return Ok(response);

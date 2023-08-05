@@ -8,7 +8,7 @@ namespace SinovadDemo.Application.Interface.UseCases
     {
         Task<Response<GenreDto>> GetAsync(int id);
         Task<Response<List<GenreDto>>> GetAllAsync();
-        Task<ResponsePagination<List<GenreDto>>> GetAllWithPaginationAsync(int page, int take);
+        Task<ResponsePagination<List<GenreDto>>> GetAllWithPaginationAsync(int page, int take, string sortBy, string sortDirection, string searchText, string searchBy);
         Response<object> Create(GenreDto genreDto);
         Response<object> CreateList(List<GenreDto> listGenreDto);
         Response<object> Update(GenreDto genreDto);

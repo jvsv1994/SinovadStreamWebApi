@@ -38,12 +38,12 @@ namespace SinovadDemo.Application.UseCases.Episodes
         }
 
 
-        public async Task<ResponsePagination<List<EpisodeDto>>> GetAllWithPaginationBySeasonAsync(int seasonId, int page, int take)
+        public async Task<ResponsePagination<List<EpisodeDto>>> GetAllWithPaginationBySeasonAsync(int seasonId, int page, int take, string sortBy, string sortDirection, string searchText, string searchBy)
         {
             var response = new ResponsePagination<List<EpisodeDto>>();
             try
             {
-                var result = await _unitOfWork.Episodes.GetAllWithPaginationByExpressionAsync(page, take, "EpisodeNumber", "desc", "", "", x => x.SeasonId == seasonId);
+                var result = await _unitOfWork.Episodes.GetAllWithPaginationByExpressionAsync(page, take, sortBy, sortDirection, searchText, searchBy, x => x.SeasonId == seasonId);
                 response.Data = result.Items.MapTo<List<EpisodeDto>>();
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;

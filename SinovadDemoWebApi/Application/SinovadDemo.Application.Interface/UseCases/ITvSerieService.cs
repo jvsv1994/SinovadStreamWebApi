@@ -7,7 +7,7 @@ namespace SinovadDemo.Application.Interface.UseCases
     public interface ITvSerieService
     {
         Task<Response<List<TvSerieDto>>> GetAllAsync();
-        Task<ResponsePagination<List<TvSerieDto>>> GetAllWithPaginationAsync(int page, int take);
+        Task<ResponsePagination<List<TvSerieDto>>> GetAllWithPaginationAsync(int page, int take, string sortBy, string sortDirection, string searchText, string searchBy);
         Task<Response<TvSerieDto>> GetAsync(int id);
         Response<object> Create(TvSerieDto tvSerieDto);
         Response<object> Update(TvSerieDto tvSerieDto);

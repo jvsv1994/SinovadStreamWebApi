@@ -39,12 +39,12 @@ namespace SinovadDemo.Application.UseCases.TvSeries
             return response;
         }
 
-        public async Task<ResponsePagination<List<TvSerieDto>>> GetAllWithPaginationAsync(int page, int take)
+        public async Task<ResponsePagination<List<TvSerieDto>>> GetAllWithPaginationAsync(int page, int take, string sortBy, string sortDirection, string searchText, string searchBy)
         {
             var response = new ResponsePagination<List<TvSerieDto>>();
             try
             {
-                var result = await _unitOfWork.TvSeries.GetAllWithPaginationAsync(page, take, "Id", "desc", "", "");
+                var result = await _unitOfWork.TvSeries.GetAllWithPaginationAsync(page, take,sortBy,sortDirection,searchText, searchBy);
                 response.Data = result.Items.MapTo<List<TvSerieDto>>();
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;

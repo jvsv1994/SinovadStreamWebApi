@@ -42,12 +42,12 @@ namespace SinovadDemo.Application.UseCases.Genres
             return response;
         }
 
-        public async Task<ResponsePagination<List<GenreDto>>> GetAllWithPaginationAsync(int page, int take)
+        public async Task<ResponsePagination<List<GenreDto>>> GetAllWithPaginationAsync(int page, int take, string sortBy, string sortDirection, string searchText, string searchBy)
         {
             var response = new ResponsePagination<List<GenreDto>>();
             try
             {
-                var result = await _unitOfWork.Genres.GetAllWithPaginationAsync(page, take, "Name","asc","","");
+                var result = await _unitOfWork.Genres.GetAllWithPaginationAsync(page, take, sortBy, sortDirection, searchText, searchBy);
                 response.Data = result.Items.MapTo<List<GenreDto>>();
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;
