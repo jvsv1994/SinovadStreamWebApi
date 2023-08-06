@@ -38,6 +38,24 @@ namespace SinovadDemo.Application.UseCases.Profiles
             return response;
         }
 
+        public async Task<Response<ProfileDto>> GetByGuidAsync(string guid)
+        {
+            var response = new Response<ProfileDto>();
+            try
+            {
+                var result = await _unitOfWork.Profiles.GetByExpressionAsync(x => x.Guid.ToString() == guid);
+                response.Data = result.MapTo<ProfileDto>();
+                response.IsSuccess = true;
+                response.Message = "Successful";
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.StackTrace;
+                _sharedService._tracer.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
         public async Task<ResponsePagination<List<ProfileDto>>> GetAllWithPaginationByUserAsync(int userId, int page, int take, string sortBy, string sortDirection, string searchText, string searchBy)
         {
             var response = new ResponsePagination<List<ProfileDto>>();

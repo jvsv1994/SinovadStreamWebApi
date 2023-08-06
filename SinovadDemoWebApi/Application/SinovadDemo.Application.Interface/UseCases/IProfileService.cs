@@ -6,6 +6,7 @@ namespace SinovadDemo.Application.Interface.UseCases
     public interface IProfileService {
     
         Task<Response<ProfileDto>> GetAsync(int id);
+        Task<Response<ProfileDto>> GetByGuidAsync(string guid);
         Task<ResponsePagination<List<ProfileDto>>> GetAllWithPaginationByUserAsync(int userId, int page, int take, string sortBy, string sortDirection, string searchText, string searchBy);
         Response<object> Create(ProfileDto profileDto);
         Response<object> CreateList(List<ProfileDto> listProfileDto);

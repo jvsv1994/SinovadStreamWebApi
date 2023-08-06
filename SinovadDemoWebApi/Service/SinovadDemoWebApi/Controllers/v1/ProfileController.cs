@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.Interface.UseCases;
+using SinovadDemo.Application.UseCases.MediaServers;
+using System.ComponentModel.DataAnnotations;
 
 namespace SinovadDemoWebApi.Controllers.v1
 {
@@ -27,6 +29,17 @@ namespace SinovadDemoWebApi.Controllers.v1
                 return Ok(response);
             }
             return BadRequest(response.Message);
+        }
+
+        [HttpGet("GetByGuidAsync/{guid}")]
+        public async Task<ActionResult> GetByGuidAsync([Required] string guid)
+        {
+            var response = await _profileService.GetByGuidAsync(guid);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response.Message); ;
         }
 
         [HttpGet("GetAllWithPaginationByUserAsync/{userId}")]
