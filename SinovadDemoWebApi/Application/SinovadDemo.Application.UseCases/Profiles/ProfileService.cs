@@ -38,12 +38,12 @@ namespace SinovadDemo.Application.UseCases.Profiles
             return response;
         }
 
-        public async Task<ResponsePagination<List<ProfileDto>>> GetAllWithPaginationByUserAsync(int userId, int page, int take)
+        public async Task<ResponsePagination<List<ProfileDto>>> GetAllWithPaginationByUserAsync(int userId, int page, int take, string sortBy, string sortDirection, string searchText, string searchBy)
         {
             var response = new ResponsePagination<List<ProfileDto>>();
             try
             {
-                var result = await _unitOfWork.Profiles.GetAllWithPaginationByExpressionAsync(page, take, "Id", "desc", "", "", x => x.UserId == userId);
+                var result = await _unitOfWork.Profiles.GetAllWithPaginationByExpressionAsync(page, take, sortBy, sortDirection, searchText, searchBy, x => x.UserId == userId);
                 response.Data = result.Items.MapTo<List<ProfileDto>>();
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;

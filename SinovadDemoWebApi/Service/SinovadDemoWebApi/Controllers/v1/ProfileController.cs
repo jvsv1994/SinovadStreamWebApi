@@ -30,9 +30,9 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpGet("GetAllWithPaginationByUserAsync/{userId}")]
-        public async Task<ActionResult> GetAll(int userId,[FromQuery] int page = 1,[FromQuery] int take = 1000)
+        public async Task<ActionResult> GetAll(int userId,[FromQuery] int page = 1,[FromQuery] int take = 1000, [FromQuery] string sortBy = "Id", [FromQuery] string sortDirection = "asc", [FromQuery] string searchText = "", [FromQuery] string searchBy = "")
         {
-            var response = await _profileService.GetAllWithPaginationByUserAsync(userId, page, take);
+            var response = await _profileService.GetAllWithPaginationByUserAsync(userId, page, take, sortBy, sortDirection, searchText, searchBy);
             if (response.IsSuccess)
             {
                 return Ok(response);
