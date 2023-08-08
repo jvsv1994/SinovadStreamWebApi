@@ -38,6 +38,23 @@ namespace SinovadDemo.Application.UseCases.Storages
             return response;
         }
 
+        public async Task<ResponseGeneric<List<StorageDto>>> GetAllLibrariesByUserAsync(int userId)
+        {
+            var response = new ResponsePagination<List<StorageDto>>();
+            try
+            {
+                var result = await _unitOfWork.Storages.GetAllByExpressionAsync(x => x.MediaServer.User.Id == userId);
+                response.Data = result.MapTo<List<StorageDto>>();
+                response.IsSuccess = true;
+                response.Message = "Successful";
+            }catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _sharedService._tracer.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
         public async Task<ResponsePagination<List<StorageDto>>> GetAllWithPaginationByMediaServerAsync(int mediaServerId, int page, int take, string sortBy, string sortDirection, string searchText, string searchBy)
         {
             var response = new ResponsePagination<List<StorageDto>>();

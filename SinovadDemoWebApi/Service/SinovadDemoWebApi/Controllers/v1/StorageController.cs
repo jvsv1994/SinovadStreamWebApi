@@ -29,6 +29,17 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message);
         }
 
+        [HttpGet("GetAllLibrariesByUserAsync/{userId}")]
+        public async Task<ActionResult> GetAllLibrariesByUser(int userId)
+        {
+            var response = await _storageService.GetAllLibrariesByUserAsync(userId);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response.Message);
+        }
+
         [HttpPost("Create")]
         public ActionResult Create([FromBody] StorageDto storageDto)
         {

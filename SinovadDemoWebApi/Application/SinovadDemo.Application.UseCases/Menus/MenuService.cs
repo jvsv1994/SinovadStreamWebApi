@@ -6,6 +6,7 @@ using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Transversal.Common;
 using SinovadDemo.Transversal.Mapping;
+using MediaType = SinovadDemo.Domain.Enums.MediaType;
 
 namespace SinovadDemo.Application.UseCases.Users
 {
@@ -119,18 +120,86 @@ namespace SinovadDemo.Application.UseCases.Users
 
         private async Task<List<MenuDto>> BuildListMenusByUser(int userId)
         {
-          var result= await _unitOfWork.Menus.GetListMenusByUser(userId);
-          var listMenus = result.MapTo<List<MenuDto>>();
-          var mainMenus = listMenus.Where(m => m.ParentId == 0 && m.Enabled==true).OrderBy(m => m.SortOrder).ToList();
-          mainMenus.ForEach(m => m.ChildMenus = BuildMenuChilds(m.Id, listMenus));
-          return mainMenus;
+            var result = await _unitOfWork.Menus.GetListMenusByUser(userId);
+            var listMenus = result.MapTo<List<MenuDto>>();
+            var mainMenus = listMenus.Where(m => m.ParentId == 0 && m.Enabled == true).OrderBy(m => m.SortOrder).ToList();
+            mainMenus.ForEach(m => m.ChildMenus = BuildMenuChilds(m.Id, listMenus));
+            return mainMenus;
         }
 
-        private List<MenuDto> BuildMenuChilds(int parentId,List<MenuDto> originalList)
+        private List<MenuDto> BuildMenuChilds(int parentId, List<MenuDto> originalList)
         {
-           var listMenus=originalList.Where(m => m.ParentId == parentId && m.Enabled == true).OrderBy(m=>m.SortOrder).ToList();
-           listMenus.ForEach(m => m.ChildMenus = BuildMenuChilds(m.Id, originalList));
-           return listMenus;
+            var listMenus = originalList.Where(m => m.ParentId == parentId && m.Enabled == true).OrderBy(m => m.SortOrder).ToList();
+            listMenus.ForEach(m => m.ChildMenus = BuildMenuChilds(m.Id, originalList));
+            return listMenus;
+        }
+
+
+
+        public async Task<Response<List<MenuDto>>> GetMediaMenuByUserAsync(int userId)
+        {
+            var response = new Response<List<MenuDto>>();
+            try
+            {
+                var list = await BuildMediaMenuByUser(userId);
+                response.Data = list;
+                response.IsSuccess = true;
+                response.Message = "Successful";
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
+        private async Task<List<MenuDto>> BuildMediaMenuByUser(int userId)
+        {
+            List<MenuDto> listOptions= new List<MenuDto>();
+            var home = new MenuDto();
+            home.SortOrder = listOptions.Count+1;
+            home.Title = "Inicio";
+            home.Path = "/home";
+            home.IconClass = "fa-house fa-solid";
+            listOptions.Add(home);
+            var movies = new MenuDto();
+            movies.SortOrder = listOptions.Count + 1;
+            movies.Title = "Películas";
+            movies.Path = "/media/movies";
+            movies.IconClass = "fa-film fa-solid";
+            listOptions.Add(movies);
+            var tvseries = new MenuDto();
+            tvseries.SortOrder = listOptions.Count + 1;
+            tvseries.Title = "Series";
+            tvseries.Path = "/media/tvseries";
+            tvseries.IconClass = "fa-tv fa-solid";
+            listOptions.Add(tvseries);
+            var listLibraries= await _unitOfWork.Storages.GetAllByExpressionAsync(x=>x.MediaServer.User.Id==userId);
+            if(listLibraries!=null && listLibraries.Count()>0)
+            {
+                var listMediaServers = await _unitOfWork.MediaServers.GetAllByExpressionAsync(x => listLibraries.Select(x => x.MediaServerId).Contains(x.Id));
+                foreach(var mediaServer in listMediaServers)
+                {
+                    var ms = new MenuDto();
+                    ms.SortOrder = listOptions.Count + 1;
+                    ms.Title = mediaServer.FamilyName!=null && mediaServer.FamilyName!="" ? mediaServer.FamilyName:mediaServer.DeviceName;
+                    ms.Path = "/media/server/"+mediaServer.Guid;
+                    ms.ChildMenus= new List<MenuDto>();
+                    var libraries=listLibraries.Where(x => x.MediaServerId == mediaServer.Id);
+                    foreach (var library in libraries)
+                    {
+                        var ml = new MenuDto();
+                        ml.SortOrder = ms.ChildMenus.Count + 1;
+                        ml.Title = library.Name;
+                        ml.Path = "/media/server/" + mediaServer.Guid+"?source="+library.Id;
+                        ml.IconClass = library.MediaTypeCatalogDetailId == (int)MediaType.Movie ? "fa-film fa-solid" : "fa-tv fa-solid";
+                        ms.ChildMenus.Add(ml);
+                    }
+                    listOptions.Add(ms);
+                }
+            }
+            return listOptions;
         }
 
     }
