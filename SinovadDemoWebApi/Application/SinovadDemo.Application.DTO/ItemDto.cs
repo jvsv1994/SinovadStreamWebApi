@@ -29,6 +29,7 @@ namespace SinovadDemo.Application.DTO
         public int MovieId { get; set; }
         public int GenreId { get; set; }
         public int VideoId { get; set; }
+        public Guid MediaServerGuid { get; set; }
         public int MediaServerId { get; set; }
         public string GenreName { get; set; }
         public string IpAddress { get; set; }

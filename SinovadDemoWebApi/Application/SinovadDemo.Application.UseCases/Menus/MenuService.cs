@@ -192,7 +192,7 @@ namespace SinovadDemo.Application.UseCases.Users
                         var ml = new MenuDto();
                         ml.SortOrder = ms.ChildMenus.Count + 1;
                         ml.Title = library.Name;
-                        ml.Path = "/media/server/" + mediaServer.Guid+"?source="+library.Id;
+                        ml.Path = "/media/server/" + mediaServer.Guid+"/libraries/"+library.Id;
                         ml.IconClass = library.MediaTypeCatalogDetailId == (int)MediaType.Movie ? "fa-film fa-solid" : "fa-tv fa-solid";
                         ms.ChildMenus.Add(ml);
                     }
