@@ -4,7 +4,7 @@ namespace SinovadDemo.Application.Interface.Persistence
 {
     public interface IVideoRepository : IGenericRepository<Video>
     {
-        List<Video> GetVideoByStorageId(int storageId);
+        List<Video> GetVideoByLibraryId(int libraryId);
 
         object GetVideosByTvSerieAndUser(int tvSerieId, int userId);
     }

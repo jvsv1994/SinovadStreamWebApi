@@ -2,7 +2,7 @@
 
 namespace SinovadDemo.Domain.Entities;
 
-public partial class Storage : BaseEntity
+public partial class Library : BaseEntity
 {
     public int MediaServerId { get; set; }
     public string PhysicalPath { get; set; }

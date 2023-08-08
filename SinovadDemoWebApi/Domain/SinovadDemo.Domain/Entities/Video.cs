@@ -8,7 +8,7 @@ public partial class Video : BaseEntity
 
     public string PhysicalPath { get; set; }
 
-    public int? StorageId { get; set; }
+    public int? LibraryId { get; set; }
 
     public int? MovieId { get; set; }
 

@@ -11,7 +11,7 @@ namespace SinovadDemo.Application.DTO
         public string PhysicalPath { get; set; }
         public int UserId { get; set; }
         public int MediaServerId { get; set; }
-        public int StorageId { get; set; }
+        public int LibraryId { get; set; }
         public MediaType MediaType { get; set; }
         public int VideoId { get; set; }
         public int MovieId { get; set; }

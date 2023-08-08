@@ -8,7 +8,7 @@ namespace SinovadDemo.Application.DTO
 {
     public class VideoRequest
     {
-        public int StorageId { get; set; }
+        public int LibraryId { get; set; }
         public MediaType MediaType { get; set; }
         public string Paths { get; set; }
         public string LogIdentifier { get; set; }

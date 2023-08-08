@@ -65,7 +65,7 @@ namespace SinovadDemo.Application.UseCases.Videos
             return response;
         }
 
-        private Response<object> RegisterVideos(MediaType mediaType, int storageId, string paths, string logIdentifier)
+        private Response<object> RegisterVideos(MediaType mediaType, int libraryId, string paths, string logIdentifier)
         {
             var response = new Response<object>();
             try
@@ -74,11 +74,11 @@ namespace SinovadDemo.Application.UseCases.Videos
                 _searchMediaBuilder.AddSearchMediaLog(_searchMediaLog);
                 if (mediaType == MediaType.Movie)
                 {
-                    RegisterMoviesAndVideos(storageId, paths);
+                    RegisterMoviesAndVideos(libraryId, paths);
                 }
                 if (mediaType == MediaType.TvSerie)
                 {
-                    RegisterTvSeriesAndVideos(storageId, paths);
+                    RegisterTvSeriesAndVideos(libraryId, paths);
                 }
                 RemoveSearchMediaLog();
                 response.IsSuccess = true;
@@ -92,22 +92,22 @@ namespace SinovadDemo.Application.UseCases.Videos
             return response;
         }
 
-        public Response<object> UpdateVideosInListStorages(UpdateStorageVideosDto dto)
+        public Response<object> UpdateVideosInListLibraries(UpdateLibraryVideosDto dto)
         {
             var response = new Response<object>();
             try
             {
-                foreach (var storage in dto.ListStorages)
+                foreach (var library in dto.ListLibraries)
                 {
-                    if(storage.MediaTypeCatalogDetailId== (int)MediaType.Movie)
+                    if(library.MediaTypeCatalogDetailId== (int)MediaType.Movie)
                     {
-                        var paths = string.Join(",",storage.ListPaths);
-                        RegisterMoviesAndVideos(storage.Id, paths);
+                        var paths = string.Join(",",library.ListPaths);
+                        RegisterMoviesAndVideos(library.Id, paths);
                     }
-                    if (storage.MediaTypeCatalogDetailId == (int)MediaType.TvSerie)
+                    if (library.MediaTypeCatalogDetailId == (int)MediaType.TvSerie)
                     {
-                        var paths = string.Join(",", storage.ListPaths);
-                        RegisterTvSeriesAndVideos(storage.Id, paths);
+                        var paths = string.Join(",", library.ListPaths);
+                        RegisterTvSeriesAndVideos(library.Id, paths);
                     }
                 }
                 response.IsSuccess = true;
@@ -385,13 +385,13 @@ namespace SinovadDemo.Application.UseCases.Videos
             }
         }
 
-        private void RegisterMoviesAndVideos(int storageId, string paths)
+        private void RegisterMoviesAndVideos(int libraryId, string paths)
         {
             AddMessage(LogType.Information, "Starting search movies");
             try
             {
-                var filesToAdd = GetFilesToAdd(storageId, paths);
-                DeleteVideosNotFoundInStorage(storageId, paths);
+                var filesToAdd = GetFilesToAdd(libraryId, paths);
+                DeleteVideosNotFoundInLibrary(libraryId, paths);
                 if (filesToAdd != null && filesToAdd.Count > 0)
                 {
                     var listMoviesFinded = new List<MovieDto>();
@@ -419,7 +419,7 @@ namespace SinovadDemo.Application.UseCases.Videos
                                 var newVideo = new VideoDto();
                                 newVideo.PhysicalPath = physicalPath;
                                 newVideo.Title = movie.Title;
-                                newVideo.StorageId = storageId;
+                                newVideo.LibraryId = libraryId;
                                 newVideo.TmdbId = movie.TmdbId;
                                 newVideo.Imdbid = movie.Imdbid;
                                 listVideosTmp.Add(newVideo);
@@ -524,13 +524,13 @@ namespace SinovadDemo.Application.UseCases.Videos
             return listMovieGenreToAdd;
         }
 
-        private void RegisterTvSeriesAndVideos(int storageId, string paths)
+        private void RegisterTvSeriesAndVideos(int libraryId, string paths)
         {
             AddMessage(LogType.Information, "Starting search tv series");
             try
             {
-                var filesToAdd = GetFilesToAdd(storageId, paths);
-                DeleteVideosNotFoundInStorage(storageId, paths);
+                var filesToAdd = GetFilesToAdd(libraryId, paths);
+                DeleteVideosNotFoundInLibrary(libraryId, paths);
                 var listTvSeriesTMDFinded = new List<TvSerieDto>();
                 var listVideosTmp = new List<VideoDto>();
                 object queryEpisodes = _unitOfWork.Episodes.GetEpisodesFromOwnDataBase();
@@ -564,7 +564,7 @@ namespace SinovadDemo.Application.UseCases.Videos
                                     newVideo.PhysicalPath = physicalPath;
                                     newVideo.Title = episodeBeanFinded.TvSerieName;
                                     newVideo.Subtitle = "T" + seasonNumber + ":E" + episodeNumber + " " + episodeBeanFinded.Name;
-                                    newVideo.StorageId = storageId;
+                                    newVideo.LibraryId = libraryId;
                                     newVideo.EpisodeNumber = episodeNumber;
                                     newVideo.SeasonNumber = seasonNumber;
                                     newVideo.EpisodeName = episodeBeanFinded.Name;
@@ -597,7 +597,7 @@ namespace SinovadDemo.Application.UseCases.Videos
                                             newVideo.PhysicalPath = physicalPath;
                                             newVideo.Title = tvShow.Name;
                                             newVideo.Subtitle = "T" + seasonNumber + ":E" + episodeNumber + " " + episodeName;
-                                            newVideo.StorageId = storageId;
+                                            newVideo.LibraryId = libraryId;
                                             newVideo.TmdbId = tvShow.TmdbId;
                                             newVideo.EpisodeNumber = episodeNumber;
                                             newVideo.SeasonNumber = seasonNumber;
@@ -692,7 +692,7 @@ namespace SinovadDemo.Application.UseCases.Videos
         }
 
 
-        private List<string> GetFilesToAdd(int storageId, string paths)
+        private List<string> GetFilesToAdd(int libraryId, string paths)
         {
             List<string> filesToAdd = new List<string>();
             try
@@ -707,7 +707,7 @@ namespace SinovadDemo.Application.UseCases.Videos
                 if (listAllFilesTmp.Count > 0)
                 {
                     AddMessage(LogType.Information, "Check if videos were already registered");
-                    Expression<Func<Video, bool>> expressionVideosToAvoidAdd = x => listAllFilesTmp.Contains(x.PhysicalPath) && x.StorageId == storageId;
+                    Expression<Func<Video, bool>> expressionVideosToAvoidAdd = x => listAllFilesTmp.Contains(x.PhysicalPath) && x.LibraryId == libraryId;
                     listVideosToAvoidAdd = _unitOfWork.Videos.GetAllByExpressionAsync(expressionVideosToAvoidAdd).Result.ToList();
                 }
                 if (listVideosToAvoidAdd.Count > 0)
@@ -727,7 +727,7 @@ namespace SinovadDemo.Application.UseCases.Videos
             return filesToAdd;
         }
 
-        private void DeleteVideosNotFoundInStorage(int storageId, string paths)
+        private void DeleteVideosNotFoundInLibrary(int libraryId, string paths)
         {
             try
             {
@@ -738,7 +738,7 @@ namespace SinovadDemo.Application.UseCases.Videos
                     listAllFilesTmp = paths.Split(",").Select(x => x.ToString()).ToList();
                 }
                 List<Video> listVideosToDelete = new List<Video>();
-                Expression<Func<Video, bool>> expressionVideosToDelete = x => !listAllFilesTmp.Contains(x.PhysicalPath) && x.StorageId == storageId;
+                Expression<Func<Video, bool>> expressionVideosToDelete = x => !listAllFilesTmp.Contains(x.PhysicalPath) && x.LibraryId == libraryId;
                 listVideosToDelete = _unitOfWork.Videos.GetAllByExpressionAsync(expressionVideosToDelete).Result.ToList();
                 if (listVideosToDelete.Count > 0)
                 {

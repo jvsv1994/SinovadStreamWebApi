@@ -6,27 +6,27 @@ using SinovadDemo.Domain.Entities;
 using SinovadDemo.Transversal.Common;
 using SinovadDemo.Transversal.Mapping;
 
-namespace SinovadDemo.Application.UseCases.Storages
+namespace SinovadDemo.Application.UseCases.Libraries
 {
-    public class StorageService : IStorageService
+    public class LibraryService : ILibraryService
     {
         private IUnitOfWork _unitOfWork;
 
         private readonly SharedService _sharedService;
 
-        public StorageService(IUnitOfWork unitOfWork, SharedService sharedService)
+        public LibraryService(IUnitOfWork unitOfWork, SharedService sharedService)
         {
             _unitOfWork = unitOfWork;
             _sharedService = sharedService;
         }
 
-        public async Task<Response<StorageDto>> GetAsync(int id)
+        public async Task<Response<LibraryDto>> GetAsync(int id)
         {
-            var response = new Response<StorageDto>();
+            var response = new Response<LibraryDto>();
             try
             {
-                var result = await _unitOfWork.Storages.GetAsync(id);
-                response.Data = result.MapTo<StorageDto>();
+                var result = await _unitOfWork.Libraries.GetAsync(id);
+                response.Data = result.MapTo<LibraryDto>();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -38,13 +38,13 @@ namespace SinovadDemo.Application.UseCases.Storages
             return response;
         }
 
-        public async Task<ResponseGeneric<List<StorageDto>>> GetAllLibrariesByUserAsync(int userId)
+        public async Task<ResponseGeneric<List<LibraryDto>>> GetAllLibrariesByUserAsync(int userId)
         {
-            var response = new ResponsePagination<List<StorageDto>>();
+            var response = new ResponsePagination<List<LibraryDto>>();
             try
             {
-                var result = await _unitOfWork.Storages.GetAllByExpressionAsync(x => x.MediaServer.User.Id == userId);
-                response.Data = result.MapTo<List<StorageDto>>();
+                var result = await _unitOfWork.Libraries.GetAllByExpressionAsync(x => x.MediaServer.User.Id == userId);
+                response.Data = result.MapTo<List<LibraryDto>>();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }catch (Exception ex)
@@ -55,13 +55,13 @@ namespace SinovadDemo.Application.UseCases.Storages
             return response;
         }
 
-        public async Task<ResponsePagination<List<StorageDto>>> GetAllWithPaginationByMediaServerAsync(int mediaServerId, int page, int take, string sortBy, string sortDirection, string searchText, string searchBy)
+        public async Task<ResponsePagination<List<LibraryDto>>> GetAllWithPaginationByMediaServerAsync(int mediaServerId, int page, int take, string sortBy, string sortDirection, string searchText, string searchBy)
         {
-            var response = new ResponsePagination<List<StorageDto>>();
+            var response = new ResponsePagination<List<LibraryDto>>();
             try
             {
-                var result = await _unitOfWork.Storages.GetAllWithPaginationByExpressionAsync(page, take, sortBy, sortDirection, searchText, searchBy, x => x.MediaServerId == mediaServerId);
-                response.Data = result.Items.MapTo<List<StorageDto>>();
+                var result = await _unitOfWork.Libraries.GetAllWithPaginationByExpressionAsync(page, take, sortBy, sortDirection, searchText, searchBy, x => x.MediaServerId == mediaServerId);
+                response.Data = result.Items.MapTo<List<LibraryDto>>();
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;
                 response.TotalCount = result.Total;
@@ -77,13 +77,13 @@ namespace SinovadDemo.Application.UseCases.Storages
         }
 
 
-        public Response<object> Create(StorageDto storageDto)
+        public Response<object> Create(LibraryDto libraryDto)
         {
             var response = new Response<object>();
             try
             {
-                var storage = storageDto.MapTo<Storage>();
-                _unitOfWork.Storages.Add(storage);
+                var library = libraryDto.MapTo<Library>();
+                _unitOfWork.Libraries.Add(library);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
                 response.Message = "Successful";
@@ -96,13 +96,13 @@ namespace SinovadDemo.Application.UseCases.Storages
             return response;
         }
 
-        public Response<object> CreateList(List<StorageDto> list)
+        public Response<object> CreateList(List<LibraryDto> list)
         {
             var response = new Response<object>();
             try
             {
-                var mediaServers = list.MapTo<List<Storage>>();
-                _unitOfWork.Storages.AddList(mediaServers);
+                var mediaServers = list.MapTo<List<Library>>();
+                _unitOfWork.Libraries.AddList(mediaServers);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
                 response.Message = "Successful";
@@ -115,13 +115,13 @@ namespace SinovadDemo.Application.UseCases.Storages
             return response;
         }
 
-        public Response<object> Update(StorageDto storageDto)
+        public Response<object> Update(LibraryDto libraryDto)
         {
             var response = new Response<object>();
             try
             {
-                var storage = storageDto.MapTo<Storage>();
-                _unitOfWork.Storages.Update(storage);
+                var library = libraryDto.MapTo<Library>();
+                _unitOfWork.Libraries.Update(library);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
                 response.Message = "Successful";
@@ -139,9 +139,9 @@ namespace SinovadDemo.Application.UseCases.Storages
             var response = new Response<object>();
             try
             {
-                _unitOfWork.VideoProfiles.DeleteByExpression(it=>it.Video.StorageId==id);
-                _unitOfWork.Videos.DeleteByExpression(it => it.StorageId == id);
-                _unitOfWork.Storages.Delete(id);
+                _unitOfWork.VideoProfiles.DeleteByExpression(it=>it.Video.LibraryId==id);
+                _unitOfWork.Videos.DeleteByExpression(it => it.LibraryId == id);
+                _unitOfWork.Libraries.Delete(id);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
                 response.Message = "Successful";
@@ -164,7 +164,7 @@ namespace SinovadDemo.Application.UseCases.Storages
                 {
                     listIds = ids.Split(",").Select(x => Convert.ToInt32(x)).ToList();
                 }
-                _unitOfWork.Storages.DeleteByExpression(x => listIds.Contains(x.Id));
+                _unitOfWork.Libraries.DeleteByExpression(x => listIds.Contains(x.Id));
                 _unitOfWork.Save();
                 response.IsSuccess = true;
                 response.Message = "Successful";

@@ -12,7 +12,7 @@ using SinovadDemo.Application.UseCases.Movies;
 using SinovadDemo.Application.UseCases.Profiles;
 using SinovadDemo.Application.UseCases.Roles;
 using SinovadDemo.Application.UseCases.Seasons;
-using SinovadDemo.Application.UseCases.Storages;
+using SinovadDemo.Application.UseCases.Libraries;
 using SinovadDemo.Application.UseCases.TranscoderSetting;
 using SinovadDemo.Application.UseCases.TranscodingProcesses;
 using SinovadDemo.Application.UseCases.TvSeries;
@@ -31,7 +31,7 @@ namespace SinovadDemo.Application.UseCases
             services.AddScoped<IMenuService, MenuService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IMediaServerService, MediaServerService>();
-            services.AddScoped<IStorageService, StorageService>();
+            services.AddScoped<ILibraryService, LibraryService>();
             services.AddScoped<IMovieService, MovieService>();
             services.AddScoped<ITvSerieService, TvSerieService>();
             services.AddScoped<ISeasonService, SeasonService>();

@@ -27,9 +27,9 @@ namespace SinovadDemo.Persistence.Repositories
         {
             var query = from tvserie in _context.TvSeries
                         join video in _context.Videos on tvserie.Id equals video.TvSerieId
-                        join storage in _context.Storages on video.StorageId equals storage.Id
-                        join mediaServer in _context.MediaServers on storage.MediaServerId equals mediaServer.Id
-                        where mediaServer.UserId == userId && storage.MediaTypeCatalogDetailId == (int)MediaType.TvSerie && tvserie.Id == tvSerieId
+                        join library in _context.Libraries on video.LibraryId equals library.Id
+                        join mediaServer in _context.MediaServers on library.MediaServerId equals mediaServer.Id
+                        where mediaServer.UserId == userId && library.MediaTypeCatalogDetailId == (int)MediaType.TvSerie && tvserie.Id == tvSerieId
                         select new ItemDto
                         {
                             Title = tvserie.Name + (tvserie.LastAirDate.Value.Year > tvserie.FirstAirDate.Value.Year ? " (" + tvserie.FirstAirDate.Value.Year + "-" + tvserie.LastAirDate.Value.Year + ")" : " (" + tvserie.FirstAirDate.Value.Year + ")"),
@@ -44,7 +44,7 @@ namespace SinovadDemo.Persistence.Repositories
                             MediaServerUrl = mediaServer.Url,
                             MediaServerState = (MediaServerState)mediaServer.StateCatalogDetailId,
                             MediaServerId = mediaServer.Id,
-                            MediaType = (MediaType)storage.MediaTypeCatalogDetailId
+                            MediaType = (MediaType)library.MediaTypeCatalogDetailId
                         } into x
                         group x by new { x.TvSerieId, x } into g
                         select g.Key.x;
@@ -55,9 +55,9 @@ namespace SinovadDemo.Persistence.Repositories
         {
             var query = from tvserie in _context.TvSeries
                         join video in _context.Videos on tvserie.Id equals video.TvSerieId
-                        join storage in _context.Storages on video.StorageId equals storage.Id
-                        join mediaServer in _context.MediaServers on storage.MediaServerId equals mediaServer.Id
-                        where mediaServer.UserId == userId && storage.MediaTypeCatalogDetailId == (int)MediaType.TvSerie && tvserie.Name.ToLower().Contains(searchText.ToLower()) == true
+                        join library in _context.Libraries on video.LibraryId equals library.Id
+                        join mediaServer in _context.MediaServers on library.MediaServerId equals mediaServer.Id
+                        where mediaServer.UserId == userId && library.MediaTypeCatalogDetailId == (int)MediaType.TvSerie && tvserie.Name.ToLower().Contains(searchText.ToLower()) == true
                         select new ItemDto
                         {
                             Title = tvserie.Name + (tvserie.LastAirDate.Value.Year > tvserie.FirstAirDate.Value.Year ? " (" + tvserie.FirstAirDate.Value.Year + "-" + tvserie.LastAirDate.Value.Year + ")" : " (" + tvserie.FirstAirDate.Value.Year + ")"),
@@ -72,7 +72,7 @@ namespace SinovadDemo.Persistence.Repositories
                             MediaServerUrl = mediaServer.Url,
                             MediaServerState = (MediaServerState)mediaServer.StateCatalogDetailId,
                             MediaServerId = mediaServer.Id,
-                            MediaType = (MediaType)storage.MediaTypeCatalogDetailId
+                            MediaType = (MediaType)library.MediaTypeCatalogDetailId
                         } into x
                         group x by new { x.TvSerieId, x } into g
                         select g.Key.x;
@@ -85,9 +85,9 @@ namespace SinovadDemo.Persistence.Repositories
                           join genre in _context.Genres on tvseriegenre.GenreId equals genre.Id
                           join tvserie in _context.TvSeries on tvseriegenre.TvSerieId equals tvserie.Id
                           join video in _context.Videos on tvserie.Id equals video.TvSerieId
-                          join storage in _context.Storages on video.StorageId equals storage.Id
-                          join mediaServer in _context.MediaServers on storage.MediaServerId equals mediaServer.Id
-                          where mediaServer.UserId == userId && storage.MediaTypeCatalogDetailId == (int)MediaType.TvSerie
+                          join library in _context.Libraries on video.LibraryId equals library.Id
+                          join mediaServer in _context.MediaServers on library.MediaServerId equals mediaServer.Id
+                          where mediaServer.UserId == userId && library.MediaTypeCatalogDetailId == (int)MediaType.TvSerie
                           select new ItemDto
                           {
                               Title = tvserie.Name + (tvserie.LastAirDate.Value.Year > tvserie.FirstAirDate.Value.Year ? " (" + tvserie.FirstAirDate.Value.Year + "-" + tvserie.LastAirDate.Value.Year + ")" : " (" + tvserie.FirstAirDate.Value.Year + ")"),
@@ -104,7 +104,7 @@ namespace SinovadDemo.Persistence.Repositories
                               MediaServerUrl = mediaServer.Url,
                               MediaServerState = (MediaServerState)mediaServer.StateCatalogDetailId,
                               MediaServerId = mediaServer.Id,
-                              MediaType = (MediaType)storage.MediaTypeCatalogDetailId,
+                              MediaType = (MediaType)library.MediaTypeCatalogDetailId,
                               Created = (DateTime)video.Created
                           }).AsEnumerable().GroupBy(a => new { a.GenreId, a.TvSerieId }).Select(x => x.First()).ToList();
             return result;
@@ -114,9 +114,9 @@ namespace SinovadDemo.Persistence.Repositories
         {
             var result = (from tvserie in _context.TvSeries
                           join video in _context.Videos on tvserie.Id equals video.TvSerieId
-                          join storage in _context.Storages on video.StorageId equals storage.Id
-                          join mediaServer in _context.MediaServers on storage.MediaServerId equals mediaServer.Id
-                          where mediaServer.UserId == userId && storage.MediaTypeCatalogDetailId == (int)MediaType.TvSerie
+                          join library in _context.Libraries on video.LibraryId equals library.Id
+                          join mediaServer in _context.MediaServers on library.MediaServerId equals mediaServer.Id
+                          where mediaServer.UserId == userId && library.MediaTypeCatalogDetailId == (int)MediaType.TvSerie
                           orderby video.Created descending
                           select new ItemDto
                           {
@@ -132,7 +132,7 @@ namespace SinovadDemo.Persistence.Repositories
                               MediaServerUrl = mediaServer.Url,
                               MediaServerState = (MediaServerState)mediaServer.StateCatalogDetailId,
                               MediaServerId = mediaServer.Id,
-                              MediaType = (MediaType)storage.MediaTypeCatalogDetailId,
+                              MediaType = (MediaType)library.MediaTypeCatalogDetailId,
                               Created = (DateTime)video.Created
                           }).AsEnumerable().GroupBy(a => a.TvSerieId).Take(10).Select(x => x.First()).ToList();
             return result;
@@ -143,9 +143,9 @@ namespace SinovadDemo.Persistence.Repositories
             var result = (from tvserie in _context.TvSeries
                           join video in _context.Videos on tvserie.Id equals video.TvSerieId
                           join videoprofile in _context.VideoProfiles on video.Id equals videoprofile.VideoId
-                          join storage in _context.Storages on video.StorageId equals storage.Id
-                          join mediaServer in _context.MediaServers on storage.MediaServerId equals mediaServer.Id
-                          where videoprofile.ProfileId == profileId && storage.MediaTypeCatalogDetailId == (int)MediaType.TvSerie
+                          join library in _context.Libraries on video.LibraryId equals library.Id
+                          join mediaServer in _context.MediaServers on library.MediaServerId equals mediaServer.Id
+                          where videoprofile.ProfileId == profileId && library.MediaTypeCatalogDetailId == (int)MediaType.TvSerie
                           orderby videoprofile.LastModified descending
                           select new ItemDto
                           {
@@ -169,7 +169,7 @@ namespace SinovadDemo.Persistence.Repositories
                               MediaServerState = (MediaServerState)mediaServer.StateCatalogDetailId,
                               VideoId = video.Id,
                               MediaServerId = mediaServer.Id,
-                              MediaType = (MediaType)storage.MediaTypeCatalogDetailId,
+                              MediaType = (MediaType)library.MediaTypeCatalogDetailId,
                               ContinueVideo = true
                           }).AsEnumerable().GroupBy(a => a.TvSerieId).Select(x => x.First()).ToList();
             return result;

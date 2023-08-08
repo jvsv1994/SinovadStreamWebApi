@@ -13,28 +13,28 @@ namespace SinovadDemo.Persistence.Repositories
             _context = context;
         }
 
-        public List<Video> GetVideoByStorageId(int storageId)
+        public List<Video> GetVideoByLibraryId(int libraryId)
         {
-            return _context.Videos.Where(video => video.StorageId == storageId).ToList();
+            return _context.Videos.Where(video => video.LibraryId == libraryId).ToList();
         }
 
         public object GetVideosByTvSerieAndUser(int tvSerieId, int userId)
         {
             var result = _context.TvSeries.Join(_context.Videos, tvSerie => tvSerie.Id, video => video.TvSerieId, (tvserie, video) => new { tvserie, video })
-                .Join(_context.Storages, video => video.video.StorageId, storage => storage.Id, (video, storage) => new { video, storage })
-                .Join(_context.MediaServers, storage => storage.storage.MediaServerId, mediaServer => mediaServer.Id, (storage, mediaServer) =>
+                .Join(_context.Libraries, video => video.video.LibraryId, library => library.Id, (video, library) => new { video, library })
+                .Join(_context.MediaServers, library => library.library.MediaServerId, mediaServer => mediaServer.Id, (library, mediaServer) =>
                 new VideoDto
                 {
                     UserId = (int)mediaServer.UserId,
                     MediaServerId = mediaServer.Id,
                     MediaServerUrl=mediaServer.Url,
-                    MediaType = (MediaType)storage.storage.MediaTypeCatalogDetailId,
-                    TmdbId = storage.video.tvserie.TmdbId != null ? (int)storage.video.tvserie.TmdbId : 0,
-                    SeasonNumber = storage.video.video.SeasonNumber != null ? (int)storage.video.video.SeasonNumber : 0,
-                    EpisodeNumber = storage.video.video.EpisodeNumber != null ? (int)storage.video.video.EpisodeNumber : 0,
-                    VideoId = storage.video.video.Id,
-                    TvSerieId = storage.video.video.TvSerieId != null ? (int)storage.video.video.TvSerieId : 0,
-                    PhysicalPath=storage.video.video.PhysicalPath
+                    MediaType = (MediaType)library.library.MediaTypeCatalogDetailId,
+                    TmdbId = library.video.tvserie.TmdbId != null ? (int)library.video.tvserie.TmdbId : 0,
+                    SeasonNumber = library.video.video.SeasonNumber != null ? (int)library.video.video.SeasonNumber : 0,
+                    EpisodeNumber = library.video.video.EpisodeNumber != null ? (int)library.video.video.EpisodeNumber : 0,
+                    VideoId = library.video.video.Id,
+                    TvSerieId = library.video.video.TvSerieId != null ? (int)library.video.video.TvSerieId : 0,
+                    PhysicalPath=library.video.video.PhysicalPath
                 })
                 .Where(item => item.MediaType == MediaType.TvSerie && item.UserId == userId && item.TvSerieId == tvSerieId).ToList();
             return result;

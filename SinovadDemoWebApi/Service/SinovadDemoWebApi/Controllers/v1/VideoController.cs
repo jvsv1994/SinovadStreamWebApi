@@ -96,10 +96,10 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message);
         }
 
-        [HttpPost("UpdateVideosInListStorages")]
-        public ActionResult UpdateVideosInListStorages([FromBody] UpdateStorageVideosDto videoRequest)
+        [HttpPost("UpdateVideosInListLibraries")]
+        public ActionResult UpdateVideosInListLibraries([FromBody] UpdateLibraryVideosDto videoRequest)
         {
-            var response = _videoService.UpdateVideosInListStorages(videoRequest);
+            var response = _videoService.UpdateVideosInListLibraries(videoRequest);
             if (response.IsSuccess)
             {
                 return Ok(response);

@@ -10,7 +10,7 @@ namespace SinovadDemo.Persistence.Repositories
         private IMenuRepository _menus;
         private IRoleRepository _roles;
         private IGenericRepository<MediaServer> _mediaServers;
-        private IGenericRepository<Storage> _accountStorages;
+        private IGenericRepository<Library> _accountLibraries;
         private IGenericRepository<Catalog> _catalogs;
         private IGenericRepository<CatalogDetail> _catalogDetails;
         private IGenreRepository _genres;
@@ -92,13 +92,13 @@ namespace SinovadDemo.Persistence.Repositories
             }
         }
 
-        public IGenericRepository<Storage> Storages
+        public IGenericRepository<Library> Libraries
         {
             get
             {
-                return _accountStorages == null ?
-                _accountStorages = new GenericRepository<Storage>(_context) :
-                _accountStorages;
+                return _accountLibraries == null ?
+                _accountLibraries = new GenericRepository<Library>(_context) :
+                _accountLibraries;
             }
         }
 

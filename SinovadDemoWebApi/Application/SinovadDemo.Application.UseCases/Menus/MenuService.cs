@@ -175,7 +175,7 @@ namespace SinovadDemo.Application.UseCases.Users
             tvseries.Path = "/media/tvseries";
             tvseries.IconClass = "fa-tv fa-solid";
             listOptions.Add(tvseries);
-            var listLibraries= await _unitOfWork.Storages.GetAllByExpressionAsync(x=>x.MediaServer.User.Id==userId);
+            var listLibraries= await _unitOfWork.Libraries.GetAllByExpressionAsync(x=>x.MediaServer.User.Id==userId);
             if(listLibraries!=null && listLibraries.Count()>0)
             {
                 var listMediaServers = await _unitOfWork.MediaServers.GetAllByExpressionAsync(x => listLibraries.Select(x => x.MediaServerId).Contains(x.Id));

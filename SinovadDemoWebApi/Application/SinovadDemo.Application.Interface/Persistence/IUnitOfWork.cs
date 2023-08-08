@@ -10,7 +10,7 @@ namespace SinovadDemo.Application.Interface.Persistence
         public IMenuRepository Menus { get; }
         public IRoleRepository Roles { get; }
         public IGenericRepository<MediaServer> MediaServers { get; }
-        public IGenericRepository<Storage> Storages { get; }
+        public IGenericRepository<Library> Libraries { get; }
         public IGenericRepository<Catalog> Catalogs { get; }
         public IGenericRepository<CatalogDetail> CatalogDetails { get; }
         public IGenreRepository Genres { get; }

@@ -23,7 +23,7 @@ namespace SinovadDemoWebApi.Controllers.v1
         //[AllowAnonymous]
         //public IActionResult Upload([FromForm] DocumentDto document)
         //{
-        //    var filePath = Path.Combine(document.StoragePhysicalPath, document.File.FileName);
+        //    var filePath = Path.Combine(document.LibraryPhysicalPath, document.File.FileName);
         //    var response = new Response<object>();
         //    try
         //    {

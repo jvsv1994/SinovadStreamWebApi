@@ -23,7 +23,7 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
 
     public virtual DbSet<MediaServer> MediaServers { get; set; }
 
-    public virtual DbSet<Storage> Storages { get; set; }
+    public virtual DbSet<Library> Libraries { get; set; }
 
     public virtual DbSet<Catalog> Catalogs { get; set; }
 
@@ -265,20 +265,20 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
             entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
         });
 
-        modelBuilder.Entity<Storage>(entity =>
+        modelBuilder.Entity<Library>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Storage__3214EC27C8AEFD60");
+            entity.HasKey(e => e.Id).HasName("PK__Library__3214EC27C8AEFD60");
 
-            entity.ToTable("Storage");
+            entity.ToTable("Library");
 
             entity.Property(e => e.PhysicalPath)
                 .HasMaxLength(1000)
                 .IsUnicode(false);
 
-            entity.HasOne(d => d.MediaServer).WithMany(p => p.Storages)
+            entity.HasOne(d => d.MediaServer).WithMany(p => p.Libraries)
                 .HasForeignKey(d => d.MediaServerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Storage_MediaServer_ID");
+                .HasConstraintName("FK_Library_MediaServer_ID");
             entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
         });
 

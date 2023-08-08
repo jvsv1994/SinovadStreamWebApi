@@ -5,7 +5,7 @@ using SinovadDemo.Domain.Enums;
 
 namespace SinovadDemo.Application.DTO
 {
-    public class StorageDto
+    public class LibraryDto
     {
         public int Id { get; set; }
         public Guid Guid { get; set; }

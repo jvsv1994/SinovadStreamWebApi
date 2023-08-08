@@ -6,22 +6,22 @@ using SinovadDemo.Application.Interface.UseCases;
 namespace SinovadDemoWebApi.Controllers.v1
 {
     [ApiController]
-    [Route("api/v{version:apiVersion}/storages")]
+    [Route("api/v{version:apiVersion}/libraries")]
     [Authorize]
     [ApiVersion("1.0", Deprecated = true)]
-    public class StorageController : Controller
+    public class LibraryController : Controller
     {
-        private readonly IStorageService _storageService;
+        private readonly ILibraryService _libraryService;
 
-        public StorageController(IStorageService storageService)
+        public LibraryController(ILibraryService libraryService)
         {
-            _storageService = storageService;
+            _libraryService = libraryService;
         }
 
         [HttpGet("GetAllWithPaginationByMediaServerAsync/{mediaServerId}")]
         public async Task<ActionResult> GetAllWithPaginationByMediaServerAsync(int mediaServerId, [FromQuery] int page = 1,[FromQuery] int take = 1000, [FromQuery] string sortBy = "Id", [FromQuery] string sortDirection = "asc", [FromQuery] string searchText = "", [FromQuery] string searchBy = "")
         {
-            var response = await _storageService.GetAllWithPaginationByMediaServerAsync(mediaServerId, page, take, sortBy, sortDirection, searchText, searchBy);
+            var response = await _libraryService.GetAllWithPaginationByMediaServerAsync(mediaServerId, page, take, sortBy, sortDirection, searchText, searchBy);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -32,7 +32,7 @@ namespace SinovadDemoWebApi.Controllers.v1
         [HttpGet("GetAllLibrariesByUserAsync/{userId}")]
         public async Task<ActionResult> GetAllLibrariesByUser(int userId)
         {
-            var response = await _storageService.GetAllLibrariesByUserAsync(userId);
+            var response = await _libraryService.GetAllLibrariesByUserAsync(userId);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -41,9 +41,9 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpPost("Create")]
-        public ActionResult Create([FromBody] StorageDto storageDto)
+        public ActionResult Create([FromBody] LibraryDto libraryDto)
         {
-            var response = _storageService.Create(storageDto);
+            var response = _libraryService.Create(libraryDto);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -52,9 +52,9 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpPost("CreateList")]
-        public ActionResult CreateList([FromBody] List<StorageDto> list)
+        public ActionResult CreateList([FromBody] List<LibraryDto> list)
         {
-            var response = _storageService.CreateList(list);
+            var response = _libraryService.CreateList(list);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -63,9 +63,9 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpPut("Update")]
-        public ActionResult Update([FromBody] StorageDto seasonDto)
+        public ActionResult Update([FromBody] LibraryDto seasonDto)
         {
-            var response = _storageService.Update(seasonDto);
+            var response = _libraryService.Update(seasonDto);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -73,10 +73,10 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message);
         }
 
-        [HttpDelete("Delete/{storageId}")]
-        public ActionResult Delete(int storageId)
+        [HttpDelete("Delete/{libraryId}")]
+        public ActionResult Delete(int libraryId)
         {
-            var response = _storageService.Delete(storageId);
+            var response = _libraryService.Delete(libraryId);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -87,7 +87,7 @@ namespace SinovadDemoWebApi.Controllers.v1
         [HttpDelete("DeleteList/{listIds}")]
         public ActionResult DeleteList(string listIds)
         {
-            var response = _storageService.DeleteList(listIds);
+            var response = _libraryService.DeleteList(listIds);
             if (response.IsSuccess)
             {
                 return Ok(response);
