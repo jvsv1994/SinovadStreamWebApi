@@ -43,7 +43,10 @@ namespace SinovadDemo.Persistence.Repositories
                             IpAddress = mediaServer.IpAddress,
                             MediaServerUrl = mediaServer.Url,
                             MediaServerState = (MediaServerState)mediaServer.StateCatalogDetailId,
+                            MediaServerGuid = mediaServer.Guid,
                             MediaServerId = mediaServer.Id,
+                            LibraryId = library.Id,
+                            LibraryGuid = library.Guid,
                             MediaType = (MediaType)library.MediaTypeCatalogDetailId
                         } into x
                         group x by new { x.TvSerieId, x } into g
@@ -71,7 +74,10 @@ namespace SinovadDemo.Persistence.Repositories
                             IpAddress = mediaServer.IpAddress,
                             MediaServerUrl = mediaServer.Url,
                             MediaServerState = (MediaServerState)mediaServer.StateCatalogDetailId,
+                            MediaServerGuid = mediaServer.Guid,
                             MediaServerId = mediaServer.Id,
+                            LibraryId = library.Id,
+                            LibraryGuid = library.Guid,
                             MediaType = (MediaType)library.MediaTypeCatalogDetailId
                         } into x
                         group x by new { x.TvSerieId, x } into g
@@ -103,7 +109,10 @@ namespace SinovadDemo.Persistence.Repositories
                               IpAddress = mediaServer.IpAddress,
                               MediaServerUrl = mediaServer.Url,
                               MediaServerState = (MediaServerState)mediaServer.StateCatalogDetailId,
+                              MediaServerGuid = mediaServer.Guid,
                               MediaServerId = mediaServer.Id,
+                              LibraryId = library.Id,
+                              LibraryGuid = library.Guid,
                               MediaType = (MediaType)library.MediaTypeCatalogDetailId,
                               Created = (DateTime)video.Created
                           }).AsEnumerable().GroupBy(a => new { a.GenreId, a.TvSerieId }).Select(x => x.First()).ToList();
@@ -131,7 +140,10 @@ namespace SinovadDemo.Persistence.Repositories
                               IpAddress = mediaServer.IpAddress,
                               MediaServerUrl = mediaServer.Url,
                               MediaServerState = (MediaServerState)mediaServer.StateCatalogDetailId,
+                              MediaServerGuid = mediaServer.Guid,
                               MediaServerId = mediaServer.Id,
+                              LibraryId = library.Id,
+                              LibraryGuid = library.Guid,
                               MediaType = (MediaType)library.MediaTypeCatalogDetailId,
                               Created = (DateTime)video.Created
                           }).AsEnumerable().GroupBy(a => a.TvSerieId).Take(10).Select(x => x.First()).ToList();
@@ -168,7 +180,10 @@ namespace SinovadDemo.Persistence.Repositories
                               MediaServerUrl = mediaServer.Url,
                               MediaServerState = (MediaServerState)mediaServer.StateCatalogDetailId,
                               VideoId = video.Id,
+                              MediaServerGuid = mediaServer.Guid,
                               MediaServerId = mediaServer.Id,
+                              LibraryId = library.Id,
+                              LibraryGuid = library.Guid,
                               MediaType = (MediaType)library.MediaTypeCatalogDetailId,
                               ContinueVideo = true
                           }).AsEnumerable().GroupBy(a => a.TvSerieId).Select(x => x.First()).ToList();

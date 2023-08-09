@@ -1,8 +1,4 @@
 ﻿using SinovadDemo.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 #nullable disable
 
@@ -31,6 +27,8 @@ namespace SinovadDemo.Application.DTO
         public int VideoId { get; set; }
         public Guid MediaServerGuid { get; set; }
         public int MediaServerId { get; set; }
+        public int LibraryId { get; set; }
+        public Guid LibraryGuid { get; set; }
         public string GenreName { get; set; }
         public string IpAddress { get; set; }
         public string MediaServerUrl { get; set; }

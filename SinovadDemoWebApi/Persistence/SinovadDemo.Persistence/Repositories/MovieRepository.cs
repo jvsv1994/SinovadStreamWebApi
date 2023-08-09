@@ -44,7 +44,10 @@ namespace SinovadDemo.Persistence.Repositories
                                   MediaServerUrl = mediaServer.Url,
                                   MediaServerState = (MediaServerState)mediaServer.StateCatalogDetailId,
                                   VideoId = video.Id,
+                                  MediaServerGuid = mediaServer.Guid,
                                   MediaServerId = mediaServer.Id,
+                                  LibraryId = library.Id,
+                                  LibraryGuid = library.Guid,
                                   MediaType = (MediaType)library.MediaTypeCatalogDetailId,
                                   PhysicalPath = video.PhysicalPath
                               } into x
@@ -73,7 +76,10 @@ namespace SinovadDemo.Persistence.Repositories
                                   MediaServerUrl = mediaServer.Url,
                                   MediaServerState = (MediaServerState)mediaServer.StateCatalogDetailId,
                                   VideoId = video.Id,
+                                  MediaServerGuid = mediaServer.Guid,
                                   MediaServerId = mediaServer.Id,
+                                  LibraryId = library.Id,
+                                  LibraryGuid = library.Guid,
                                   MediaType = (MediaType)library.MediaTypeCatalogDetailId,
                                   PhysicalPath=video.PhysicalPath
                               } into x
@@ -107,7 +113,10 @@ namespace SinovadDemo.Persistence.Repositories
                                    IpAddress = mediaServer.IpAddress,
                                    MediaServerUrl = mediaServer.Url,
                                    MediaServerState = (MediaServerState)mediaServer.StateCatalogDetailId,
+                                   MediaServerGuid = mediaServer.Guid,
                                    MediaServerId = mediaServer.Id,
+                                   LibraryId = library.Id,
+                                   LibraryGuid = library.Guid,
                                    MediaType = (MediaType)library.MediaTypeCatalogDetailId,
                                    PhysicalPath = video.PhysicalPath,
                                    Created = (DateTime)video.Created
@@ -137,7 +146,10 @@ namespace SinovadDemo.Persistence.Repositories
                                    IpAddress = mediaServer.IpAddress,
                                    MediaServerUrl = mediaServer.Url,
                                    MediaServerState = (MediaServerState)mediaServer.StateCatalogDetailId,
+                                   MediaServerGuid = mediaServer.Guid,
                                    MediaServerId = mediaServer.Id,
+                                   LibraryId = library.Id,
+                                   LibraryGuid = library.Guid,
                                    MediaType = (MediaType)library.MediaTypeCatalogDetailId,
                                    PhysicalPath = video.PhysicalPath,
                                    Created = (DateTime)video.Created
@@ -172,7 +184,10 @@ namespace SinovadDemo.Persistence.Repositories
                               MediaServerUrl = mediaServer.Url,
                               MediaServerState = (MediaServerState)mediaServer.StateCatalogDetailId,
                               VideoId = video.Id,
+                              MediaServerGuid = mediaServer.Guid,
                               MediaServerId = mediaServer.Id,
+                              LibraryId = library.Id,
+                              LibraryGuid = library.Guid,
                               MediaType = (MediaType)library.MediaTypeCatalogDetailId,
                               ContinueVideo=true
                           }).AsEnumerable().GroupBy(a => a.MovieId).Select(x => x.First()).ToList();
