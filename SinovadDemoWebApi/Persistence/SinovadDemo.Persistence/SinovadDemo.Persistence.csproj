@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Application\SinovadDemo.Application.Interface\SinovadDemo.Application.Interface.csproj" />
     <ProjectReference Include="..\..\Domain\SinovadDemo.Domain\SinovadDemo.Domain.csproj" />
+    <ProjectReference Include="..\..\Transversal\SinovadDemo.Transversal.Mapping\SinovadDemo.Transversal.Mapping.csproj" />
     <ProjectReference Include="..\..\Transversal\SinovadDemo.Transversal.Paging\SinovadDemo.Transversal.Paging.csproj" />
   </ItemGroup>
 

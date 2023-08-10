@@ -19,6 +19,24 @@ namespace SinovadDemo.Application.UseCases.Episodes
             _sharedService = sharedService;
         }
 
+        public async Task<Response<EpisodeDto>> GetTvEpisodeAsync(int tvSerieId,int seasonNumber,int episodeNumber)
+        {
+            var response = new Response<EpisodeDto>();
+            try
+            {
+                var result = _unitOfWork.Episodes.GetEpisode(tvSerieId, seasonNumber, episodeNumber);
+                response.Data = result.MapTo<EpisodeDto>();
+                response.IsSuccess = true;
+                response.Message = "Successful";
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _sharedService._tracer.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
         public async Task<Response<EpisodeDto>> GetAsync(int id)
         {
             var response = new Response<EpisodeDto>();
@@ -42,7 +60,7 @@ namespace SinovadDemo.Application.UseCases.Episodes
             var response = new Response<List<EpisodeDto>>();
             try
             {
-                var result = await _unitOfWork.Episodes.GetAllAsync();
+                var result =  _unitOfWork.Episodes.GetEpisodesFromOwnDataBase();
                 response.Data = result.MapTo<List<EpisodeDto>>();
                 response.IsSuccess = true;
                 response.Message = "Successful";

@@ -6,6 +6,7 @@ namespace SinovadDemo.Application.Interface.UseCases
 {
     public interface IEpisodeService
     {
+        Task<Response<EpisodeDto>> GetTvEpisodeAsync(int tvSerieId, int seasonNumber, int episodeNumber);
         Task<Response<EpisodeDto>> GetAsync(int id);
         Task<Response<List<EpisodeDto>>> GetAllAsync();
         Task<ResponsePagination<List<EpisodeDto>>> GetAllWithPaginationBySeasonAsync(int seasonId, int page, int take, string sortBy, string sortDirection, string searchText, string searchBy);

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using SinovadDemo.Domain.Entities;
 
 #nullable disable
 
@@ -24,6 +23,7 @@ namespace SinovadDemo.Application.DTO
         public List<SeasonDto> ListSeasons { get; set; }
         public List<TvSerieGenreDto> ListItemGenres { get; set; }
         public List<string> ListGenreNames { get; set; }
+        public List<GenreDto> ListGenres { get; set; }
         public virtual List<TvSerieGenreDto> TvSerieGenres { get; set; }
 
     }

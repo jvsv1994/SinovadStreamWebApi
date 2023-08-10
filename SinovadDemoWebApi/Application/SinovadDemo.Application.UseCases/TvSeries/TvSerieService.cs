@@ -60,6 +60,26 @@ namespace SinovadDemo.Application.UseCases.TvSeries
             return response;
         }
 
+        public async Task<Response<TvSerieDto>> SearchAsync(string query)
+        {
+            var response = new Response<TvSerieDto>();
+            try
+            {
+                var result = await _unitOfWork.TvSeries.GetByExpressionAsync(x => x.Name.ToLower().Trim().Contains(query.ToLower().Trim()));
+                var tvSerie = result.MapTo<TvSerieDto>();
+                var listGenres = _unitOfWork.Genres.GetGenresByTvSerieId(tvSerie.Id);
+                tvSerie.ListGenres= listGenres.MapTo<List<GenreDto>>();
+                response.Data = tvSerie;
+                response.IsSuccess = true;
+                response.Message = "Successful";
+            }catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _sharedService._tracer.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
         public async Task<Response<TvSerieDto>> GetAsync(int id)
         {
             var response = new Response<TvSerieDto>();
