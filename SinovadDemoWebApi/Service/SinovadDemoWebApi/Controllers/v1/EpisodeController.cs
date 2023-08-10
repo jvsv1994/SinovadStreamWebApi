@@ -30,6 +30,18 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message);
         }
 
+
+        [HttpGet("GetAllAsync")]
+        public async Task<ActionResult> GetAllAsync()
+        {
+            var response = await _episodeService.GetAllAsync();
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response.Message);
+        }
+
         [HttpGet("GetAllWithPaginationBySeasonAsync/{seasonId}")]
         public async Task<ActionResult> GetAllWithPaginationBySeasonAsync(int seasonId, [FromQuery] int page = 1, [FromQuery] int take = 1000, [FromQuery] string sortBy = "EpisodeNumber", [FromQuery] string sortDirection = "asc", [FromQuery] string searchText = "", [FromQuery] string searchBy = "")
         {

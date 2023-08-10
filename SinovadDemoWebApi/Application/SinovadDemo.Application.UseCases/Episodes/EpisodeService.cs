@@ -37,6 +37,24 @@ namespace SinovadDemo.Application.UseCases.Episodes
             return response;
         }
 
+        public async Task<Response<List<EpisodeDto>>> GetAllAsync()
+        {
+            var response = new Response<List<EpisodeDto>>();
+            try
+            {
+                var result = await _unitOfWork.Episodes.GetAllAsync();
+                response.Data = result.MapTo<List<EpisodeDto>>();
+                response.IsSuccess = true;
+                response.Message = "Successful";
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _sharedService._tracer.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
 
         public async Task<ResponsePagination<List<EpisodeDto>>> GetAllWithPaginationBySeasonAsync(int seasonId, int page, int take, string sortBy, string sortDirection, string searchText, string searchBy)
         {
