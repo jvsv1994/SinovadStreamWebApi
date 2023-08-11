@@ -21,6 +21,24 @@ namespace SinovadDemo.Application.UseCases.Seasons
             _sharedService = sharedService;
         }
 
+        public async Task<Response<SeasonDto>> GetTvSeasonAsync(int tvSerieId,int seasonNumber)
+        {
+            var response = new Response<SeasonDto>();
+            try
+            {
+                var result = await _unitOfWork.Seasons.GetByExpressionAsync(x=>x.TvSerieId==tvSerieId && x.SeasonNumber==seasonNumber);
+                response.Data = result.MapTo<SeasonDto>();
+                response.IsSuccess = true;
+                response.Message = "Successful";
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _sharedService._tracer.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
         public async Task<Response<SeasonDto>> GetAsync(int id)
         {
             var response = new Response<SeasonDto>();

@@ -18,6 +18,17 @@ namespace SinovadDemoWebApi.Controllers.v1
             _seasonService = seasonService;
         }
 
+        [HttpGet("GetTvSeasonAsync")]
+        public async Task<ActionResult> GetTvSeasonAsync([FromQuery] int tvSerieId, [FromQuery] int seasonNumber)
+        {
+            var response = await _seasonService.GetTvSeasonAsync(tvSerieId,seasonNumber);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response.Message);
+        }
+
         [HttpGet("GetAsync/{seasonId}")]
         public async Task<ActionResult> GetAsync(int seasonId)
         {
