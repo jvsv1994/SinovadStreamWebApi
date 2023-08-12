@@ -1,4 +1,5 @@
-﻿using SinovadDemo.Application.DTO;
+﻿using Google.Protobuf.Collections;
+using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Application.Shared;
@@ -161,6 +162,18 @@ namespace SinovadDemo.Application.UseCases.TvSeries
             var response = new Response<object>();
             try
             {
+                //var seasons = _unitOfWork.Seasons.GetAllByExpression(x => x.TvSerieId==id);
+                //if (seasons != null && seasons.Count() > 0)
+                //{
+                //    var listSeasonsIds = seasons.Select(x => x.Id);
+                //    var episodes = _unitOfWork.Episodes.GetAllByExpression(x => listSeasonsIds.Contains(x.SeasonId));
+                //    if (episodes != null && episodes.Count() > 0)
+                //    {
+                //        _unitOfWork.Episodes.DeleteList(episodes.ToList());
+                //    }
+                //    _unitOfWork.Seasons.DeleteList(seasons.ToList());
+                //}
+                _unitOfWork.TvSerieGenres.DeleteByExpression(x =>x.TvSerieId==id);
                 _unitOfWork.TvSeries.Delete(id);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
@@ -184,6 +197,17 @@ namespace SinovadDemo.Application.UseCases.TvSeries
                 {
                     listIds = ids.Split(",").Select(x => Convert.ToInt32(x)).ToList();
                 }
+                //var seasons = _unitOfWork.Seasons.GetAllByExpression(x=> listIds.Contains(x.TvSerieId));
+                //if (seasons != null && seasons.Count() > 0)
+                //{
+                //    var listSeasonsIds = seasons.Select(x => x.Id);
+                //    var episodes = _unitOfWork.Episodes.GetAllByExpression(x => listSeasonsIds.Contains(x.SeasonId));
+                //    if(episodes != null && episodes.Count() > 0)
+                //    {
+                //        _unitOfWork.Episodes.DeleteList(episodes.ToList());
+                //    }
+                //    _unitOfWork.Seasons.DeleteList(seasons.ToList());
+                //}
                 _unitOfWork.TvSerieGenres.DeleteByExpression(x => listIds.Contains(x.TvSerieId));
                 _unitOfWork.TvSeries.DeleteByExpression(x => listIds.Contains(x.Id));
                 _unitOfWork.Save();

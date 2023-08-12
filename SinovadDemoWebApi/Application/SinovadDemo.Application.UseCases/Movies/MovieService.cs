@@ -166,6 +166,7 @@ namespace SinovadDemo.Application.UseCases.Movies
             var response = new Response<object>();
             try
             {
+                _unitOfWork.MovieGenres.DeleteByExpression(x => x.MovieId == id);
                 _unitOfWork.Movies.Delete(id);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
