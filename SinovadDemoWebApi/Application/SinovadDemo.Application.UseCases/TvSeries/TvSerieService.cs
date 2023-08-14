@@ -1,5 +1,4 @@
-﻿using Google.Protobuf.Collections;
-using SinovadDemo.Application.DTO;
+﻿using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Application.Shared;
@@ -236,48 +235,5 @@ namespace SinovadDemo.Application.UseCases.TvSeries
             }
         }
 
-        public ItemDetailDto GetTvSerieData(ItemDetailDto tvSerieDetail, List<SeasonDto> listSeasons, List<VideoDto> listVideos)
-        {
-            tvSerieDetail.Title = tvSerieDetail.Name;
-            var listGenres = _unitOfWork.Genres.GetGenresByTvSerieId(tvSerieDetail.Id);
-            tvSerieDetail.Genres = string.Join(", ", listGenres.Select(genre => genre.Name));
-            List<Season> listAllSeasons = _unitOfWork.Seasons.GetSeasonsByTvSerieId(tvSerieDetail.Id);
-            List<Episode> listAllEpisodes = _unitOfWork.Episodes.GetEpisodesByTvSerieId(tvSerieDetail.Id);
-            for (var i = 0; i < listSeasons.Count; i++)
-            {
-                var season = listSeasons[i];
-                Season seasonems = listAllSeasons.Find(item => item.SeasonNumber == season.SeasonNumber);
-                season.Overview = seasonems.Summary;
-                season.Name = seasonems.Name;
-                List<Episode> listepisodesems = listAllEpisodes.FindAll(item => item.SeasonId == seasonems.Id);
-                List<EpisodeDto> listEpisodesBySeason = new List<EpisodeDto>();
-                List<VideoDto> listVideosBySeason = listVideos.FindAll(item => item.SeasonNumber == season.SeasonNumber);
-                for (var j = 0; j < listVideosBySeason.Count; j++)
-                {
-                    var video = listVideosBySeason[j];
-                    var episodeems = listepisodesems.Find(item => item.EpisodeNumber == video.EpisodeNumber);
-                    if (episodeems != null)
-                    {
-                        var episode = new EpisodeDto();
-                        episode.MediaServerId = video.MediaServerId;
-                        episode.MediaServerUrl=video.MediaServerUrl;
-                        episode.TvSerieName = tvSerieDetail.Name;
-                        episode.EpisodeNumber = (int)episodeems.EpisodeNumber;
-                        episode.SeasonNumber = (int)seasonems.SeasonNumber;
-                        episode.Name = episodeems.Title;
-                        episode.Overview = episodeems.Summary;
-                        episode.PhysicalPath = video.PhysicalPath;
-                        episode.StillPath = tvSerieDetail.PosterPath;
-                        episode.VideoId = video.VideoId;
-                        listEpisodesBySeason.Add(episode);
-                    }
-                }
-                List<EpisodeDto> listEpisodesOrdered = listEpisodesBySeason.OrderBy(o => o.EpisodeNumber).ToList();
-                season.ListEpisodes = listEpisodesOrdered;
-            }
-            List<SeasonDto> listSeasonsOrdered = listSeasons.OrderBy(o => o.SeasonNumber).ToList();
-            tvSerieDetail.ListSeasons = listSeasonsOrdered;
-            return tvSerieDetail;
-        }
     }
 }

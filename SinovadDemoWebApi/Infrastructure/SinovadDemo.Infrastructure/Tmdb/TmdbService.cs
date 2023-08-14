@@ -3,7 +3,6 @@ using SinovadDemo.Application.Configuration;
 using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.Interface.Infrastructure;
 using SinovadDemo.Application.Shared;
-using SinovadDemo.Domain.Entities;
 using TMDbLib.Client;
 using TMDbLib.Objects.Search;
 using TMDbLib.Objects.TvShows;
@@ -21,59 +20,6 @@ namespace SinovadDemo.Infrastructure.Tmdb
         {
             _sharedService = sharedService;
             _tmdbClient = new TMDbClient(options.Value.TMDbApiKey);
-        }
-
-        public ItemDetailDto GetTvSerieData(int tmdbId, List<SeasonDto> listSeasons, List<VideoDto> listVideos)
-        {
-            var tvSerieDetail = new ItemDetailDto();
-            TMDbClient client = new TMDbClient(_sharedService._config.TMDbApiKey);
-            TvShow tvSerie = client.GetTvShowAsync(tmdbId, TvShowMethods.Undefined, "es-MX").Result;
-            Credits credits = client.GetTvShowCreditsAsync(tmdbId, "es-MX").Result;
-            tvSerieDetail = GetDetailTvSerieByTMDB(tvSerie.Genres, credits);
-            tvSerieDetail.TmdbId = tmdbId;
-            tvSerieDetail.PosterPath = tvSerie.PosterPath;
-            tvSerieDetail.Title = tvSerie.Name;
-            for (var i = 0; i < listSeasons.Count; i++)
-            {
-                var season = listSeasons[i];
-                TvSeason seasontmdb = client.GetTvSeasonAsync(season.TvSerieTmdbId, (int)season.SeasonNumber, TvSeasonMethods.Undefined, "es-MX").Result;
-                season.Overview = seasontmdb.Overview;
-                season.Name = seasontmdb.Name;
-                season.PosterPath = seasontmdb.PosterPath;
-                List<TvSeasonEpisode> listtse = seasontmdb.Episodes;
-                List<EpisodeDto> listEpisodesBySeason = new List<EpisodeDto>();
-                List<VideoDto> listVideosBySeason = listVideos.FindAll(item => item.SeasonNumber == season.SeasonNumber);
-                for (var j = 0; j < listVideosBySeason.Count; j++)
-                {
-                    var video = listVideosBySeason[j];
-                    var tse = listtse.Find(item => item.EpisodeNumber == video.EpisodeNumber);
-                    if (tse != null)
-                    {
-                        var indexEpisode=listEpisodesBySeason.FindIndex(item => item.EpisodeNumber == video.EpisodeNumber);
-                        if(indexEpisode == -1)
-                        {
-                            var episode = new EpisodeDto();
-                            episode.MediaServerId = video.MediaServerId;
-                            episode.MediaServerUrl = video.MediaServerUrl;
-                            episode.TvSerieName = tvSerie.Name;
-                            episode.EpisodeNumber = tse.EpisodeNumber;
-                            episode.SeasonNumber = tse.SeasonNumber;
-                            episode.Name = tse.Name;
-                            episode.Overview = tse.Overview;
-                            episode.PhysicalPath = video.PhysicalPath;
-                            episode.TmdbId = tse.Id;
-                            episode.StillPath = tse.StillPath;
-                            episode.VideoId = video.VideoId;
-                            listEpisodesBySeason.Add(episode);
-                        }
-                    }
-                }
-                List<EpisodeDto> listEpisodesOrdered = listEpisodesBySeason.OrderBy(o => o.EpisodeNumber).ToList();
-                season.ListEpisodes = listEpisodesOrdered;
-            }
-            List<SeasonDto> listSeasonsOrdered = listSeasons.OrderBy(o => o.SeasonNumber).ToList();
-            tvSerieDetail.ListSeasons = listSeasonsOrdered;
-            return tvSerieDetail;
         }
 
         public MovieDto SearchMovie(string movieName, string year)
@@ -205,41 +151,6 @@ namespace SinovadDemo.Infrastructure.Tmdb
             }
             return listGenres;
         }
-
-        public ItemDetailDto GetMovieDetail(ItemDetailDto movieDetail)
-        {
-            TMDbLib.Objects.Movies.Movie movie = _tmdbClient.GetMovieAsync((int)movieDetail.TmdbId, "es-MX").Result;
-            TMDbLib.Objects.Movies.Credits credits = _tmdbClient.GetMovieCreditsAsync((int)movieDetail.TmdbId).Result;
-            movieDetail.Genres = string.Join(", ", movie.Genres.Select(item => item.Name));
-            if (credits != null)
-            {
-                movieDetail.Actors = string.Join(", ", credits.Cast.Select(item => item.Name).Take(10));
-                movieDetail.Directors = string.Join(", ", credits.Crew.Select(item => item.Name).Take(10));
-            }
-            return movieDetail;
-        }
-
-        private ItemDetailDto GetDetailTvSerieByTMDB(List<TMDbLib.Objects.General.Genre> genreList, Credits credits)
-        {
-            ItemDetailDto detail = new ItemDetailDto();
-            if (genreList != null && genreList.Count > 0)
-            {
-                detail.Genres = string.Join(",", genreList.Select(x => x.Name));
-            }
-            if (credits != null)
-            {
-                if (credits.Cast != null && credits.Cast.Count > 0)
-                {
-                    detail.Actors = string.Join(",", credits.Cast.Select(x => x.Name).Take(10));
-                }
-                if (credits.Crew != null && credits.Crew.Count > 0)
-                {
-                    detail.Directors = string.Join(",", credits.Crew.Select(x => x.Name).Take(10));
-                }
-            }
-            return detail;
-        }
-
         private TMDbLib.Objects.Movies.Movie GetValidMovie(string movieName, List<SearchMovie> listSearchTv, string language)
         {
             TMDbLib.Objects.Movies.Movie movieFinded = null;

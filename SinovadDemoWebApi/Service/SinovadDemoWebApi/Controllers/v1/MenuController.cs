@@ -17,22 +17,10 @@ namespace SinovadDemoWebApi.Controllers.v1
         {
             _menuService = userService;
         }
-
         [HttpGet("GetByUserAsync/{userId}")]
         public async Task<ActionResult> GetByUserAsync(int userId)
         {
             var response = await _menuService.GetListMenusByUser(userId);
-            if (response.IsSuccess)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response.Message);
-        }
-
-        [HttpGet("GetMediaMenuByUserAsync/{userId}")]
-        public async Task<ActionResult> GetMediaMenuByUserAsync(int userId)
-        {
-            var response = await _menuService.GetMediaMenuByUserAsync(userId);
             if (response.IsSuccess)
             {
                 return Ok(response);

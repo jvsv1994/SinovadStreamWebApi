@@ -158,24 +158,5 @@ namespace SinovadDemo.Application.UseCases.Seasons
             return response;
         }
 
-        public List<SeasonDto> GetSeasonsByVideos(List<VideoDto> listVideos)
-        {
-            List<SeasonDto> listSeasons = new List<SeasonDto>();
-            for (var i = 0; i < listVideos.Count; i++)
-            {
-                var video = listVideos[i];
-                var seasonNumber = video.SeasonNumber;
-                var season = new SeasonDto();
-                season.SeasonNumber = seasonNumber;
-                season.TvSerieTmdbId = video.TmdbId!=null?(int)video.TmdbId:0;
-                season.TvSerieId = video.TvSerieId;
-                var index = listSeasons.FindIndex(item => item.SeasonNumber == seasonNumber);
-                if (index == -1)
-                {
-                    listSeasons.Add(season);
-                }
-            }
-            return listSeasons;
-        }
     }
 }

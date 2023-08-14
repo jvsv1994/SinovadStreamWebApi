@@ -10,7 +10,6 @@ namespace SinovadDemo.Persistence.Repositories
         private IMenuRepository _menus;
         private IRoleRepository _roles;
         private IGenericRepository<MediaServer> _mediaServers;
-        private IGenericRepository<Library> _accountLibraries;
         private IGenericRepository<Catalog> _catalogs;
         private IGenericRepository<CatalogDetail> _catalogDetails;
         private IGenreRepository _genres;
@@ -18,12 +17,8 @@ namespace SinovadDemo.Persistence.Repositories
         private IGenericRepository<MovieGenre> _movieGenres;
         private IGenericRepository<Profile> _profiles;
         private ISeasonRepository _seasons;
-        private IGenericRepository<TranscoderSettings> _transcoderSettings;
-        private IGenericRepository<TranscodingProcess> _transcodingProcesses;
         private ITvSerieRepository _tvSeries;
         private IGenericRepository<TvSerieGenre> _tvSerieGenres;
-        private IVideoRepository _videos;
-        private IGenericRepository<VideoProfile> _videoProfiles;
         private IEpisodeRepository _episodes;
         private IAppUserRepository _appUsers;
 
@@ -89,16 +84,6 @@ namespace SinovadDemo.Persistence.Repositories
                 return _mediaServers == null ?
                 _mediaServers = new GenericRepository<MediaServer>(_context) :
                 _mediaServers;
-            }
-        }
-
-        public IGenericRepository<Library> Libraries
-        {
-            get
-            {
-                return _accountLibraries == null ?
-                _accountLibraries = new GenericRepository<Library>(_context) :
-                _accountLibraries;
             }
         }
 
@@ -172,26 +157,6 @@ namespace SinovadDemo.Persistence.Repositories
             }
         }
 
-        public IGenericRepository<TranscoderSettings> TranscoderSettings
-        {
-            get
-            {
-                return _transcoderSettings == null ?
-                _transcoderSettings = new GenericRepository<TranscoderSettings>(_context) :
-                _transcoderSettings;
-            }
-        }
-
-        public IGenericRepository<TranscodingProcess> TranscodingProcesses
-        {
-            get
-            {
-                return _transcodingProcesses == null ?
-                _transcodingProcesses = new GenericRepository<TranscodingProcess>(_context) :
-                _transcodingProcesses;
-            }
-        }
-
         public ITvSerieRepository TvSeries
         {
             get
@@ -209,26 +174,6 @@ namespace SinovadDemo.Persistence.Repositories
                 return _tvSerieGenres == null ?
                 _tvSerieGenres = new GenericRepository<TvSerieGenre>(_context) :
                 _tvSerieGenres;
-            }
-        }
-
-        public IVideoRepository Videos
-        {
-            get
-            {
-                return _videos == null ?
-                _videos = new VideoRepository(_context) :
-                _videos;
-            }
-        }
-
-        public IGenericRepository<VideoProfile> VideoProfiles
-        {
-            get
-            {
-                return _videoProfiles == null ?
-                _videoProfiles = new GenericRepository<VideoProfile>(_context) :
-                _videoProfiles;
             }
         }
 

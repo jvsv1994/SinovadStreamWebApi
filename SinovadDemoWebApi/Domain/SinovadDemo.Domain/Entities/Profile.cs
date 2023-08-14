@@ -16,5 +16,4 @@ public partial class Profile : BaseEntity
 
     public virtual User User { get; set; } = null!;
 
-    public virtual ICollection<VideoProfile> VideoProfiles { get; set; } = new List<VideoProfile>();
 }

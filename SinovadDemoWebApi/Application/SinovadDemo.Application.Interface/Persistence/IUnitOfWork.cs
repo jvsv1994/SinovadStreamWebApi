@@ -10,7 +10,6 @@ namespace SinovadDemo.Application.Interface.Persistence
         public IMenuRepository Menus { get; }
         public IRoleRepository Roles { get; }
         public IGenericRepository<MediaServer> MediaServers { get; }
-        public IGenericRepository<Library> Libraries { get; }
         public IGenericRepository<Catalog> Catalogs { get; }
         public IGenericRepository<CatalogDetail> CatalogDetails { get; }
         public IGenreRepository Genres { get; }
@@ -18,12 +17,8 @@ namespace SinovadDemo.Application.Interface.Persistence
         public IGenericRepository<MovieGenre> MovieGenres { get; }
         public IGenericRepository<Profile> Profiles { get; }
         public ISeasonRepository Seasons { get; }
-        public IGenericRepository<TranscoderSettings> TranscoderSettings { get; }
-        public IGenericRepository<TranscodingProcess> TranscodingProcesses { get; }
         public ITvSerieRepository TvSeries { get; }
         public IGenericRepository<TvSerieGenre> TvSerieGenres { get; }
-        public IVideoRepository Videos { get; }
-        public IGenericRepository<VideoProfile> VideoProfiles { get; }
         public IEpisodeRepository Episodes { get; }
         public void Save();
         public Task SaveAsync();

@@ -23,8 +23,6 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
 
     public virtual DbSet<MediaServer> MediaServers { get; set; }
 
-    public virtual DbSet<Library> Libraries { get; set; }
-
     public virtual DbSet<Catalog> Catalogs { get; set; }
 
     public virtual DbSet<CatalogDetail> CatalogDetails { get; set; }
@@ -43,17 +41,9 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
 
     public virtual DbSet<Season> Seasons { get; set; }
 
-    public virtual DbSet<TranscoderSettings> TranscoderSettings { get; set; }
-
-    public virtual DbSet<TranscodingProcess> TranscodingProcesses { get; set; }
-
     public virtual DbSet<TvSerie> TvSeries { get; set; }
 
     public virtual DbSet<TvSerieGenre> TvSerieGenres { get; set; }
-
-    public virtual DbSet<Video> Videos { get; set; }
-
-    public virtual DbSet<VideoProfile> VideoProfiles { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -247,42 +237,8 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_MediaServer_User_ID");
-            entity.HasOne(d => d.TranscoderSettings).WithOne(p => p.MediaServer)
-                .HasForeignKey<TranscoderSettings>(d => d.MediaServerId)
-             .OnDelete(DeleteBehavior.ClientSetNull)
-             .HasConstraintName("FK_MediaServer_User_ID");
             entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
         });
-
-        modelBuilder.Entity<TranscoderSettings>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Transcod__3214EC279D19B237");
-
-            entity.HasOne(d => d.MediaServer).WithOne(p => p.TranscoderSettings)
-                .HasForeignKey<TranscoderSettings>(d => d.MediaServerId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_TranscoderSettings_MediaServer_ID");
-            entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
-        });
-
-        modelBuilder.Entity<Library>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Library__3214EC27C8AEFD60");
-
-            entity.ToTable("Library");
-
-            entity.Property(e => e.PhysicalPath)
-                .HasMaxLength(1000)
-                .IsUnicode(false);
-
-            entity.HasOne(d => d.MediaServer).WithMany(p => p.Libraries)
-                .HasForeignKey(d => d.MediaServerId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Library_MediaServer_ID");
-            entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
-        });
-
-
 
         modelBuilder.Entity<Episode>(entity =>
         {
@@ -415,15 +371,6 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
             entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
         });
 
-
-        modelBuilder.Entity<TranscodingProcess>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Transcod__3214EC27DF052101");
-
-            entity.ToTable("TranscodingProcess");
-            entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
-        });
-
         modelBuilder.Entity<TvSerie>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__TvSerie__3214EC27895BB3B8");
@@ -474,41 +421,6 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
                 .HasForeignKey(d => d.TvSerieId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_TvSerieGenre_TvSerie_ID");
-        });
-
-        modelBuilder.Entity<Video>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Video__3214EC2725862FD1");
-
-            entity.ToTable("Video");
-
-            entity.Property(e => e.PhysicalPath)
-                .HasMaxLength(1000)
-                .IsUnicode(false);
-            entity.Property(e => e.Subtitle)
-                .HasMaxLength(1000)
-                .IsUnicode(false);
-            entity.Property(e => e.Title)
-                .HasMaxLength(1000)
-                .IsUnicode(false);
-            entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
-        });
-
-        modelBuilder.Entity<VideoProfile>(entity =>
-        {
-            entity.HasKey(e => new { e.VideoId, e.ProfileId });
-
-            entity.ToTable("VideoProfile");
-
-            entity.HasOne(d => d.Profile).WithMany(p => p.VideoProfiles)
-                .HasForeignKey(d => d.ProfileId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_VideoProfileProfile");
-
-            entity.HasOne(d => d.Video).WithMany(p => p.VideoProfiles)
-                .HasForeignKey(d => d.VideoId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_VideoProfileVideo");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -10,7 +10,6 @@ namespace SinovadDemo.Application.Interface.UseCases
         Response<object> Create(MenuDto menuDto);
         Response<object> Update(MenuDto menuDto);
         Task<Response<List<MenuDto>>> GetListMenusByUser(int userId);
-        Task<Response<List<MenuDto>>> GetMediaMenuByUserAsync(int userId);
 
     }
 
