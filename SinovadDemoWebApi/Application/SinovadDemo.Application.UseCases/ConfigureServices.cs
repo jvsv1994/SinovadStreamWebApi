@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using SinovadDemo.Application.Builder;
 using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Application.Shared;
 using SinovadDemo.Application.UseCases.Authentication;
@@ -40,9 +39,6 @@ namespace SinovadDemo.Application.UseCases
 
             //validators
             services.AddTransient<AccessUserDtoValidator>();
-
-            // singleton services
-            services.AddSingleton<SearchMediaLogBuilder>();
 
             return services;
         }
