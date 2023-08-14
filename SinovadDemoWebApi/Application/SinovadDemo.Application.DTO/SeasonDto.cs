@@ -15,7 +15,6 @@ namespace SinovadDemo.Application.DTO
         public string Overview { get; set; }
         public string PosterPath { get; set; }
         public int TvSerieId { get; set; }
-        public int TvSerieTmdbId { get; set; }
         public List<EpisodeDto> ListEpisodes { get; set; }
 
     }

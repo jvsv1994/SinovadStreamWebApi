@@ -60,7 +60,7 @@ namespace SinovadDemo.Application.UseCases.Episodes
             var response = new Response<List<EpisodeDto>>();
             try
             {
-                var result =  _unitOfWork.Episodes.GetEpisodesFromOwnDataBase();
+                var result = await _unitOfWork.Episodes.GetAllAsync();
                 response.Data = result.MapTo<List<EpisodeDto>>();
                 response.IsSuccess = true;
                 response.Message = "Successful";
