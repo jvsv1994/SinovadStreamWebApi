@@ -16,6 +16,7 @@ namespace SinovadDemo.Domain.Entities
         public bool Active { get; set; }
         public virtual ICollection<MediaServer> MediaServers { get; set; } = new List<MediaServer>();
         public virtual ICollection<Profile> Profiles { get; set; } = new List<Profile>();
+        public virtual ICollection<LinkedAccount> LinkedAccounts { get; set; } = new List<LinkedAccount>();
         public DateTime? Created { get; set; }
         public string? CreatedBy { get; set; }
         public DateTime? LastModified { get; set; }

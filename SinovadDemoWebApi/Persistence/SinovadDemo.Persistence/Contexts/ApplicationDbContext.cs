@@ -39,6 +39,8 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
 
     public virtual DbSet<Profile> Profiles { get; set; }
 
+    public virtual DbSet<LinkedAccount> LinkedAccounts { get; set; }
+
     public virtual DbSet<Season> Seasons { get; set; }
 
     public virtual DbSet<TvSerie> TvSeries { get; set; }
@@ -111,7 +113,8 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
            new Catalog { Id = 2, Name = "Tipos de contenido Multimedia ", Guid = Guid.NewGuid() },
            new Catalog { Id = 3, Name = "Tipos de transmisión de Video", Guid = Guid.NewGuid() },
            new Catalog { Id = 4, Name = "Preajuste del transcodificador", Guid = Guid.NewGuid() },
-           new Catalog { Id = 5, Name = "Tipo de Icono", Guid = Guid.NewGuid() });
+           new Catalog { Id = 5, Name = "Tipo de Icono", Guid = Guid.NewGuid() },
+           new Catalog { Id = 6, Name = "Tipo de Cuenta Vinculada", Guid = Guid.NewGuid() });
 
         modelBuilder.Entity<CatalogDetail>(entity =>
         {
@@ -154,7 +157,11 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
         new CatalogDetail { CatalogId = 4, Id = 9, Name = "veryslow", TextValue = "veryslow", Guid = Guid.NewGuid() },
 
         new CatalogDetail { CatalogId = 5, Id = 1, Name = "Imagen", Guid = Guid.NewGuid() },
-        new CatalogDetail { CatalogId = 5, Id = 2, Name = "Font Awesome", Guid = Guid.NewGuid() });
+        new CatalogDetail { CatalogId = 5, Id = 2, Name = "Font Awesome", Guid = Guid.NewGuid() },
+
+        new CatalogDetail { CatalogId = 6, Id = 1, Name = "Google", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 6, Id = 2, Name = "Facebook", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 6, Id = 3, Name = "Apple", Guid = Guid.NewGuid() });
 
         modelBuilder.Entity<IdentityUserClaim<int>>(entity =>
         {
@@ -348,6 +355,19 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Profile_User_ID");
+            entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
+        });
+
+        modelBuilder.Entity<LinkedAccount>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__LinkedAccount__3214EC27B7871CE4");
+
+            entity.ToTable("LinkedAccount");
+
+            entity.HasOne(d => d.User).WithMany(p => p.LinkedAccounts)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_LinkedAccount_User_ID");
             entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
         });
 

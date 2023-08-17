@@ -58,4 +58,11 @@
         FontAwesome = 2
     }
 
+    public enum LinkedAccountType
+    {
+        Google = 1,
+        Facebook = 2,
+        Apple = 3
+    }
+
 }
