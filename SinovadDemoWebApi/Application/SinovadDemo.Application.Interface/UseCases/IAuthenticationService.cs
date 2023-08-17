@@ -5,6 +5,7 @@ namespace SinovadDemo.Application.Interface.UseCases
 {
     public  interface IAuthenticationService
     {
+        Task<Response<bool>> ValidateUser(string username);
         Task<Response<AuthenticationUserResponseDto>> AuthenticateUser(AccessUserDto dto);
         Task<Response<AuthenticationMediaServerResponseDto>> AuthenticateMediaServer(string securityIdentifier);
     }

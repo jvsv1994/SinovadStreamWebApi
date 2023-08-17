@@ -63,6 +63,25 @@ namespace SinovadDemoWebApi.Controllers.v1
             }
             return BadRequest(response);
         }
+
+        [HttpPost("ValidateUser")]
+        [AllowAnonymous]
+        public async Task<ActionResult> ValidateUser([FromBody] AccessUserDto dto)
+        {
+            var response = await _authenticationService.ValidateUser(dto.UserName);
+            if (response.IsSuccess)
+            {
+                if (response.Data==true)
+                {
+                    return Ok(response);
+                }
+                else
+                {
+                    return NotFound(response);
+                }
+            }
+            return BadRequest(response);
+        }
     }
 
 }

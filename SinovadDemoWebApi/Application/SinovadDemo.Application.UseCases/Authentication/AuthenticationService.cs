@@ -34,6 +34,29 @@ namespace SinovadDemo.Application.UseCases.Authentication
             _accessUserDtoValidator = accessUserDtoValidator;
         }
 
+        public async Task<Response<bool>> ValidateUser(string username)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                var user = await _unitOfWork.Users.GetByExpressionAsync(x=>x.UserName==username);
+                if(user != null)
+                {
+                    response.Data = true;
+                    response.Message = "Valid user";
+                }else{
+                    response.Message = "Invalid user";
+                }
+                response.IsSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
         public async Task<Response<AuthenticationUserResponseDto>> AuthenticateUser(AccessUserDto dto)
         {
             var response = new Response<AuthenticationUserResponseDto>();
