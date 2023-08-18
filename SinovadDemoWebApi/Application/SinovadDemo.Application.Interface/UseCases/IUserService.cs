@@ -11,6 +11,7 @@ namespace SinovadDemo.Application.Interface.UseCases
         Task<Response<UserDto>> GetUserByMediaServerSecurityIdentifier(string securityIdentifier);
         Task<Response<UserDto>> GetUserByLinkedAccountEmail(string email,LinkedAccountProvider LinkedAccountProvider);
         Task<Response<UserDto>> GetAsync(int id);
+        Task<Response<bool>> ChangeNames(ChangeNamesDto dto);
         Task<Response<bool>> ChangeUserName(ChangeUserNameDto dto);
         Task<Response<bool>> ResetPassword(ResetPasswordDto dto);
         Task<Response<bool>> ChangePassword(ChangePasswordDto dto);

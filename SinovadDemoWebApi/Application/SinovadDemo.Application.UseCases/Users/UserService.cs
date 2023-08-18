@@ -198,6 +198,33 @@ namespace SinovadDemo.Application.UseCases.Users
             return response;
         }
 
+        public async Task<Response<bool>> ChangeNames(ChangeNamesDto dto)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                var user = await _userManager.FindByIdAsync(dto.UserId.ToString());
+                user.FirstName = dto.FirstName;
+                user.LastName=dto.LastName;
+                var res = await _userManager.UpdateAsync(user);
+                if (res.Succeeded)
+                {
+                    response.Data = true;
+                    response.IsSuccess = true;
+                    response.Message = "Successful";
+                }else
+                {
+                    response.Message = string.Join("\n", res.Errors.Select(err => err.Description));
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
         public async Task<Response<bool>> ChangeUserName(ChangeUserNameDto dto)
         {
             var response = new Response<bool>();

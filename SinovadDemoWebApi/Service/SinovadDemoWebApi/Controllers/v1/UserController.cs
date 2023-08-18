@@ -188,6 +188,21 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message);
         }
 
+        [HttpPost("ChangeNames")]
+        public async Task<ActionResult> ChangeNames([FromBody] ChangeNamesDto dto)
+        {
+            if (dto == null)
+            {
+                return BadRequest();
+            }
+            var response = await _userService.ChangeNames(dto);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response.Message);
+        }
+
         [HttpPost("ChangeUserName")]
         public async Task<ActionResult> ChangeUserName([FromBody] ChangeUserNameDto dto)
         {
