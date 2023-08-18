@@ -66,13 +66,13 @@ namespace SinovadDemo.Application.UseCases.Users
             return response;
         }
 
-        public async Task<Response<UserDto>> GetUserByUsername(string username)
+        public async Task<Response<UserDto>> GetUserByGuid(string userGuid)
         {
             var response = new Response<UserDto>();
             try
             {
-                _logger.LogInformation("Getting user data from " + username);
-                var user = await _unitOfWork.Users.GetByExpressionAsync(x => x.UserName == username);
+                _logger.LogInformation("Getting user data from user with Guid " + userGuid);
+                var user = await _unitOfWork.Users.GetByExpressionAsync(x => x.Guid.ToString() == userGuid);
                 if(user!=null)
                 {
                     var userDto = user.MapTo<UserDto>();
@@ -179,6 +179,33 @@ namespace SinovadDemo.Application.UseCases.Users
                 var appUser = (User)user;
                 appUser.Active = true;
                 var res = await _userManager.ResetPasswordAsync(appUser, dto.ResetPasswordToken, dto.Password);
+                if (res.Succeeded)
+                {
+                    response.Data = true;
+                    response.IsSuccess = true;
+                    response.Message = "Successful";
+                }
+                else
+                {
+                    response.Message = string.Join("\n", res.Errors.Select(err => err.Description));
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> ChangeUserName(ChangeUserNameDto dto)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                var user = await _userManager.FindByIdAsync(dto.UserId.ToString());
+                var appUser = (User)user;
+                var res = await _userManager.SetUserNameAsync(appUser, dto.UserName);
                 if (res.Succeeded)
                 {
                     response.Data = true;
@@ -359,7 +386,7 @@ namespace SinovadDemo.Application.UseCases.Users
                             {
                                 _logger.LogInformation("Successful autentication for the user " + dto.UserName);
                                 var jwtHelper = new JWTHelper(_config.Value.JwtSettings.Secret, _config.Value.JwtSettings.Issuer, _config.Value.JwtSettings.Audience);
-                                var token = jwtHelper.CreateToken(dto.UserName);
+                                var token = jwtHelper.CreateTokenWithUserGuid(user.Guid);
                                 _logger.LogInformation("Token generated for the user " + dto.UserName + " : " + token);
                                 response.Data = token;
                                 response.IsSuccess = true;
@@ -417,7 +444,7 @@ namespace SinovadDemo.Application.UseCases.Users
                                 var data = new AuthenticationUserResponseDto();
                                 data.User= user.MapTo<UserDto>();
                                 var jwtHelper = new JWTHelper(_config.Value.JwtSettings.Secret, _config.Value.JwtSettings.Issuer, _config.Value.JwtSettings.Audience);
-                                var token = jwtHelper.CreateToken(dto.UserName);
+                                var token = jwtHelper.CreateTokenWithUserGuid(user.Guid);
                                 data.ApiToken = token;
                                 response.Data = data;
                             }else{

@@ -58,7 +58,7 @@ namespace SinovadDemoWebApi.Controllers.v1
             var claimUser = User.FindFirst(ClaimTypes.NameIdentifier);
             if (claimUser != null)
             {
-                response = await _userService.GetUserByUsername(claimUser.Value);
+                response = await _userService.GetUserByGuid(claimUser.Value);
             }else
             {
                 var claimSID = User.FindFirst(ClaimTypes.Sid);
@@ -181,6 +181,21 @@ namespace SinovadDemoWebApi.Controllers.v1
                 return BadRequest();
             }
             var response = await _userService.ResetPassword(dto);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response.Message);
+        }
+
+        [HttpPost("ChangeUserName")]
+        public async Task<ActionResult> ChangeUserName([FromBody] ChangeUserNameDto dto)
+        {
+            if (dto == null)
+            {
+                return BadRequest();
+            }
+            var response = await _userService.ChangeUserName(dto);
             if (response.IsSuccess)
             {
                 return Ok(response);

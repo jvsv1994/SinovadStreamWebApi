@@ -87,7 +87,7 @@ namespace SinovadDemo.Application.UseCases.Authentication
                                 var data = new AuthenticationUserResponseDto();
                                 data.User = user.MapTo<UserDto>();
                                 var jwtHelper = new JWTHelper(_config.Value.JwtSettings.Secret, _config.Value.JwtSettings.Issuer, _config.Value.JwtSettings.Audience);
-                                var token = jwtHelper.CreateToken(dto.UserName);
+                                var token = jwtHelper.CreateTokenWithUserGuid(user.Guid);
                                 data.ApiToken = token;
                                 response.Data = data;
                             }else

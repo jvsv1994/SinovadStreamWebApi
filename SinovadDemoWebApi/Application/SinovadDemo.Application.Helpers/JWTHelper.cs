@@ -22,10 +22,10 @@ namespace SinovadDemo.Application.Helpers
             _audience = audience;
         }
 
-        public string CreateToken(string @username)
+        public string CreateTokenWithUserGuid(Guid guid)
         {
             var claims = new ClaimsIdentity();
-            claims.AddClaim(new Claim(ClaimTypes.NameIdentifier,@username));
+            claims.AddClaim(new Claim(ClaimTypes.NameIdentifier, guid.ToString()));
 
             var tokenDescription = new SecurityTokenDescriptor()
             {
