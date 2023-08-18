@@ -183,6 +183,8 @@ namespace SinovadDemo.Application.UseCases.Authentication
                             var mainProfile = new Profile();
                             mainProfile.FullName = appUser.FirstName.Split(" ")[0];
                             mainProfile.Main = true;
+                            var aleatoryUsername= (userDataFinded.FirstName + userDataFinded.LastName + "_" + Guid.NewGuid()).Replace(" ","");
+                            appUser.UserName = aleatoryUsername.ToLower();
                             appUser.Profiles.Add(mainProfile);
                             linkedAccount = new LinkedAccount();
                             linkedAccount.Email = appUser.Email;

@@ -66,7 +66,7 @@ namespace SinovadDemo.Application.UseCases.Users
             return response;
         }
 
-        public async Task<Response<UserDto>> GetAsync(string username)
+        public async Task<Response<UserDto>> GetUserByUsername(string username)
         {
             var response = new Response<UserDto>();
             try
@@ -75,7 +75,9 @@ namespace SinovadDemo.Application.UseCases.Users
                 var user = await _unitOfWork.Users.GetByExpressionAsync(x => x.UserName == username);
                 if(user!=null)
                 {
-                    response.Data = user.MapTo<UserDto>();
+                    var userDto = user.MapTo<UserDto>();
+                    userDto.IsPasswordSetted = user.PasswordHash != null ? true : false;
+                    response.Data = userDto;
                     response.Message = "Successful";
                 }
                 response.IsSuccess = true;
@@ -100,7 +102,9 @@ namespace SinovadDemo.Application.UseCases.Users
                     if(user!=null)
                     {
                         user.MediaServers = null;
-                        response.Data = user.MapTo<UserDto>();
+                        var userDto = user.MapTo<UserDto>();
+                        userDto.IsPasswordSetted = user.PasswordHash != null ? true : false;
+                        response.Data = userDto;
                         response.Message = "Successful";
                     }
                 }
@@ -132,7 +136,9 @@ namespace SinovadDemo.Application.UseCases.Users
                         user.LinkedAccounts = null;
                         user.Profiles = null;
                         user.MediaServers = null;
-                        response.Data = user.MapTo<UserDto>();
+                        var userDto= user.MapTo<UserDto>();
+                        userDto.IsPasswordSetted = user.PasswordHash!=null?true:false;
+                        response.Data = userDto;
                         response.Message = "Successful";
                     }
                 }
@@ -206,6 +212,33 @@ namespace SinovadDemo.Application.UseCases.Users
                     response.IsSuccess = true;
                     response.Message = "Successful";
                 }else
+                {
+                    response.Message = string.Join("\n", res.Errors.Select(err => err.Description));
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> SetPassword(SetPasswordDto dto)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                var user = await _userManager.FindByIdAsync(dto.UserId.ToString());
+                var appUser = (User)user; 
+                var res = await _userManager.AddPasswordAsync(appUser,dto.Password);
+                if (res.Succeeded)
+                {
+                    response.Data = true;
+                    response.IsSuccess = true;
+                    response.Message = "Successful";
+                }
+                else
                 {
                     response.Message = string.Join("\n", res.Errors.Select(err => err.Description));
                 }
