@@ -58,11 +58,11 @@ namespace SinovadDemo.Application.Helpers
             return tokenHandler.WriteToken(createdToken);
         }
 
-        public string CreateTokenWithLinkedAccountEmail(string email,LinkedAccountType LinkedAccountType)
+        public string CreateTokenWithLinkedAccountEmail(string email,LinkedAccountProvider LinkedAccountProvider)
         {
             var claims = new ClaimsIdentity();
             claims.AddClaim(new Claim(ClaimTypes.Email, email));
-            claims.AddClaim(new Claim("LinkedAccountType", LinkedAccountType.ToString()));
+            claims.AddClaim(new Claim("LinkedAccountProvider", LinkedAccountProvider.ToString()));
             var tokenDescription = new SecurityTokenDescriptor()
             {
                 Subject = claims,

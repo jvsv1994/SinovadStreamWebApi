@@ -114,7 +114,7 @@ namespace SinovadDemo.Application.UseCases.Users
         }
 
 
-        public async Task<Response<UserDto>> GetUserByLinkedAccountEmail(string email, LinkedAccountType LinkedAccountType)
+        public async Task<Response<UserDto>> GetUserByLinkedAccountEmail(string email, LinkedAccountProvider LinkedAccountProvider)
         {
             var response = new Response<UserDto>();
             try
@@ -122,7 +122,7 @@ namespace SinovadDemo.Application.UseCases.Users
                 var list= await _unitOfWork.LinkedAccounts.GetAllAsync();
                 var ele = list.ToList()[0];
                 var token = ele.AccessToken;
-                var linkedAccountList = await _unitOfWork.LinkedAccounts.GetAllByExpressionAsync(x => x.Email.ToLower().Equals(email.ToLower()) && x.LinkedAccountTypeCatalogDetailId== (int)LinkedAccountType);
+                var linkedAccountList = await _unitOfWork.LinkedAccounts.GetAllByExpressionAsync(x => x.Email.ToLower().Equals(email.ToLower()) && x.LinkedAccountProviderCatalogDetailId== (int)LinkedAccountProvider);
                 var linkedAccount = linkedAccountList.FirstOrDefault();
                 if (linkedAccount != null)
                 {

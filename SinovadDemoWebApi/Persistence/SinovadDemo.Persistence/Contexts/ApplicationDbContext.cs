@@ -114,7 +114,7 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
            new Catalog { Id = 3, Name = "Tipos de transmisión de Video", Guid = Guid.NewGuid() },
            new Catalog { Id = 4, Name = "Preajuste del transcodificador", Guid = Guid.NewGuid() },
            new Catalog { Id = 5, Name = "Tipo de Icono", Guid = Guid.NewGuid() },
-           new Catalog { Id = 6, Name = "Tipo de Cuenta Vinculada", Guid = Guid.NewGuid() });
+           new Catalog { Id = 6, Name = "Proveedor de Cuenta Vinculada", Guid = Guid.NewGuid() });
 
         modelBuilder.Entity<CatalogDetail>(entity =>
         {

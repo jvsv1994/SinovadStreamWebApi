@@ -9,7 +9,7 @@ namespace SinovadDemo.Application.Interface.UseCases
         Task<ResponsePagination<List<UserDto>>> GetAllWithPaginationAsync(int page, int take, string sortBy, string sortDirection, string searchText, string searchBy);
         Task<Response<UserDto>> GetAsync(string username);
         Task<Response<UserDto>> GetUserByMediaServerSecurityIdentifier(string securityIdentifier);
-        Task<Response<UserDto>> GetUserByLinkedAccountEmail(string email,LinkedAccountType LinkedAccountType);
+        Task<Response<UserDto>> GetUserByLinkedAccountEmail(string email,LinkedAccountProvider LinkedAccountProvider);
         Task<Response<UserDto>> GetAsync(int id);
         Task<Response<bool>> ResetPassword(ResetPasswordDto dto);
         Task<Response<bool>> ChangePassword(ChangePasswordDto dto);

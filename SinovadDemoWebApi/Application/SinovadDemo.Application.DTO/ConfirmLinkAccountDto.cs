@@ -7,7 +7,7 @@ namespace SinovadDemo.Application.DTO
         public string Email { get; set; }   
         public string AccessToken { get; set; } 
         public int UserId { get; set;}
-        public LinkedAccountType LinkedAccountType  { get; set; }
+        public LinkedAccountProvider LinkedAccountProvider  { get; set; }
         public string? Password { get; set; }
 
     }

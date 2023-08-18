@@ -67,10 +67,10 @@ namespace SinovadDemoWebApi.Controllers.v1
                   response = await _userService.GetUserByMediaServerSecurityIdentifier(claimSID.Value);
                 }else{
                     var claimEmail = User.FindFirst(ClaimTypes.Email);
-                    var LinkedAccountType = User.FindFirst("LinkedAccountType");
-                    if (claimEmail != null && LinkedAccountType!=null)
+                    var LinkedAccountProvider = User.FindFirst("LinkedAccountProvider");
+                    if (claimEmail != null && LinkedAccountProvider!=null)
                     {
-                        response = await _userService.GetUserByLinkedAccountEmail(claimEmail.Value, Enum.Parse<LinkedAccountType>(LinkedAccountType.Value));
+                        response = await _userService.GetUserByLinkedAccountEmail(claimEmail.Value, Enum.Parse<LinkedAccountProvider>(LinkedAccountProvider.Value));
                     }
                 }
             }

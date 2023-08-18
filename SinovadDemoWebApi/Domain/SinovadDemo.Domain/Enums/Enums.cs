@@ -7,7 +7,7 @@
         VideoTransmissionType = 3,
         TranscoderPreset=4,
         IconType = 5,
-        LinkedAccountType = 6
+        LinkedAccountProvider = 6
     }
 
     public enum MediaServerState
@@ -59,7 +59,7 @@
         FontAwesome = 2
     }
 
-    public enum LinkedAccountType
+    public enum LinkedAccountProvider
     {
         Google = 1,
         Facebook = 2,

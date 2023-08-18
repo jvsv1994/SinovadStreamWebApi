@@ -156,7 +156,7 @@ namespace SinovadDemo.Application.UseCases.Authentication
             try
             {
                 UserDto userDataFinded=null;
-                if(linkedAccountDto.LinkedAccountTypeCatalogDetailId==LinkedAccountType.Google)
+                if(linkedAccountDto.LinkedAccountProviderCatalogDetailId==LinkedAccountProvider.Google)
                 {
                     userDataFinded = await _firebaseAuthService.ValidateGoogleCredentials(linkedAccountDto.AccessToken);
                 }
@@ -187,8 +187,8 @@ namespace SinovadDemo.Application.UseCases.Authentication
                             linkedAccount = new LinkedAccount();
                             linkedAccount.Email = appUser.Email;
                             linkedAccount.AccessToken = linkedAccountDto.AccessToken;
-                            linkedAccount.LinkedAccountTypeCatalogId = (int)CatalogEnum.LinkedAccountType;
-                            linkedAccount.LinkedAccountTypeCatalogDetailId = (int)linkedAccountDto.LinkedAccountTypeCatalogDetailId;
+                            linkedAccount.LinkedAccountProviderCatalogId = (int)CatalogEnum.LinkedAccountProvider;
+                            linkedAccount.LinkedAccountProviderCatalogDetailId = (int)linkedAccountDto.LinkedAccountProviderCatalogDetailId;
                             appUser.LinkedAccounts.Add(linkedAccount);
                             user = await _unitOfWork.Users.AddAsync(appUser);
                             await _unitOfWork.SaveAsync();
@@ -197,7 +197,7 @@ namespace SinovadDemo.Application.UseCases.Authentication
                             confirmLinkAccountData.UserId = user.Id;
                             confirmLinkAccountData.Email = userDataFinded.Email;
                             confirmLinkAccountData.AccessToken = linkedAccountDto.AccessToken;
-                            confirmLinkAccountData.LinkedAccountType = linkedAccountDto.LinkedAccountTypeCatalogDetailId;
+                            confirmLinkAccountData.LinkedAccountProvider = linkedAccountDto.LinkedAccountProviderCatalogDetailId;
                             authenticateUserResponse.ConfirmLinkAccountData = confirmLinkAccountData;
                         }
                     }
@@ -207,7 +207,7 @@ namespace SinovadDemo.Application.UseCases.Authentication
                         user.Profiles = null;
                         authenticateUserResponse.User = user.MapTo<UserDto>();
                         var jwtHelper = new JWTHelper(_config.Value.JwtSettings.Secret, _config.Value.JwtSettings.Issuer, _config.Value.JwtSettings.Audience);
-                        var token = jwtHelper.CreateTokenWithLinkedAccountEmail(userDataFinded.Email, linkedAccountDto.LinkedAccountTypeCatalogDetailId);
+                        var token = jwtHelper.CreateTokenWithLinkedAccountEmail(userDataFinded.Email, linkedAccountDto.LinkedAccountProviderCatalogDetailId);
                         authenticateUserResponse.ApiToken = token;
                     }
                     response.Data = authenticateUserResponse;
@@ -239,8 +239,8 @@ namespace SinovadDemo.Application.UseCases.Authentication
                     linkedAccount.UserId = user.Id;
                     linkedAccount.Email = user.Email;
                     linkedAccount.AccessToken = confirmLinkAccountDto.AccessToken;
-                    linkedAccount.LinkedAccountTypeCatalogId = (int)CatalogEnum.LinkedAccountType;
-                    linkedAccount.LinkedAccountTypeCatalogDetailId = (int)confirmLinkAccountDto.LinkedAccountType;
+                    linkedAccount.LinkedAccountProviderCatalogId = (int)CatalogEnum.LinkedAccountProvider;
+                    linkedAccount.LinkedAccountProviderCatalogDetailId = (int)confirmLinkAccountDto.LinkedAccountProvider;
                     linkedAccount = await _unitOfWork.LinkedAccounts.AddAsync(linkedAccount);
                     await _unitOfWork.SaveAsync();
                     response.Message = "Success";
@@ -249,7 +249,7 @@ namespace SinovadDemo.Application.UseCases.Authentication
                     user.Profiles = null;
                     authenticateUserResponse.User = user.MapTo<UserDto>();
                     var jwtHelper = new JWTHelper(_config.Value.JwtSettings.Secret, _config.Value.JwtSettings.Issuer, _config.Value.JwtSettings.Audience);
-                    var token = jwtHelper.CreateTokenWithLinkedAccountEmail(confirmLinkAccountDto.Email,(LinkedAccountType) confirmLinkAccountDto.LinkedAccountType);
+                    var token = jwtHelper.CreateTokenWithLinkedAccountEmail(confirmLinkAccountDto.Email,(LinkedAccountProvider) confirmLinkAccountDto.LinkedAccountProvider);
                     authenticateUserResponse.ApiToken = token;
                     response.Data = authenticateUserResponse;
                 }else{

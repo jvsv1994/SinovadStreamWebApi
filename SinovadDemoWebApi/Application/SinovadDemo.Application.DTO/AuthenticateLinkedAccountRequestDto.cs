@@ -6,7 +6,7 @@ namespace SinovadDemo.Application.DTO
     {
         public string AccessToken { get; set; }
         public CatalogEnum LinkedAccountTypeCatalogId { get; set; }
-        public LinkedAccountType LinkedAccountTypeCatalogDetailId { get; set; }
+        public LinkedAccountProvider LinkedAccountProviderCatalogDetailId { get; set; }
 
     }
 }
