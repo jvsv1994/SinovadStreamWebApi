@@ -16,6 +16,7 @@ namespace SinovadDemo.Persistence.Repositories
         private IMovieRepository _movies;
         private IGenericRepository<MovieGenre> _movieGenres;
         private IGenericRepository<Profile> _profiles;
+        private IGenericRepository<LinkedAccount> _linkedAccounts;
         private ISeasonRepository _seasons;
         private ITvSerieRepository _tvSeries;
         private IGenericRepository<TvSerieGenre> _tvSerieGenres;
@@ -144,6 +145,16 @@ namespace SinovadDemo.Persistence.Repositories
                 return _profiles == null ?
                 _profiles = new GenericRepository<Profile>(_context) :
                 _profiles;
+            }
+        }
+
+        public IGenericRepository<LinkedAccount> LinkedAccounts
+        {
+            get
+            {
+                return _linkedAccounts == null ?
+                _linkedAccounts = new GenericRepository<LinkedAccount>(_context) :
+                _linkedAccounts;
             }
         }
 

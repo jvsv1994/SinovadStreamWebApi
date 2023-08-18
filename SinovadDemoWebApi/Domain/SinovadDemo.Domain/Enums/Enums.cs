@@ -6,7 +6,8 @@
         MediaType = 2,
         VideoTransmissionType = 3,
         TranscoderPreset=4,
-        IconType = 5
+        IconType = 5,
+        LinkedAccountType = 6
     }
 
     public enum MediaServerState

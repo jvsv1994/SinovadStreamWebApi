@@ -102,3 +102,5 @@
 /SinovadDemoWebApi/Service/SinovadDemoWebApi/obj
 /SinovadDemoWebApi/Service/SinovadDemoWebApi/appsettings.json
 /SinovadDemoWebApi/Service/SinovadDemoWebApi/Properties/PublishProfiles
+/SinovadDemoWebApi/Service/SinovadDemoWebApi/FirebaseCredentials.json
+/SinovadDemoWebApi/Application/SinovadDemo.Application.UseCases/FirebaseCredentials.json

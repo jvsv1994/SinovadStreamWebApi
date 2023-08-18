@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.Interface.UseCases;
+using SinovadDemo.Application.UseCases.Movies;
+using SinovadDemo.Domain.Enums;
 using SinovadDemo.Transversal.Common;
 using System.Security.Claims;
 
@@ -62,7 +64,14 @@ namespace SinovadDemoWebApi.Controllers.v1
                 var claimSID = User.FindFirst(ClaimTypes.Sid);
                 if(claimSID != null)
                 {
-                    response = await _userService.GetUserByMediaServerSecurityIdentifier(claimSID.Value);
+                  response = await _userService.GetUserByMediaServerSecurityIdentifier(claimSID.Value);
+                }else{
+                    var claimEmail = User.FindFirst(ClaimTypes.Email);
+                    var LinkedAccountType = User.FindFirst("LinkedAccountType");
+                    if (claimEmail != null && LinkedAccountType!=null)
+                    {
+                        response = await _userService.GetUserByLinkedAccountEmail(claimEmail.Value, Enum.Parse<LinkedAccountType>(LinkedAccountType.Value));
+                    }
                 }
             }
             if (response==null)
@@ -187,6 +196,17 @@ namespace SinovadDemoWebApi.Controllers.v1
                 return BadRequest();
             }
             var response = await _userService.ChangePassword(dto);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response.Message);
+        }
+
+        [HttpDelete("Delete/{userId}")]
+        public ActionResult Delete(int userId)
+        {
+            var response = _userService.Delete(userId);
             if (response.IsSuccess)
             {
                 return Ok(response);

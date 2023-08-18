@@ -9,6 +9,7 @@ using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Application.Validator;
 using SinovadDemo.Domain.Entities;
+using SinovadDemo.Domain.Enums;
 using SinovadDemo.Transversal.Common;
 using SinovadDemo.Transversal.Mapping;
 
@@ -105,6 +106,39 @@ namespace SinovadDemo.Application.UseCases.Users
                 }
                 response.IsSuccess = true;
             }catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
+
+        public async Task<Response<UserDto>> GetUserByLinkedAccountEmail(string email, LinkedAccountType LinkedAccountType)
+        {
+            var response = new Response<UserDto>();
+            try
+            {
+                var list= await _unitOfWork.LinkedAccounts.GetAllAsync();
+                var ele = list.ToList()[0];
+                var token = ele.AccessToken;
+                var linkedAccountList = await _unitOfWork.LinkedAccounts.GetAllByExpressionAsync(x => x.Email.ToLower().Equals(email.ToLower()) && x.LinkedAccountTypeCatalogDetailId== (int)LinkedAccountType);
+                var linkedAccount = linkedAccountList.FirstOrDefault();
+                if (linkedAccount != null)
+                {
+                    var user = await _unitOfWork.Users.GetByExpressionAsync(x => x.Id == linkedAccount.UserId);
+                    if (user != null)
+                    {
+                        user.LinkedAccounts = null;
+                        user.Profiles = null;
+                        user.MediaServers = null;
+                        response.Data = user.MapTo<UserDto>();
+                        response.Message = "Successful";
+                    }
+                }
+                response.IsSuccess = true;
+            }
+            catch (Exception ex)
             {
                 response.Message = ex.Message;
                 _logger.LogError(ex.StackTrace);
@@ -527,6 +561,8 @@ namespace SinovadDemo.Application.UseCases.Users
             var response = new Response<object>();
             try
             {
+                _unitOfWork.LinkedAccounts.DeleteByExpression(x => x.UserId == id);
+                _unitOfWork.Profiles.DeleteByExpression(x=>x.UserId==id);
                 _unitOfWork.Users.Delete(id);
                 _unitOfWork.Save();
                 response.IsSuccess = true;

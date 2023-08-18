@@ -8,5 +8,7 @@ namespace SinovadDemo.Application.Interface.UseCases
         Task<Response<bool>> ValidateUser(string username);
         Task<Response<AuthenticationUserResponseDto>> AuthenticateUser(AccessUserDto dto);
         Task<Response<AuthenticationMediaServerResponseDto>> AuthenticateMediaServer(string securityIdentifier);
+        Task<Response<AuthenticationUserResponseDto>> AuthenticateLinkedAccount(AuthenticateLinkedAccountRequestDto linkedAccountDto);
+        Task<Response<AuthenticationUserResponseDto>> AuthenticatePasswordAndConfirmLinkAccountToUser(ConfirmLinkAccountDto confirmLinkAccountDto);
     }
 }

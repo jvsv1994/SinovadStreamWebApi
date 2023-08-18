@@ -21,6 +21,7 @@ namespace SinovadDemo.Application.UseCases
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
+
             //scoped services
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IMenuService, MenuService>();

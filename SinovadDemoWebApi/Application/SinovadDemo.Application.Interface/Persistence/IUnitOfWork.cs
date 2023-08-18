@@ -16,6 +16,7 @@ namespace SinovadDemo.Application.Interface.Persistence
         public IMovieRepository Movies { get; }
         public IGenericRepository<MovieGenre> MovieGenres { get; }
         public IGenericRepository<Profile> Profiles { get; }
+        public IGenericRepository<LinkedAccount> LinkedAccounts { get; }
         public ISeasonRepository Seasons { get; }
         public ITvSerieRepository TvSeries { get; }
         public IGenericRepository<TvSerieGenre> TvSerieGenres { get; }

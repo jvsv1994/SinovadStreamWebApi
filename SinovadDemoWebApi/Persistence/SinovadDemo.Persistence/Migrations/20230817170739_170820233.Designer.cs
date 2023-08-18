@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SinovadDemo.Domain.Entities;
 
@@ -11,9 +12,11 @@ using SinovadDemo.Domain.Entities;
 namespace SinovadDemo.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230817170739_170820233")]
+    partial class _170820233
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,7 +90,7 @@ namespace SinovadDemo.Persistence.Migrations
                         {
                             Id = 1,
                             Enabled = true,
-                            Guid = new Guid("8e5dd347-8650-4a98-8677-b1d1e85ce59d"),
+                            Guid = new Guid("6200cfa5-3e2d-40c1-a147-3c9be6321ab9"),
                             ParentId = 0,
                             SortOrder = 1,
                             Title = "General"
@@ -96,7 +99,7 @@ namespace SinovadDemo.Persistence.Migrations
                         {
                             Id = 2,
                             Enabled = true,
-                            Guid = new Guid("b5ff97d0-2999-4fb4-ac39-cab1c18acfe5"),
+                            Guid = new Guid("b13f8eca-4251-4b69-9a2d-276bb09aadb7"),
                             ParentId = 0,
                             SortOrder = 2,
                             Title = "Movie Data Base"
@@ -105,7 +108,7 @@ namespace SinovadDemo.Persistence.Migrations
                         {
                             Id = 3,
                             Enabled = true,
-                            Guid = new Guid("1d3d3b6b-06ed-4581-8f6a-eff7734ea17f"),
+                            Guid = new Guid("d93f48e9-5770-4865-a0dd-d7aa3771d6ee"),
                             IconClass = "fa-solid fa-list-check",
                             IconTypeCatalogDetailId = 2,
                             IconTypeCatalogId = 5,
@@ -118,7 +121,7 @@ namespace SinovadDemo.Persistence.Migrations
                         {
                             Id = 4,
                             Enabled = true,
-                            Guid = new Guid("a6639054-3479-4fca-90c1-6196ee59ed00"),
+                            Guid = new Guid("256b8adb-02b3-4967-8e97-efce8fc61223"),
                             IconClass = "fa-solid fa-user",
                             IconTypeCatalogDetailId = 2,
                             IconTypeCatalogId = 5,
@@ -131,7 +134,7 @@ namespace SinovadDemo.Persistence.Migrations
                         {
                             Id = 5,
                             Enabled = true,
-                            Guid = new Guid("124c1a84-027d-473f-9463-df110ef87791"),
+                            Guid = new Guid("5ffbbd47-b49c-4b2b-8ed2-8fecac717975"),
                             IconClass = "fa-solid fa-list-check",
                             IconTypeCatalogDetailId = 2,
                             IconTypeCatalogId = 5,
@@ -144,7 +147,7 @@ namespace SinovadDemo.Persistence.Migrations
                         {
                             Id = 6,
                             Enabled = true,
-                            Guid = new Guid("1b8072cf-38d9-4279-957c-ab34df2593b4"),
+                            Guid = new Guid("941b77be-5b31-4a13-ac0d-761fc6998755"),
                             IconClass = "fa-solid fa-film",
                             IconTypeCatalogDetailId = 2,
                             IconTypeCatalogId = 5,
@@ -157,7 +160,7 @@ namespace SinovadDemo.Persistence.Migrations
                         {
                             Id = 7,
                             Enabled = true,
-                            Guid = new Guid("ed881cd2-c155-4b5f-9226-1d7db8181724"),
+                            Guid = new Guid("c7d033eb-1b81-4be2-9294-0c5b25d35c5c"),
                             IconClass = "fa-solid fa-tv",
                             IconTypeCatalogDetailId = 2,
                             IconTypeCatalogId = 5,
@@ -170,7 +173,7 @@ namespace SinovadDemo.Persistence.Migrations
                         {
                             Id = 8,
                             Enabled = true,
-                            Guid = new Guid("6a5cd5e3-d5ba-4eea-956c-2d786b7e9c21"),
+                            Guid = new Guid("79205ca7-33c8-4a7e-ae85-312c05f7e13b"),
                             IconClass = "fa-solid fa-list-check",
                             IconTypeCatalogDetailId = 2,
                             IconTypeCatalogId = 5,
@@ -238,14 +241,14 @@ namespace SinovadDemo.Persistence.Migrations
                         {
                             Id = 1,
                             Enabled = true,
-                            Guid = new Guid("9bf22117-c17a-48fb-9f3a-b61f199b3ddf"),
+                            Guid = new Guid("9d802a65-5f62-4c56-8527-e2fc5b9cd5f8"),
                             Name = "Administrador Principal"
                         },
                         new
                         {
                             Id = 2,
                             Enabled = true,
-                            Guid = new Guid("b420a455-d03d-4241-869b-5ef7513e027c"),
+                            Guid = new Guid("d8210d29-28ac-47c2-95d4-f71e0f346cd3"),
                             Name = "Administrador de Medios"
                         });
                 });
@@ -494,37 +497,37 @@ namespace SinovadDemo.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            Guid = new Guid("851877d3-9544-43cb-b7f4-1f13a7df4974"),
+                            Guid = new Guid("f4915287-faa5-4238-96e7-8ce2e4a2f26c"),
                             Name = "Estado del Servidor Multimedia"
                         },
                         new
                         {
                             Id = 2,
-                            Guid = new Guid("416caf94-75f4-4218-98ea-3604361163d1"),
+                            Guid = new Guid("93b4e7f4-7a8c-400c-9a13-58b29bf64091"),
                             Name = "Tipos de contenido Multimedia "
                         },
                         new
                         {
                             Id = 3,
-                            Guid = new Guid("b3398c5b-c698-416a-a4c5-803b9c6451fc"),
+                            Guid = new Guid("32060e41-77c5-41e5-b444-207b74328d16"),
                             Name = "Tipos de transmisión de Video"
                         },
                         new
                         {
                             Id = 4,
-                            Guid = new Guid("0811881a-19a0-43fe-a6a1-f4b6540a3a65"),
+                            Guid = new Guid("c9118d6f-0a1f-481e-b6f5-468f0c166eb4"),
                             Name = "Preajuste del transcodificador"
                         },
                         new
                         {
                             Id = 5,
-                            Guid = new Guid("754a42ff-f4a1-41cd-a442-9e2eb1fde3c7"),
+                            Guid = new Guid("b2e0d861-34a9-4bc0-a6db-6e9fe7260448"),
                             Name = "Tipo de Icono"
                         },
                         new
                         {
                             Id = 6,
-                            Guid = new Guid("9de1bd08-d769-48aa-8f84-4217ad8c4b6e"),
+                            Guid = new Guid("418f5320-55ce-4b61-ada2-a053c946621b"),
                             Name = "Tipo de Cuenta Vinculada"
                         });
                 });
@@ -581,56 +584,56 @@ namespace SinovadDemo.Persistence.Migrations
                         {
                             CatalogId = 1,
                             Id = 1,
-                            Guid = new Guid("4365b908-84ef-4f5d-bfb0-4d4c00d52ec9"),
+                            Guid = new Guid("759170ad-9bbb-44b0-a86e-e17cdf21fca4"),
                             Name = "Iniciado"
                         },
                         new
                         {
                             CatalogId = 1,
                             Id = 2,
-                            Guid = new Guid("3e6fc2a4-2605-4419-8472-9d9c065cf80d"),
+                            Guid = new Guid("ff91af5e-24b2-4e60-aa72-cf263ff8d8a1"),
                             Name = "Pausado"
                         },
                         new
                         {
                             CatalogId = 2,
                             Id = 1,
-                            Guid = new Guid("fdaa25d9-b244-4257-b8b7-1bcefaa495f2"),
+                            Guid = new Guid("1daded7f-cd3e-49de-bb98-4154584ce2a6"),
                             Name = "Película"
                         },
                         new
                         {
                             CatalogId = 2,
                             Id = 2,
-                            Guid = new Guid("833d504f-faa4-4619-a65c-61cfac887fc2"),
+                            Guid = new Guid("814edefa-89f6-4012-8936-e085dc111724"),
                             Name = "Serie de TV"
                         },
                         new
                         {
                             CatalogId = 3,
                             Id = 1,
-                            Guid = new Guid("c75adbe5-ef56-4cd3-b197-e36c290a9b1b"),
+                            Guid = new Guid("f79ef84e-9108-4cbd-bde0-73396426cdf8"),
                             Name = "Normal"
                         },
                         new
                         {
                             CatalogId = 3,
                             Id = 2,
-                            Guid = new Guid("824a56f6-5b78-49a5-a8c3-ea399d677c03"),
+                            Guid = new Guid("9dd193ff-7e11-4034-b398-3149696895e1"),
                             Name = "MPEG-DASH"
                         },
                         new
                         {
                             CatalogId = 3,
                             Id = 3,
-                            Guid = new Guid("56df2ae8-2d12-4064-9a03-70f87774379c"),
+                            Guid = new Guid("a531d5d8-1365-45a9-ac74-e7e57a5fc723"),
                             Name = "HLS"
                         },
                         new
                         {
                             CatalogId = 4,
                             Id = 1,
-                            Guid = new Guid("9f1486ba-21bb-4e77-809f-87511edf0e6a"),
+                            Guid = new Guid("7aec02fd-6f8d-4960-a4d9-0dfc242df9fb"),
                             Name = "ultrafast",
                             TextValue = "ultrafast"
                         },
@@ -638,7 +641,7 @@ namespace SinovadDemo.Persistence.Migrations
                         {
                             CatalogId = 4,
                             Id = 2,
-                            Guid = new Guid("95391765-42f5-4407-b3ef-98a599c6761d"),
+                            Guid = new Guid("d2bb7efc-6b09-4ba6-9cc0-b2a444f9ee8c"),
                             Name = "superfast",
                             TextValue = "superfast"
                         },
@@ -646,7 +649,7 @@ namespace SinovadDemo.Persistence.Migrations
                         {
                             CatalogId = 4,
                             Id = 3,
-                            Guid = new Guid("175a9aa6-c5f0-4319-8425-dfba43673b57"),
+                            Guid = new Guid("7e862346-d31e-41f1-ac29-df8e775b23ce"),
                             Name = "veryfast",
                             TextValue = "veryfast"
                         },
@@ -654,7 +657,7 @@ namespace SinovadDemo.Persistence.Migrations
                         {
                             CatalogId = 4,
                             Id = 4,
-                            Guid = new Guid("264123e0-3fad-4ef7-86e2-9ba06f5d6762"),
+                            Guid = new Guid("5535790d-e2d6-4cf7-8182-4793dc5e7224"),
                             Name = "faster",
                             TextValue = "faster"
                         },
@@ -662,7 +665,7 @@ namespace SinovadDemo.Persistence.Migrations
                         {
                             CatalogId = 4,
                             Id = 5,
-                            Guid = new Guid("821ea483-c2a9-4889-b36f-6a7f4efc5c34"),
+                            Guid = new Guid("bf5d5010-a20f-4cc8-ba16-28d7c9acb4dd"),
                             Name = "fast",
                             TextValue = "fast"
                         },
@@ -670,7 +673,7 @@ namespace SinovadDemo.Persistence.Migrations
                         {
                             CatalogId = 4,
                             Id = 6,
-                            Guid = new Guid("ad6345cd-708b-4842-a964-a49bf9dea81c"),
+                            Guid = new Guid("45583bb8-fe48-4711-a372-2863ad3bdda8"),
                             Name = "medium",
                             TextValue = "medium"
                         },
@@ -678,7 +681,7 @@ namespace SinovadDemo.Persistence.Migrations
                         {
                             CatalogId = 4,
                             Id = 7,
-                            Guid = new Guid("bb97ed03-fabc-42b6-b61d-f1601efd826d"),
+                            Guid = new Guid("d1248d7a-a056-4efb-86a6-8c26c8b2b979"),
                             Name = "slow",
                             TextValue = "slow"
                         },
@@ -686,7 +689,7 @@ namespace SinovadDemo.Persistence.Migrations
                         {
                             CatalogId = 4,
                             Id = 8,
-                            Guid = new Guid("6be27200-c3e1-41a4-a1a6-05caa58d3f92"),
+                            Guid = new Guid("bd641fdf-d549-44e2-bbdd-30aee0623a49"),
                             Name = "slower",
                             TextValue = "slower"
                         },
@@ -694,7 +697,7 @@ namespace SinovadDemo.Persistence.Migrations
                         {
                             CatalogId = 4,
                             Id = 9,
-                            Guid = new Guid("40b70e33-b453-4f9f-8b99-5c303fd3afe0"),
+                            Guid = new Guid("5842420d-0ca9-4d2f-81fd-81736c72790c"),
                             Name = "veryslow",
                             TextValue = "veryslow"
                         },
@@ -702,35 +705,35 @@ namespace SinovadDemo.Persistence.Migrations
                         {
                             CatalogId = 5,
                             Id = 1,
-                            Guid = new Guid("04631082-c8a7-4dd7-baca-d732a1f8402c"),
+                            Guid = new Guid("ddc3dd39-ffa4-42c5-84e2-614ef19c63f4"),
                             Name = "Imagen"
                         },
                         new
                         {
                             CatalogId = 5,
                             Id = 2,
-                            Guid = new Guid("3bee6129-35f4-467c-bfd3-e24c62a01e73"),
+                            Guid = new Guid("e956fe50-27e9-4a1e-8500-b8435bad8769"),
                             Name = "Font Awesome"
                         },
                         new
                         {
                             CatalogId = 6,
                             Id = 1,
-                            Guid = new Guid("d34bb12a-f1fb-4199-8748-b448f34c4ed2"),
+                            Guid = new Guid("f18ef695-4d7d-4fd3-acd7-f1b5f3c19af8"),
                             Name = "Google"
                         },
                         new
                         {
                             CatalogId = 6,
                             Id = 2,
-                            Guid = new Guid("1549560d-5d3b-42bc-8fbe-7f6a868d833c"),
+                            Guid = new Guid("4ec28411-35cb-4d9e-bec6-2c33676b501b"),
                             Name = "Facebook"
                         },
                         new
                         {
                             CatalogId = 6,
                             Id = 3,
-                            Guid = new Guid("665c71e4-13d9-4556-972a-603c4808969f"),
+                            Guid = new Guid("07d37b49-dab1-4288-ab8d-dda2766aa714"),
                             Name = "Apple"
                         });
                 });
@@ -844,7 +847,6 @@ namespace SinovadDemo.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AccessToken")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("Created")
@@ -876,6 +878,10 @@ namespace SinovadDemo.Persistence.Migrations
 
                     b.Property<int>("LinkedAccountTypeCatalogId")
                         .HasColumnType("int");
+
+                    b.Property<string>("SourceId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");

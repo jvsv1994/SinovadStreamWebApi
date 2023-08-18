@@ -20,6 +20,52 @@ namespace SinovadDemoWebApi.Controllers.v1
             _authenticationService = authenticationService;
         }
 
+        [HttpPost("AuthenticatePasswordAndConfirmLinkAccountToUser")]
+        [AllowAnonymous]
+        public async Task<ActionResult> AuthenticatePasswordAndConfirmLinkAccountToUser([FromBody] ConfirmLinkAccountDto confirmLinkAccount)
+        {
+            if (confirmLinkAccount == null)
+            {
+                return BadRequest();
+            }
+            var response = await _authenticationService.AuthenticatePasswordAndConfirmLinkAccountToUser(confirmLinkAccount);
+            if (response.IsSuccess)
+            {
+                if (response.Data != null)
+                {
+                    return Ok(response);
+                }
+                else
+                {
+                    return NotFound(response);
+                }
+            }
+            return BadRequest(response);
+        }
+
+        [HttpPost("AuthenticateLinkedAccount")]
+        [AllowAnonymous]
+        public async Task<ActionResult> AuthenticateLinkedAccount([FromBody] AuthenticateLinkedAccountRequestDto linkedAccount)
+        {
+            if (linkedAccount == null)
+            {
+                return BadRequest();
+            }
+            var response = await _authenticationService.AuthenticateLinkedAccount(linkedAccount);
+            if (response.IsSuccess)
+            {
+                if (response.Data != null)
+                {
+                    return Ok(response);
+                }
+                else
+                {
+                    return NotFound(response);
+                }
+            }
+            return BadRequest(response);
+        }
+
         [HttpPost("AuthenticateMediaServer")]
         [AllowAnonymous]
         public async Task<ActionResult> AuthenticateMediaServer([FromBody] string sid)
