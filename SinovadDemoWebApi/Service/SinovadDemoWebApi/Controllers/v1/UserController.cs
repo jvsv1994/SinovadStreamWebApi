@@ -54,7 +54,7 @@ namespace SinovadDemoWebApi.Controllers.v1
         [HttpGet("GetUserData")]
         public async Task<ActionResult> GetUserData()
         {
-            Response<UserDto> response = null;
+            Response<UserSessionDto> response = null;
             var claimUser = User.FindFirst(ClaimTypes.NameIdentifier);
             if (claimUser != null)
             {
@@ -65,13 +65,6 @@ namespace SinovadDemoWebApi.Controllers.v1
                 if(claimSID != null)
                 {
                   response = await _userService.GetUserByMediaServerSecurityIdentifier(claimSID.Value);
-                }else{
-                    var claimEmail = User.FindFirst(ClaimTypes.Email);
-                    var LinkedAccountProvider = User.FindFirst("LinkedAccountProvider");
-                    if (claimEmail != null && LinkedAccountProvider!=null)
-                    {
-                        response = await _userService.GetUserByLinkedAccountEmail(claimEmail.Value, Enum.Parse<LinkedAccountProvider>(LinkedAccountProvider.Value));
-                    }
                 }
             }
             if (response==null)

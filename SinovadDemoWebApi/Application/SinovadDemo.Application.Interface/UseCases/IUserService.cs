@@ -7,9 +7,8 @@ namespace SinovadDemo.Application.Interface.UseCases
     public interface IUserService
     {
         Task<ResponsePagination<List<UserDto>>> GetAllWithPaginationAsync(int page, int take, string sortBy, string sortDirection, string searchText, string searchBy);
-        Task<Response<UserDto>> GetUserByGuid(string guid);
-        Task<Response<UserDto>> GetUserByMediaServerSecurityIdentifier(string securityIdentifier);
-        Task<Response<UserDto>> GetUserByLinkedAccountEmail(string email,LinkedAccountProvider LinkedAccountProvider);
+        Task<Response<UserSessionDto>> GetUserByGuid(string guid);
+        Task<Response<UserSessionDto>> GetUserByMediaServerSecurityIdentifier(string securityIdentifier);
         Task<Response<UserDto>> GetAsync(int id);
         Task<Response<bool>> ChangeNames(ChangeNamesDto dto);
         Task<Response<bool>> ChangeUserName(ChangeUserNameDto dto);

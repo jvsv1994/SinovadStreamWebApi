@@ -14,6 +14,7 @@ using SinovadDemo.Application.UseCases.Seasons;
 using SinovadDemo.Application.UseCases.TvSeries;
 using SinovadDemo.Application.UseCases.Users;
 using SinovadDemo.Application.Validator;
+using System.Reflection;
 
 namespace SinovadDemo.Application.UseCases
 {
@@ -21,7 +22,7 @@ namespace SinovadDemo.Application.UseCases
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
             //scoped services
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IMenuService, MenuService>();

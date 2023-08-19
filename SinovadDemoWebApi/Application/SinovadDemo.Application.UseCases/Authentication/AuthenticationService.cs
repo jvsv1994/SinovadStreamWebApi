@@ -209,7 +209,7 @@ namespace SinovadDemo.Application.UseCases.Authentication
                         user.Profiles = null;
                         authenticateUserResponse.User = user.MapTo<UserDto>();
                         var jwtHelper = new JWTHelper(_config.Value.JwtSettings.Secret, _config.Value.JwtSettings.Issuer, _config.Value.JwtSettings.Audience);
-                        var token = jwtHelper.CreateTokenWithLinkedAccountEmail(userDataFinded.Email, linkedAccountDto.LinkedAccountProviderCatalogDetailId);
+                        var token = jwtHelper.CreateTokenWithUserGuid(user.Guid);
                         authenticateUserResponse.ApiToken = token;
                     }
                     response.Data = authenticateUserResponse;
@@ -251,7 +251,7 @@ namespace SinovadDemo.Application.UseCases.Authentication
                     user.Profiles = null;
                     authenticateUserResponse.User = user.MapTo<UserDto>();
                     var jwtHelper = new JWTHelper(_config.Value.JwtSettings.Secret, _config.Value.JwtSettings.Issuer, _config.Value.JwtSettings.Audience);
-                    var token = jwtHelper.CreateTokenWithLinkedAccountEmail(confirmLinkAccountDto.Email,(LinkedAccountProvider) confirmLinkAccountDto.LinkedAccountProvider);
+                    var token = jwtHelper.CreateTokenWithUserGuid(user.Guid);
                     authenticateUserResponse.ApiToken = token;
                     response.Data = authenticateUserResponse;
                 }else{

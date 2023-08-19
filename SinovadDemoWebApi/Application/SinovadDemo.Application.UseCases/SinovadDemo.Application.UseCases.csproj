@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Domain\SinovadDemo.Domain\SinovadDemo.Domain.csproj" />
     <ProjectReference Include="..\..\Transversal\SinovadDemo.Transversal.Common\SinovadDemo.Transversal.Common.csproj" />
     <ProjectReference Include="..\..\Transversal\SinovadDemo.Transversal.Mapping\SinovadDemo.Transversal.Mapping.csproj" />

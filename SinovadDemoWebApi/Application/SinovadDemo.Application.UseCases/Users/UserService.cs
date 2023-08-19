@@ -31,7 +31,9 @@ namespace SinovadDemo.Application.UseCases.Users
 
         private readonly IOptions<MyConfig> _config;
 
-        public UserService(IUnitOfWork unitOfWork, IAppLogger<UserService> logger, IOptions<MyConfig> config, UserManager<User> userManager, SignInManager<User> signInManager, IEmailSenderService emalSenderService, AccessUserDtoValidator accessUserDtoValidator)
+        private readonly AutoMapper.IMapper _mapper;
+
+        public UserService(IUnitOfWork unitOfWork, IAppLogger<UserService> logger, IOptions<MyConfig> config, UserManager<User> userManager, SignInManager<User> signInManager, IEmailSenderService emalSenderService, AccessUserDtoValidator accessUserDtoValidator,AutoMapper.IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
@@ -40,6 +42,7 @@ namespace SinovadDemo.Application.UseCases.Users
             _signInManager = signInManager;
             _emalSenderService = emalSenderService;
             _accessUserDtoValidator = accessUserDtoValidator;
+            _mapper = mapper;
         }
 
         public async Task<ResponsePagination<List<UserDto>>> GetAllWithPaginationAsync(int page, int take, string sortBy, string sortDirection, string searchText, string searchBy)
@@ -66,18 +69,16 @@ namespace SinovadDemo.Application.UseCases.Users
             return response;
         }
 
-        public async Task<Response<UserDto>> GetUserByGuid(string userGuid)
+        public async Task<Response<UserSessionDto>> GetUserByGuid(string userGuid)
         {
-            var response = new Response<UserDto>();
+            var response = new Response<UserSessionDto>();
             try
             {
                 _logger.LogInformation("Getting user data from user with Guid " + userGuid);
                 var user = await _unitOfWork.Users.GetByExpressionAsync(x => x.Guid.ToString() == userGuid);
                 if(user!=null)
                 {
-                    var userDto = user.MapTo<UserDto>();
-                    userDto.IsPasswordSetted = user.PasswordHash != null ? true : false;
-                    response.Data = userDto;
+                    response.Data = await GetUserSessionData(user);
                     response.Message = "Successful";
                 }
                 response.IsSuccess = true;
@@ -90,9 +91,24 @@ namespace SinovadDemo.Application.UseCases.Users
             return response;
         }
 
-        public async Task<Response<UserDto>> GetUserByMediaServerSecurityIdentifier(string securityIdentifier)
+        private async Task<UserSessionDto> GetUserSessionData(User user)
         {
-            var response = new Response<UserDto>();
+            var userDto = _mapper.Map<UserDto>(user);
+            userDto.IsPasswordSetted = user.PasswordHash != null ? true : false;
+            var userSessionDto = new UserSessionDto();
+            userSessionDto.User = userDto;
+            var mediaServers = await _unitOfWork.MediaServers.GetAllByExpressionAsync(x => x.UserId == user.Id);
+            userSessionDto.MediaServers = _mapper.Map<List<MediaServerDto>>(mediaServers);
+            var profiles = await _unitOfWork.Profiles.GetAllByExpressionAsync(x => x.UserId == user.Id);
+            userSessionDto.Profiles = _mapper.Map<List<ProfileDto>>(profiles);
+            var linkedAccounts = await _unitOfWork.LinkedAccounts.GetAllByExpressionAsync(x => x.UserId == user.Id);
+            userSessionDto.LinkedAccounts = _mapper.Map<List<LinkedAccountDto>>(linkedAccounts);
+            return userSessionDto;
+        }
+
+        public async Task<Response<UserSessionDto>> GetUserByMediaServerSecurityIdentifier(string securityIdentifier)
+        {
+            var response = new Response<UserSessionDto>();
             try
             {
                 var mediaServer = await _unitOfWork.MediaServers.GetByExpressionAsync(x => x.SecurityIdentifier == securityIdentifier);
@@ -101,50 +117,12 @@ namespace SinovadDemo.Application.UseCases.Users
                     var user = await _unitOfWork.Users.GetByExpressionAsync(x => x.Id == mediaServer.UserId);
                     if(user!=null)
                     {
-                        user.MediaServers = null;
-                        var userDto = user.MapTo<UserDto>();
-                        userDto.IsPasswordSetted = user.PasswordHash != null ? true : false;
-                        response.Data = userDto;
+                        response.Data = await GetUserSessionData(user);
                         response.Message = "Successful";
                     }
                 }
                 response.IsSuccess = true;
             }catch (Exception ex)
-            {
-                response.Message = ex.Message;
-                _logger.LogError(ex.StackTrace);
-            }
-            return response;
-        }
-
-
-        public async Task<Response<UserDto>> GetUserByLinkedAccountEmail(string email, LinkedAccountProvider LinkedAccountProvider)
-        {
-            var response = new Response<UserDto>();
-            try
-            {
-                var list= await _unitOfWork.LinkedAccounts.GetAllAsync();
-                var ele = list.ToList()[0];
-                var token = ele.AccessToken;
-                var linkedAccountList = await _unitOfWork.LinkedAccounts.GetAllByExpressionAsync(x => x.Email.ToLower().Equals(email.ToLower()) && x.LinkedAccountProviderCatalogDetailId== (int)LinkedAccountProvider);
-                var linkedAccount = linkedAccountList.FirstOrDefault();
-                if (linkedAccount != null)
-                {
-                    var user = await _unitOfWork.Users.GetByExpressionAsync(x => x.Id == linkedAccount.UserId);
-                    if (user != null)
-                    {
-                        user.LinkedAccounts = null;
-                        user.Profiles = null;
-                        user.MediaServers = null;
-                        var userDto= user.MapTo<UserDto>();
-                        userDto.IsPasswordSetted = user.PasswordHash!=null?true:false;
-                        response.Data = userDto;
-                        response.Message = "Successful";
-                    }
-                }
-                response.IsSuccess = true;
-            }
-            catch (Exception ex)
             {
                 response.Message = ex.Message;
                 _logger.LogError(ex.StackTrace);

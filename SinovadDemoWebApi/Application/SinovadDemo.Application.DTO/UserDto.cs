@@ -1,5 +1,6 @@
 ﻿#nullable disable
 
+
 namespace SinovadDemo.Application.DTO
 {
     public partial class UserDto
