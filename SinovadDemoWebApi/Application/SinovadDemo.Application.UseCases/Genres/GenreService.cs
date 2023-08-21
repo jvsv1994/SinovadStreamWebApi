@@ -5,7 +5,6 @@ using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Application.Shared;
 using SinovadDemo.Domain.Entities;
 using SinovadDemo.Transversal.Common;
-using SinovadDemo.Transversal.Mapping;
 
 namespace SinovadDemo.Application.UseCases.Genres
 {
@@ -17,11 +16,14 @@ namespace SinovadDemo.Application.UseCases.Genres
 
         private readonly ITmdbService _tmdbService;
 
-        public GenreService(IUnitOfWork unitOfWork,ITmdbService tmdbService, SharedService sharedService)
+        private readonly AutoMapper.IMapper _mapper;
+
+        public GenreService(IUnitOfWork unitOfWork,ITmdbService tmdbService, SharedService sharedService,AutoMapper.IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _sharedService = sharedService;
             _tmdbService = tmdbService;
+            _mapper = mapper;
         }
 
         public async Task<Response<List<GenreDto>>> GetAllAsync()
@@ -30,7 +32,7 @@ namespace SinovadDemo.Application.UseCases.Genres
             try
             {
                 var result = await _unitOfWork.Genres.GetAllAsync();
-                response.Data = result.MapTo<List<GenreDto>>();
+                response.Data = _mapper.Map<List<GenreDto>>(result);
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -48,7 +50,7 @@ namespace SinovadDemo.Application.UseCases.Genres
             try
             {
                 var result = await _unitOfWork.Genres.GetAllWithPaginationAsync(page, take, sortBy, sortDirection, searchText, searchBy);
-                response.Data = result.Items.MapTo<List<GenreDto>>();
+                response.Data = _mapper.Map<List<GenreDto>>(result);
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;
                 response.TotalCount = result.Total;
@@ -69,7 +71,7 @@ namespace SinovadDemo.Application.UseCases.Genres
             try
             {
                 var result = await _unitOfWork.Genres.GetAsync(id);
-                response.Data = result.MapTo<GenreDto>();
+                response.Data = _mapper.Map<GenreDto>(result);
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -87,7 +89,7 @@ namespace SinovadDemo.Application.UseCases.Genres
             var response = new Response<object>();
             try
             {
-                var entity = dto.MapTo<Genre>();
+                var entity = _mapper.Map<Genre>(dto);
                 _unitOfWork.Genres.Add(entity);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
@@ -106,7 +108,7 @@ namespace SinovadDemo.Application.UseCases.Genres
             var response = new Response<object>();
             try
             {
-                var listEntities = list.MapTo<List<Genre>>();
+                var listEntities = _mapper.Map<List<Genre>>(list);
                 _unitOfWork.Genres.AddList(listEntities);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
@@ -125,7 +127,7 @@ namespace SinovadDemo.Application.UseCases.Genres
             var response = new Response<object>();
             try
             {
-                var entity = dto.MapTo<Genre>();
+                var entity = _mapper.Map<Genre>(dto);
                 _unitOfWork.Genres.Update(entity);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
@@ -190,7 +192,7 @@ namespace SinovadDemo.Application.UseCases.Genres
                 List<Genre> genresFinded=_unitOfWork.Genres.GetAllByExpression(it=> it.TmdbId!=null && listIdsGenresDto.Contains((int)it.TmdbId)).ToList();
                 if(genresFinded.Count==0)
                 {
-                    var listGenres = listGenresDto.MapTo<List<Genre>>();
+                    var listGenres = _mapper.Map<List<Genre>>(listGenresDto);
                     _unitOfWork.Genres.AddList(listGenres);
                     _unitOfWork.Save();
                 }

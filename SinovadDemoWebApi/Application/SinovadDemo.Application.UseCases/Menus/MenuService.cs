@@ -3,7 +3,6 @@ using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Transversal.Common;
-using SinovadDemo.Transversal.Mapping;
 
 namespace SinovadDemo.Application.UseCases.Users
 {
@@ -13,11 +12,13 @@ namespace SinovadDemo.Application.UseCases.Users
 
         private readonly IAppLogger<UserService> _logger;
 
+        private readonly AutoMapper.IMapper _mapper;
 
-        public MenuService(IUnitOfWork unitOfWork, IAppLogger<UserService> logger)
+        public MenuService(IUnitOfWork unitOfWork, IAppLogger<UserService> logger, AutoMapper.IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
+            _mapper = mapper;
         }
 
         public async Task<Response<List<MenuDto>>> GetAllAsync()
@@ -26,7 +27,7 @@ namespace SinovadDemo.Application.UseCases.Users
             try
             {
                 var result = await _unitOfWork.Menus.GetAllAsync();
-                response.Data = result.MapTo<List<MenuDto>>();
+                response.Data = _mapper.Map<List<MenuDto>>(result);
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -44,7 +45,7 @@ namespace SinovadDemo.Application.UseCases.Users
             try
             {
                 var result = await _unitOfWork.Menus.GetAllWithPaginationAsync(page, take, sortBy, sortDirection, searchText, searchBy);
-                response.Data = result.Items.MapTo<List<MenuDto>>();
+                response.Data = _mapper.Map<List<MenuDto>>(result.Items);
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;
                 response.TotalCount = result.Total;
@@ -63,7 +64,7 @@ namespace SinovadDemo.Application.UseCases.Users
             var response = new Response<object>();
             try
             {
-                var entity = dto.MapTo<Menu>();
+                var entity = _mapper.Map<Menu>(dto);
                 _unitOfWork.Menus.Add(entity);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
@@ -82,7 +83,7 @@ namespace SinovadDemo.Application.UseCases.Users
             var response = new Response<object>();
             try
             {
-                var entity = dto.MapTo<Menu>();
+                var entity = _mapper.Map<Menu>(dto);
                 _unitOfWork.Menus.Update(entity);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
@@ -116,7 +117,7 @@ namespace SinovadDemo.Application.UseCases.Users
         private async Task<List<MenuDto>> BuildListMenusByUser(int userId)
         {
             var result = await _unitOfWork.Menus.GetListMenusByUser(userId);
-            var listMenus = result.MapTo<List<MenuDto>>();
+            var listMenus = _mapper.Map<List<MenuDto>>(result);
             var mainMenus = listMenus.Where(m => m.ParentId == 0 && m.Enabled == true).OrderBy(m => m.SortOrder).ToList();
             mainMenus.ForEach(m => m.ChildMenus = BuildMenuChilds(m.Id, listMenus));
             return mainMenus;

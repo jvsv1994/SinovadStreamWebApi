@@ -7,7 +7,6 @@ using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Application.Shared;
 using SinovadDemo.Domain.Entities;
 using SinovadDemo.Transversal.Common;
-using SinovadDemo.Transversal.Mapping;
 
 namespace SinovadDemo.Application.UseCases.MediaServers
 {
@@ -19,12 +18,14 @@ namespace SinovadDemo.Application.UseCases.MediaServers
 
         private readonly IOptions<MyConfig> _config;
 
+        private readonly AutoMapper.IMapper _mapper;
 
-        public MediaServerService(IUnitOfWork unitOfWork, SharedService sharedService, IOptions<MyConfig> config)
+        public MediaServerService(IUnitOfWork unitOfWork, SharedService sharedService, IOptions<MyConfig> config, AutoMapper.IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _sharedService = sharedService;
             _config = config;
+            _mapper = mapper;
         }
 
         public async Task<Response<MediaServerDto>> GetAsync(int id)
@@ -33,7 +34,7 @@ namespace SinovadDemo.Application.UseCases.MediaServers
             try
             {
                 var mediaServer = await _unitOfWork.MediaServers.GetAsync(id);
-                response.Data = mediaServer.MapTo<MediaServerDto>();
+                response.Data = _mapper.Map<MediaServerDto>(mediaServer);
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -51,7 +52,7 @@ namespace SinovadDemo.Application.UseCases.MediaServers
             try
             {
                 var result = await _unitOfWork.MediaServers.GetByExpressionAsync(x => x.Guid.ToString()==guid);
-                response.Data = result.MapTo<MediaServerDto>();
+                response.Data = _mapper.Map<MediaServerDto>(result);
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -71,7 +72,7 @@ namespace SinovadDemo.Application.UseCases.MediaServers
                 var result = await _unitOfWork.MediaServers.GetByExpressionAsync(x => x.SecurityIdentifier.ToString() == securityIdentifier);
                 if(result!=null)
                 {
-                    response.Data = result.MapTo<MediaServerDto>();
+                    response.Data = _mapper.Map<MediaServerDto>(result);
                 }
                 response.IsSuccess = true;
                 response.Message = "Successful";
@@ -112,7 +113,7 @@ namespace SinovadDemo.Application.UseCases.MediaServers
             try
             {
                 var result = await _unitOfWork.MediaServers.GetByExpressionAsync(x => x.IpAddress == ipAddress && x.UserId == userId);
-                response.Data = result.MapTo<MediaServerDto>();
+                response.Data = _mapper.Map<MediaServerDto>(result);
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -130,7 +131,7 @@ namespace SinovadDemo.Application.UseCases.MediaServers
             try
             {
                 var result = await _unitOfWork.MediaServers.GetAllByExpressionAsync(x => x.UserId == userId);
-                response.Data = result.MapTo<List<MediaServerDto>>();
+                response.Data = _mapper.Map<List<MediaServerDto>>(result);
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }catch (Exception ex)
@@ -148,7 +149,7 @@ namespace SinovadDemo.Application.UseCases.MediaServers
             try
             {
                 var result = await _unitOfWork.MediaServers.GetAllWithPaginationByExpressionAsync(page, take, sortBy, sortDirection, searchText, searchBy, x => x.UserId == userId);
-                response.Data = result.Items.MapTo<List<MediaServerDto>>();
+                response.Data = _mapper.Map<List<MediaServerDto>>(result.Items);
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;
                 response.TotalCount = result.Total;
@@ -168,7 +169,7 @@ namespace SinovadDemo.Application.UseCases.MediaServers
             var response = new Response<object>();
             try
             {
-                var mediaServer = mediaServerDto.MapTo<MediaServer>();
+                var mediaServer = _mapper.Map<MediaServer>(mediaServerDto);
                 _unitOfWork.MediaServers.Add(mediaServer);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
@@ -187,7 +188,7 @@ namespace SinovadDemo.Application.UseCases.MediaServers
             var response = new Response<object>();
             try
             {
-                var mediaServers = listMediaServerDto.MapTo<List<MediaServer>>();
+                var mediaServers = _mapper.Map<List<MediaServer>>(listMediaServerDto);
                 _unitOfWork.MediaServers.AddList(mediaServers);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
@@ -219,11 +220,11 @@ namespace SinovadDemo.Application.UseCases.MediaServers
                     _unitOfWork.MediaServers.Update(ms);
                 }else
                 {
-                    var mediaServer = mediaServerDto.MapTo<MediaServer>();
+                    var mediaServer = _mapper.Map<MediaServer>(mediaServerDto);
                     ms = await _unitOfWork.MediaServers.AddAsync(mediaServer);
                 }
                 await _unitOfWork.SaveAsync();
-                response.Data = ms.MapTo<MediaServerDto>();
+                response.Data = _mapper.Map<MediaServerDto>(ms);
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }catch (Exception ex)
@@ -239,7 +240,7 @@ namespace SinovadDemo.Application.UseCases.MediaServers
             var response = new Response<object>();
             try
             {
-                var mediaServer = mediaServerDto.MapTo<MediaServer>();
+                var mediaServer = _mapper.Map<MediaServer>(mediaServerDto);
                 _unitOfWork.MediaServers.Update(mediaServer);
                 _unitOfWork.Save();
                 response.IsSuccess = true;

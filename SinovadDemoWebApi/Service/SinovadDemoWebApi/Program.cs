@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using SinovadDemo.Application.UseCases;
 using SinovadDemo.Infrastructure;
 using SinovadDemo.Persistence;
+using SinovadDemoWebApi.CustomHub;
 using SinovadDemoWebApi.Modules.Authentication;
 using SinovadDemoWebApi.Modules.HealthCheck;
 using SinovadDemoWebApi.Modules.Identity;
@@ -22,6 +23,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.PropertyNamingPolicy = null;
 });
+builder.Services.AddSignalR();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddIdentity();
 builder.Services.AddCors();
@@ -75,7 +77,9 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseRateLimiter();
-app.UseEndpoints(_ => { });
+app.UseEndpoints(endpoints => {
+    endpoints.MapHub<MediaServerHub>("/mediaServerHub");
+});
 app.MapControllers();
 app.MapHealthChecksUI();
 app.MapHealthChecks("/health", new HealthCheckOptions
