@@ -1,7 +1,5 @@
-﻿using SinovadDemo.Application.DTO;
-using SinovadDemo.Application.Interface.Persistence;
+﻿using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Domain.Entities;
-using SinovadDemo.Transversal.Mapping;
 
 namespace SinovadDemo.Persistence.Repositories
 {

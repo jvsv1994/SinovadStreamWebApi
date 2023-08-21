@@ -19,6 +19,7 @@ namespace Pacagroup.Ecommerce.Application.UseCases.Common.Mappings
             CreateMap<TvSerie, TvSerieDto>().ReverseMap();
             CreateMap<TvSerieGenre, TvSerieGenreDto>().ReverseMap();
             CreateMap<MediaServer, MediaServerDto>().ReverseMap();
+            CreateMap<RegisterUserDto,User>();
             CreateMap<User, UserDto>().ForMember(x => x.IsPasswordSetted, y => y.MapFrom(y => y.PasswordHash!=null)).ReverseMap();
             CreateMap<Profile, ProfileDto>().ReverseMap();
             CreateMap<LinkedAccount, LinkedAccountDto>().ReverseMap();

@@ -5,7 +5,6 @@ using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Application.Shared;
 using SinovadDemo.Domain.Entities;
 using SinovadDemo.Transversal.Common;
-using SinovadDemo.Transversal.Mapping;
 using System.Text;
 using System.Text.Json;
 
@@ -17,13 +16,14 @@ namespace SinovadDemo.Application.UseCases.Movies
         private IUnitOfWork _unitOfWork;
         private readonly SharedService _sharedService;
         private readonly IDistributedCache _distributedCache;
+        private readonly AutoMapper.IMapper _mapper;
 
-
-        public MovieService(IUnitOfWork unitOfWork, SharedService sharedService, IDistributedCache distributedCache)
+        public MovieService(IUnitOfWork unitOfWork, SharedService sharedService, IDistributedCache distributedCache, AutoMapper.IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _sharedService = sharedService;
             _distributedCache = distributedCache;
+            _mapper = mapper;
         }
 
         public async Task<Response<List<MovieDto>>> GetAllAsync()
@@ -40,7 +40,7 @@ namespace SinovadDemo.Application.UseCases.Movies
                 else
                 {
                     var result = await _unitOfWork.Movies.GetAllAsync();
-                    response.Data = result.MapTo<List<MovieDto>>();
+                    response.Data = _mapper.Map<List<MovieDto>>(result);
                     if (response.Data != null)
                     {
                         var serializedCategories = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(response.Data));
@@ -70,7 +70,7 @@ namespace SinovadDemo.Application.UseCases.Movies
             try
             {
                 var result = await _unitOfWork.Movies.GetAllWithPaginationAsync(page, take, sortBy, sortDirection, searchText, searchBy);
-                response.Data = result.Items.MapTo<List<MovieDto>>();
+                response.Data = _mapper.Map<List<MovieDto>>(result.Items);
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;
                 response.TotalCount = result.Total;
@@ -91,7 +91,7 @@ namespace SinovadDemo.Application.UseCases.Movies
             try
             {
                 var movie = await _unitOfWork.Movies.GetAsync(id);
-                var mdto = movie.MapTo<MovieDto>();
+                var mdto = _mapper.Map<MovieDto>(movie);
                 var movieGenres = await _unitOfWork.MovieGenres.GetAllAsync();
                 var genres = await _unitOfWork.Genres.GetAllAsync();
                 var listItemGenres = (from mg in movieGenres
@@ -121,7 +121,7 @@ namespace SinovadDemo.Application.UseCases.Movies
             var response = new Response<object>();
             try
             {
-                var movie = movieDto.MapTo<Movie>();
+                var movie = _mapper.Map<Movie>(movieDto);
                 MapMovieGenres(movieDto, movie);
                 _unitOfWork.Movies.Add(movie);
                 _unitOfWork.Save();
@@ -141,7 +141,7 @@ namespace SinovadDemo.Application.UseCases.Movies
             var response = new Response<object>();
             try
             {
-                var movie = movieDto.MapTo<Movie>();
+                var movie = _mapper.Map<Movie>(movieDto);
                 MapMovieGenres(movieDto, movie);
                 var listMovieGenres = _unitOfWork.MovieGenres.GetAllByExpressionAsync(c => c.MovieId == movie.Id).Result.ToList();
                 if (listMovieGenres != null && listMovieGenres.Count > 0)

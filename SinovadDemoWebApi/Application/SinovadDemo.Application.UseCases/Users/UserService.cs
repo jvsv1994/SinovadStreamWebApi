@@ -9,9 +9,7 @@ using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Application.Validator;
 using SinovadDemo.Domain.Entities;
-using SinovadDemo.Domain.Enums;
 using SinovadDemo.Transversal.Common;
-using SinovadDemo.Transversal.Mapping;
 
 namespace SinovadDemo.Application.UseCases.Users
 {
@@ -51,7 +49,7 @@ namespace SinovadDemo.Application.UseCases.Users
             try
             {
                 var result = await _unitOfWork.Users.GetAllWithPaginationAsync(page, take, sortBy, sortDirection, searchText, searchBy);
-                response.Data = result.Items.MapTo<List<UserDto>>();
+                response.Data = _mapper.Map<List<UserDto>>(result.Items);
                 if (response.Data != null)
                 {
                     response.PageNumber = page;
@@ -136,7 +134,7 @@ namespace SinovadDemo.Application.UseCases.Users
             try
             {
                 var result = await _unitOfWork.Users.GetAsync(id);
-                response.Data = result.MapTo<UserDto>();
+                response.Data = _mapper.Map<UserDto>(result);
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -447,7 +445,7 @@ namespace SinovadDemo.Application.UseCases.Users
                             if (user.Active)
                             {
                                 var data = new AuthenticationUserResponseDto();
-                                data.User= user.MapTo<UserDto>();
+                                data.User= _mapper.Map<UserDto>(user);
                                 var jwtHelper = new JWTHelper(_config.Value.JwtSettings.Secret, _config.Value.JwtSettings.Issuer, _config.Value.JwtSettings.Audience);
                                 var token = jwtHelper.CreateTokenWithUserGuid(user.Guid);
                                 data.ApiToken = token;
@@ -519,7 +517,7 @@ namespace SinovadDemo.Application.UseCases.Users
                     {
                         response.Message = "Exist an account with this username";
                     }else{
-                        var appUser = dto.MapTo<User>();
+                        var appUser = _mapper.Map<User>(dto);
                         appUser.Created = DateTime.Now;
                         appUser.LastModified = DateTime.Now;
                         var mainProfile = new Profile();
@@ -588,7 +586,7 @@ namespace SinovadDemo.Application.UseCases.Users
             var response = new Response<object>();
             try
             {
-                var user = userDto.MapTo<User>();
+                var user = _mapper.Map<User>(userDto);
                 _unitOfWork.Users.Add(user);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
@@ -607,7 +605,7 @@ namespace SinovadDemo.Application.UseCases.Users
             var response = new Response<object>();
             try
             {
-                var user = userDto.MapTo<User>();
+                var user = _mapper.Map<User>(userDto);
                 _unitOfWork.Users.Update(user);
                 _unitOfWork.Save();
                 response.IsSuccess = true;

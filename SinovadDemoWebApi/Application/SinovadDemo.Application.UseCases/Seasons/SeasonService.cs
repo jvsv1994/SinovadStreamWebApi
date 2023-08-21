@@ -4,7 +4,6 @@ using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Application.Shared;
 using SinovadDemo.Domain.Entities;
 using SinovadDemo.Transversal.Common;
-using SinovadDemo.Transversal.Mapping;
 
 namespace SinovadDemo.Application.UseCases.Seasons
 {
@@ -15,10 +14,13 @@ namespace SinovadDemo.Application.UseCases.Seasons
 
         private readonly SharedService _sharedService;
 
-        public SeasonService(IUnitOfWork unitOfWork, SharedService sharedService)
+        private readonly AutoMapper.IMapper _mapper;
+
+        public SeasonService(IUnitOfWork unitOfWork, SharedService sharedService, AutoMapper.IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _sharedService = sharedService;
+            _mapper = mapper;
         }
 
         public async Task<Response<SeasonDto>> GetTvSeasonAsync(int tvSerieId,int seasonNumber)
@@ -27,7 +29,7 @@ namespace SinovadDemo.Application.UseCases.Seasons
             try
             {
                 var result = await _unitOfWork.Seasons.GetByExpressionAsync(x=>x.TvSerieId==tvSerieId && x.SeasonNumber==seasonNumber);
-                response.Data = result.MapTo<SeasonDto>();
+                response.Data = _mapper.Map<SeasonDto>(result);
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -45,7 +47,7 @@ namespace SinovadDemo.Application.UseCases.Seasons
             try
             {
                 var result = await _unitOfWork.Seasons.GetAsync(id);
-                response.Data = result.MapTo<SeasonDto>();
+                response.Data = _mapper.Map<SeasonDto>(result);
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -64,7 +66,7 @@ namespace SinovadDemo.Application.UseCases.Seasons
             try
             {
                 var result = await _unitOfWork.Seasons.GetAllWithPaginationByExpressionAsync(page, take, sortBy, sortDirection, searchText, searchBy, x => x.TvSerieId == tvSerieId);
-                response.Data = result.Items.MapTo<List<SeasonDto>>();
+                response.Data = _mapper.Map<List<SeasonDto>>(result.Items);
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;
                 response.TotalCount = result.Total;
@@ -84,7 +86,7 @@ namespace SinovadDemo.Application.UseCases.Seasons
             var response = new Response<object>();
             try
             {
-                var season = seasonDto.MapTo<Season>();
+                var season = _mapper.Map<Season>(seasonDto);
                 _unitOfWork.Seasons.Add(season);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
@@ -103,7 +105,7 @@ namespace SinovadDemo.Application.UseCases.Seasons
             var response = new Response<object>();
             try
             {
-                var season = seasonDto.MapTo<Season>();
+                var season = _mapper.Map<Season>(seasonDto);
                 _unitOfWork.Seasons.Update(season);
                 _unitOfWork.Save();
                 response.IsSuccess = true;

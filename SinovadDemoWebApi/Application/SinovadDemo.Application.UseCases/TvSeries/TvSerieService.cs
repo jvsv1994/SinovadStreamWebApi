@@ -4,7 +4,6 @@ using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Application.Shared;
 using SinovadDemo.Domain.Entities;
 using SinovadDemo.Transversal.Common;
-using SinovadDemo.Transversal.Mapping;
 
 namespace SinovadDemo.Application.UseCases.TvSeries
 {
@@ -15,10 +14,13 @@ namespace SinovadDemo.Application.UseCases.TvSeries
 
         private readonly SharedService _sharedService;
 
-        public TvSerieService(IUnitOfWork unitOfWork, SharedService sharedService)
+        private readonly AutoMapper.IMapper _mapper;
+
+        public TvSerieService(IUnitOfWork unitOfWork, SharedService sharedService, AutoMapper.IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _sharedService = sharedService;
+            _mapper = mapper;
         }
 
         public async Task<Response<List<TvSerieDto>>> GetAllAsync()
@@ -27,7 +29,7 @@ namespace SinovadDemo.Application.UseCases.TvSeries
             try
             {
                 var result = await _unitOfWork.TvSeries.GetAllAsync();
-                response.Data = result.MapTo<List<TvSerieDto>>();
+                response.Data = _mapper.Map<List<TvSerieDto>>(result);
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -45,7 +47,7 @@ namespace SinovadDemo.Application.UseCases.TvSeries
             try
             {
                 var result = await _unitOfWork.TvSeries.GetAllWithPaginationAsync(page, take,sortBy,sortDirection,searchText, searchBy);
-                response.Data = result.Items.MapTo<List<TvSerieDto>>();
+                response.Data = _mapper.Map<List<TvSerieDto>>(result.Items);
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;
                 response.TotalCount = result.Total;
@@ -66,9 +68,9 @@ namespace SinovadDemo.Application.UseCases.TvSeries
             try
             {
                 var result = await _unitOfWork.TvSeries.GetByExpressionAsync(x => x.Name.ToLower().Trim().Contains(query.ToLower().Trim()));
-                var tvSerie = result.MapTo<TvSerieDto>();
+                var tvSerie = _mapper.Map<TvSerieDto>(result);
                 var listGenres = _unitOfWork.Genres.GetGenresByTvSerieId(tvSerie.Id);
-                tvSerie.ListGenres= listGenres.MapTo<List<GenreDto>>();
+                tvSerie.ListGenres= _mapper.Map<List<GenreDto>>(listGenres);
                 response.Data = tvSerie;
                 response.IsSuccess = true;
                 response.Message = "Successful";
@@ -86,7 +88,7 @@ namespace SinovadDemo.Application.UseCases.TvSeries
             try
             {
                 var tvSerie = await _unitOfWork.TvSeries.GetAsync(id);
-                var mdto = tvSerie.MapTo<TvSerieDto>();
+                var mdto = _mapper.Map<TvSerieDto>(tvSerie);
                 var tvSerieGenres = await _unitOfWork.TvSerieGenres.GetAllAsync();
                 var genres = await _unitOfWork.Genres.GetAllAsync();
                 var listItemGenres = (from mg in tvSerieGenres
@@ -116,7 +118,7 @@ namespace SinovadDemo.Application.UseCases.TvSeries
             var response = new Response<object>();
             try
             {
-                var tvSerie = tvSerieDto.MapTo<TvSerie>();
+                var tvSerie = _mapper.Map<TvSerie>(tvSerieDto);
                 MapTvSerieGenres(tvSerieDto, tvSerie);
                 _unitOfWork.TvSeries.Add(tvSerie);
                 _unitOfWork.Save();
@@ -136,7 +138,7 @@ namespace SinovadDemo.Application.UseCases.TvSeries
             var response = new Response<object>();
             try
             {
-                var tvSerie = tvSerieDto.MapTo<TvSerie>();
+                var tvSerie = _mapper.Map<TvSerie>(tvSerieDto);
                 MapTvSerieGenres(tvSerieDto, tvSerie);
                 var listtvSerieGenres = _unitOfWork.TvSerieGenres.GetAllByExpressionAsync(x => x.TvSerieId == tvSerie.Id).Result.ToList();
                 if (listtvSerieGenres != null && listtvSerieGenres.Count > 0)

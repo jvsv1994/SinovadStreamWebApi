@@ -4,7 +4,6 @@ using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Application.Shared;
 using SinovadDemo.Domain.Entities;
 using SinovadDemo.Transversal.Common;
-using SinovadDemo.Transversal.Mapping;
 
 namespace SinovadDemo.Application.UseCases.Profiles
 {
@@ -14,10 +13,13 @@ namespace SinovadDemo.Application.UseCases.Profiles
 
         private readonly SharedService _sharedService;
 
-        public ProfileService(IUnitOfWork unitOfWork, SharedService sharedService)
+        private readonly AutoMapper.IMapper _mapper;
+
+        public ProfileService(IUnitOfWork unitOfWork, SharedService sharedService, AutoMapper.IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _sharedService = sharedService;
+            _mapper = mapper;
         }
 
         public async Task<Response<ProfileDto>> GetAsync(int id)
@@ -26,7 +28,7 @@ namespace SinovadDemo.Application.UseCases.Profiles
             try
             {
                 var result = await _unitOfWork.Profiles.GetAsync(id);
-                response.Data = result.MapTo<ProfileDto>();
+                response.Data = _mapper.Map<ProfileDto>(result);
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -44,7 +46,7 @@ namespace SinovadDemo.Application.UseCases.Profiles
             try
             {
                 var result = await _unitOfWork.Profiles.GetByExpressionAsync(x => x.Guid.ToString() == guid);
-                response.Data = result.MapTo<ProfileDto>();
+                response.Data = _mapper.Map<ProfileDto>(result);
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -62,7 +64,7 @@ namespace SinovadDemo.Application.UseCases.Profiles
             try
             {
                 var result = await _unitOfWork.Profiles.GetAllWithPaginationByExpressionAsync(page, take, sortBy, sortDirection, searchText, searchBy, x => x.UserId == userId);
-                response.Data = result.Items.MapTo<List<ProfileDto>>();
+                response.Data = _mapper.Map<List<ProfileDto>>(result.Items);
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;
                 response.TotalCount = result.Total;
@@ -82,7 +84,7 @@ namespace SinovadDemo.Application.UseCases.Profiles
             var response = new Response<object>();
             try
             {
-                var profile = profileDto.MapTo<Profile>();
+                var profile = _mapper.Map<Profile>(profileDto);
                 _unitOfWork.Profiles.Add(profile);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
@@ -101,7 +103,7 @@ namespace SinovadDemo.Application.UseCases.Profiles
             var response = new Response<object>();
             try
             {
-                var profiles = listProfileDto.MapTo<List<Profile>>();
+                var profiles = _mapper.Map<List<Profile>>(listProfileDto);
                 _unitOfWork.Profiles.AddList(profiles);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
@@ -120,7 +122,7 @@ namespace SinovadDemo.Application.UseCases.Profiles
             var response = new Response<object>();
             try
             {
-                var profile = profileDto.MapTo<Profile>();
+                var profile = _mapper.Map<Profile>(profileDto);
                 _unitOfWork.Profiles.Update(profile);
                 _unitOfWork.Save();
                 response.IsSuccess = true;

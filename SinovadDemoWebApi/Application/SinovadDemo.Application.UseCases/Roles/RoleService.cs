@@ -1,12 +1,10 @@
 ﻿using Generic.Core.Models;
 using Microsoft.Extensions.Options;
-using Org.BouncyCastle.Crypto;
 using SinovadDemo.Application.Configuration;
 using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Transversal.Common;
-using SinovadDemo.Transversal.Mapping;
 
 namespace SinovadDemo.Application.UseCases.Roles
 {
@@ -18,11 +16,14 @@ namespace SinovadDemo.Application.UseCases.Roles
 
         private readonly IOptions<MyConfig> _config;
 
-        public RoleService(IUnitOfWork unitOfWork, IAppLogger<RoleService> logger, IOptions<MyConfig> config)
+        private readonly AutoMapper.IMapper _mapper;
+
+        public RoleService(IUnitOfWork unitOfWork, IAppLogger<RoleService> logger, IOptions<MyConfig> config, AutoMapper.IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
             _config = config;
+            _mapper = mapper;
         }
      
         public async Task<ResponsePagination<List<RoleDto>>> GetAllWithPaginationAsync(int page, int take,string sortBy,string sortDirection,string searchText,string searchBy)
@@ -31,7 +32,7 @@ namespace SinovadDemo.Application.UseCases.Roles
             try
             {
                 var result = await _unitOfWork.Roles.GetAllWithPaginationAsync(page, take, sortBy, sortDirection, searchText, searchBy);
-                response.Data = result.Items.MapTo<List<RoleDto>>();
+                response.Data = _mapper.Map<List<RoleDto>>(result.Items);
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;
                 response.TotalCount = result.Total;
@@ -50,7 +51,7 @@ namespace SinovadDemo.Application.UseCases.Roles
             var response = new Response<object>();
             try
             {
-                var entity = dto.MapTo<Role>();
+                var entity = _mapper.Map<Role>(dto);
                 _unitOfWork.Roles.Add(entity);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
@@ -69,7 +70,7 @@ namespace SinovadDemo.Application.UseCases.Roles
             var response = new Response<object>();
             try
             {
-                var entity = dto.MapTo<Role>();
+                var entity = _mapper.Map<Role>(dto);
                 _unitOfWork.Roles.Update(entity);
                 _unitOfWork.Save();
                 response.IsSuccess = true;

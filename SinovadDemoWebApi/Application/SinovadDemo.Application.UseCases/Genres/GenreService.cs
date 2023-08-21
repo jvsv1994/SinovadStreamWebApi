@@ -50,7 +50,7 @@ namespace SinovadDemo.Application.UseCases.Genres
             try
             {
                 var result = await _unitOfWork.Genres.GetAllWithPaginationAsync(page, take, sortBy, sortDirection, searchText, searchBy);
-                response.Data = _mapper.Map<List<GenreDto>>(result);
+                response.Data = _mapper.Map<List<GenreDto>>(result.Items);
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;
                 response.TotalCount = result.Total;
