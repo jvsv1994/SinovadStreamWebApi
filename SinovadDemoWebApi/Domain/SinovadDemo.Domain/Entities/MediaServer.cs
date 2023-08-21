@@ -1,4 +1,6 @@
-﻿namespace SinovadDemo.Domain.Entities;
+﻿using SinovadDemo.Domain.Common;
+
+namespace SinovadDemo.Domain.Entities;
 
 public class MediaServer: BaseEntity
 {

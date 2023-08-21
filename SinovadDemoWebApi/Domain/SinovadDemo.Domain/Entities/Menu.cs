@@ -1,4 +1,4 @@
-using SinovadDemo.Domain.Entities;
+using SinovadDemo.Domain.Common;
 
 namespace Generic.Core.Models
 {

@@ -4,6 +4,7 @@
     {
         public string ApiToken { get; set; }
         public UserDto User { get; set; }
+        public UserSessionDto UserData { get; set; }
         public ConfirmLinkAccountDto ConfirmLinkAccountData { get; set; }
 
     }

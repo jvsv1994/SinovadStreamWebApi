@@ -1,6 +1,4 @@
-﻿using SinovadDemo.Domain.Common;
-
-namespace SinovadDemo.Domain.Entities;
+﻿namespace SinovadDemo.Domain.Common;
 
 public class BaseEntity : BaseAuditableEntity
 {

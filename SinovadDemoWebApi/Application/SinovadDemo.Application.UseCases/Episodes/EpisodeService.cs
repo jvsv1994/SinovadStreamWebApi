@@ -4,7 +4,6 @@ using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Application.Shared;
 using SinovadDemo.Domain.Entities;
 using SinovadDemo.Transversal.Common;
-using SinovadDemo.Transversal.Mapping;
 
 namespace SinovadDemo.Application.UseCases.Episodes
 {
@@ -12,11 +11,13 @@ namespace SinovadDemo.Application.UseCases.Episodes
     {
         private IUnitOfWork _unitOfWork;
         private readonly SharedService _sharedService;
+        private readonly AutoMapper.IMapper _mapper;
 
-        public EpisodeService(IUnitOfWork unitOfWork, SharedService sharedService)
+        public EpisodeService(IUnitOfWork unitOfWork, SharedService sharedService, AutoMapper.IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _sharedService = sharedService;
+            _mapper = mapper;
         }
 
         public async Task<Response<EpisodeDto>> GetTvEpisodeAsync(int tvSerieId,int seasonNumber,int episodeNumber)
@@ -25,7 +26,7 @@ namespace SinovadDemo.Application.UseCases.Episodes
             try
             {
                 var result = _unitOfWork.Episodes.GetEpisode(tvSerieId, seasonNumber, episodeNumber);
-                response.Data = result.MapTo<EpisodeDto>();
+                response.Data = _mapper.Map<EpisodeDto>(result);
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -43,7 +44,7 @@ namespace SinovadDemo.Application.UseCases.Episodes
             try
             {
                 var result = await _unitOfWork.Episodes.GetAsync(id);
-                response.Data = result.MapTo<EpisodeDto>();
+                response.Data = _mapper.Map<EpisodeDto>(result);
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -61,7 +62,7 @@ namespace SinovadDemo.Application.UseCases.Episodes
             try
             {
                 var result = await _unitOfWork.Episodes.GetAllAsync();
-                response.Data = result.MapTo<List<EpisodeDto>>();
+                response.Data = _mapper.Map<List<EpisodeDto>>(result);
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -80,7 +81,7 @@ namespace SinovadDemo.Application.UseCases.Episodes
             try
             {
                 var result = await _unitOfWork.Episodes.GetAllWithPaginationByExpressionAsync(page, take, sortBy, sortDirection, searchText, searchBy, x => x.SeasonId == seasonId);
-                response.Data = result.Items.MapTo<List<EpisodeDto>>();
+                response.Data = _mapper.Map<List<EpisodeDto>>(result.Items);
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;
                 response.TotalCount = result.Total;
@@ -100,7 +101,7 @@ namespace SinovadDemo.Application.UseCases.Episodes
             var response = new Response<object>();
             try
             {
-                var entity = dto.MapTo<Episode>();
+                var entity = _mapper.Map<Episode>(dto);
                 _unitOfWork.Episodes.Add(entity);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
@@ -119,7 +120,7 @@ namespace SinovadDemo.Application.UseCases.Episodes
             var response = new Response<object>();
             try
             {
-                var listEntities = list.MapTo<List<Episode>>();
+                var listEntities = _mapper.Map<List<Episode>>(list);
                 _unitOfWork.Episodes.AddList(listEntities);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
@@ -138,7 +139,7 @@ namespace SinovadDemo.Application.UseCases.Episodes
             var response = new Response<object>();
             try
             {
-                var entity = dto.MapTo<Episode>();
+                var entity = _mapper.Map<Episode>(dto);
                 _unitOfWork.Episodes.Update(entity);
                 _unitOfWork.Save();
                 response.IsSuccess = true;

@@ -10,7 +10,6 @@ using SinovadDemo.Application.Validator;
 using SinovadDemo.Domain.Entities;
 using SinovadDemo.Domain.Enums;
 using SinovadDemo.Transversal.Common;
-using SinovadDemo.Transversal.Mapping;
 
 namespace SinovadDemo.Application.UseCases.Authentication
 {
@@ -28,7 +27,9 @@ namespace SinovadDemo.Application.UseCases.Authentication
 
         private readonly IFirebaseAuthService _firebaseAuthService;
 
-        public AuthenticationService(IUnitOfWork unitOfWork, IAppLogger<AuthenticationService> logger, IOptions<MyConfig> config, SignInManager<User> signInManager, AccessUserDtoValidator accessUserDtoValidator,IFirebaseAuthService firebaseAuthService)
+        private readonly AutoMapper.IMapper _mapper;
+
+        public AuthenticationService(IUnitOfWork unitOfWork, IAppLogger<AuthenticationService> logger, IOptions<MyConfig> config, SignInManager<User> signInManager, AccessUserDtoValidator accessUserDtoValidator,IFirebaseAuthService firebaseAuthService, AutoMapper.IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
@@ -36,6 +37,7 @@ namespace SinovadDemo.Application.UseCases.Authentication
             _signInManager = signInManager;
             _accessUserDtoValidator = accessUserDtoValidator;
             _firebaseAuthService = firebaseAuthService;
+            _mapper=mapper;
         }
 
         public async Task<Response<bool>> ValidateUser(string username)
@@ -84,8 +86,8 @@ namespace SinovadDemo.Application.UseCases.Authentication
                         {
                             if (user.Active)
                             {
-                                var data = new AuthenticationUserResponseDto();
-                                data.User = user.MapTo<UserDto>();
+                                var data = new AuthenticationUserResponseDto();                   
+                                data.UserData = await GetUserSessionData(user);
                                 var jwtHelper = new JWTHelper(_config.Value.JwtSettings.Secret, _config.Value.JwtSettings.Issuer, _config.Value.JwtSettings.Audience);
                                 var token = jwtHelper.CreateTokenWithUserGuid(user.Guid);
                                 data.ApiToken = token;
@@ -125,12 +127,11 @@ namespace SinovadDemo.Application.UseCases.Authentication
                 if (mediaServer != null)
                 {
                     var authenticateMediaServerResponse = new AuthenticationMediaServerResponseDto();
-                    authenticateMediaServerResponse.MediaServer = mediaServer.MapTo<MediaServerDto>();
+                    authenticateMediaServerResponse.MediaServer = _mapper.Map<MediaServerDto>(mediaServer);
                     if(mediaServer.UserId!=null)
                     {
                         var user = await _unitOfWork.Users.GetByExpressionAsync(x => x.Id == mediaServer.UserId);
-                        user.MediaServers = null;
-                        authenticateMediaServerResponse.User = user.MapTo<UserDto>();
+                        authenticateMediaServerResponse.User = _mapper.Map<UserDto>(user);
                     }
                     var jwtHelper = new JWTHelper(_config.Value.JwtSettings.Secret, _config.Value.JwtSettings.Issuer, _config.Value.JwtSettings.Audience);
                     var token = jwtHelper.CreateTokenWithSecurityIdentifier(securityIdentifier);
@@ -176,7 +177,7 @@ namespace SinovadDemo.Application.UseCases.Authentication
                         if (user==null)
                         {
                             //register account
-                            var appUser = userDataFinded.MapTo<User>();
+                            var appUser = _mapper.Map<User>(userDataFinded);
                             appUser.Created = DateTime.Now;
                             appUser.LastModified = DateTime.Now;
                             appUser.Active = true;
@@ -205,9 +206,7 @@ namespace SinovadDemo.Application.UseCases.Authentication
                     }
                     if(linkedAccount!=null && user!=null)
                     {
-                        user.LinkedAccounts = null;
-                        user.Profiles = null;
-                        authenticateUserResponse.User = user.MapTo<UserDto>();
+                        authenticateUserResponse.UserData = await GetUserSessionData(user);
                         var jwtHelper = new JWTHelper(_config.Value.JwtSettings.Secret, _config.Value.JwtSettings.Issuer, _config.Value.JwtSettings.Audience);
                         var token = jwtHelper.CreateTokenWithUserGuid(user.Guid);
                         authenticateUserResponse.ApiToken = token;
@@ -247,9 +246,7 @@ namespace SinovadDemo.Application.UseCases.Authentication
                     await _unitOfWork.SaveAsync();
                     response.Message = "Success";
                     var authenticateUserResponse = new AuthenticationUserResponseDto();
-                    user.LinkedAccounts = null;
-                    user.Profiles = null;
-                    authenticateUserResponse.User = user.MapTo<UserDto>();
+                    authenticateUserResponse.UserData = await GetUserSessionData(user);
                     var jwtHelper = new JWTHelper(_config.Value.JwtSettings.Secret, _config.Value.JwtSettings.Issuer, _config.Value.JwtSettings.Audience);
                     var token = jwtHelper.CreateTokenWithUserGuid(user.Guid);
                     authenticateUserResponse.ApiToken = token;
@@ -265,6 +262,21 @@ namespace SinovadDemo.Application.UseCases.Authentication
                 _logger.LogError(ex.StackTrace);
             }
             return response;
+        }
+
+        private async Task<UserSessionDto> GetUserSessionData(User user)
+        {
+            var userDto = _mapper.Map<UserDto>(user);
+            userDto.IsPasswordSetted = user.PasswordHash != null ? true : false;
+            var userSessionDto = new UserSessionDto();
+            userSessionDto.User = userDto;
+            var mediaServers = await _unitOfWork.MediaServers.GetAllByExpressionAsync(x => x.UserId == user.Id);
+            userSessionDto.MediaServers = _mapper.Map<List<MediaServerDto>>(mediaServers);
+            var profiles = await _unitOfWork.Profiles.GetAllByExpressionAsync(x => x.UserId == user.Id);
+            userSessionDto.Profiles = _mapper.Map<List<ProfileDto>>(profiles);
+            var linkedAccounts = await _unitOfWork.LinkedAccounts.GetAllByExpressionAsync(x => x.UserId == user.Id);
+            userSessionDto.LinkedAccounts = _mapper.Map<List<LinkedAccountDto>>(linkedAccounts);
+            return userSessionDto;
         }
     }
 }

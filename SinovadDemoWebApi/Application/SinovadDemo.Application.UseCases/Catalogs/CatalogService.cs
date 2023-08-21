@@ -4,7 +4,6 @@ using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Application.Shared;
 using SinovadDemo.Domain.Entities;
 using SinovadDemo.Transversal.Common;
-using SinovadDemo.Transversal.Mapping;
 
 namespace SinovadDemo.Application.UseCases.Catalogs
 {
@@ -14,10 +13,13 @@ namespace SinovadDemo.Application.UseCases.Catalogs
 
         private readonly SharedService _sharedService;
 
-        public CatalogService(IUnitOfWork unitOfWork, SharedService sharedService)
+        private readonly AutoMapper.IMapper _mapper;
+
+        public CatalogService(IUnitOfWork unitOfWork, SharedService sharedService, AutoMapper.IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _sharedService = sharedService;
+            _mapper = mapper;
         }
         public async Task<Response<CatalogDto>> GetAsync(int id)
         {
@@ -25,7 +27,7 @@ namespace SinovadDemo.Application.UseCases.Catalogs
             try
             {
                 var result = await _unitOfWork.Catalogs.GetAsync(id);
-                response.Data = result.MapTo<CatalogDto>();
+                response.Data = _mapper.Map<CatalogDto>(result);
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -42,7 +44,7 @@ namespace SinovadDemo.Application.UseCases.Catalogs
             try
             {
                 var result = await _unitOfWork.Catalogs.GetAllWithPaginationAsync(page, take, "Id", "desc","","");
-                response.Data = result.Items.MapTo<List<CatalogDto>>();
+                response.Data = _mapper.Map<List<CatalogDto>>(result);
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;
                 response.TotalCount = result.Total;
@@ -62,7 +64,7 @@ namespace SinovadDemo.Application.UseCases.Catalogs
             var response = new Response<object>();
             try
             {
-                var catalog = catalogDto.MapTo<Catalog>();
+                var catalog = _mapper.Map<Catalog>(catalogDto);
                 _unitOfWork.Catalogs.Add(catalog);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
@@ -81,7 +83,7 @@ namespace SinovadDemo.Application.UseCases.Catalogs
             var response = new Response<object>();
             try
             {
-                var catalog = catalogDto.MapTo<Catalog>();
+                var catalog = _mapper.Map<Catalog>(catalogDto);
                 _unitOfWork.Catalogs.Update(catalog);
                 _unitOfWork.Save();
                 response.IsSuccess = true;
@@ -142,7 +144,7 @@ namespace SinovadDemo.Application.UseCases.Catalogs
             try
             {
                 var result = await _unitOfWork.CatalogDetails.GetByExpressionAsync(x => x.CatalogId == catalogId && x.Id == catalogDetailId);
-                response.Data = result.MapTo<CatalogDetailDto>();
+                response.Data = _mapper.Map<CatalogDetailDto>(result);
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -160,7 +162,7 @@ namespace SinovadDemo.Application.UseCases.Catalogs
             try
             {
                 var result = await _unitOfWork.CatalogDetails.GetAllByExpressionAsync(x => x.CatalogId == catalogId);
-                response.Data = result.MapTo<List<CatalogDetailDto>>();
+                response.Data = _mapper.Map<List<CatalogDetailDto>>(result);
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -183,7 +185,7 @@ namespace SinovadDemo.Application.UseCases.Catalogs
                     listIds = catalogIds.Split(",").Select(x => Convert.ToInt32(x)).ToList();
                 }
                 var result = await _unitOfWork.CatalogDetails.GetAllWithPaginationByExpressionAsync(page, take, "Id", "desc","","", x => listIds.Contains(x.CatalogId));
-                response.Data = result.Items.MapTo<List<CatalogDetailDto>>();
+                response.Data = _mapper.Map<List<CatalogDetailDto>>(result.Items);
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;
                 response.TotalCount = result.Total;
