@@ -24,6 +24,8 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.PropertyNamingPolicy = null;
 });
 builder.Services.AddSignalR();
+builder.Services.AddHostedService<MediaServerHostedService>();
+builder.Services.AddSingleton<SharedData>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddIdentity();
 builder.Services.AddCors();

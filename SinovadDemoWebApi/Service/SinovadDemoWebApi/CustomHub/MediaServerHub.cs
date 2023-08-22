@@ -4,6 +4,12 @@ namespace SinovadDemoWebApi.CustomHub
 {
     public class MediaServerHub: Hub
     {
+        private readonly SharedData _sharedData;
+
+        public MediaServerHub(SharedData sharedData)
+        {
+            _sharedData = sharedData;
+        }
 
         // for web client
 
@@ -23,6 +29,25 @@ namespace SinovadDemoWebApi.CustomHub
         {
             await Clients.Group(userGuid).SendAsync("UpdateItemsByMediaServerAndLibrary", mediaServerGuid, libraryGuid);
         }
+        public async Task UpdateMediaServerLastConnection(string userGuid,string mediaServerGuid)
+        {
+            var connectionFinded= _sharedData.ListConnections.Find(x => x.MediaServerGuid == mediaServerGuid);
+            if(connectionFinded!=null)
+            {
+                connectionFinded.LastConnection = DateTime.Now;
+                connectionFinded.UserGuid = userGuid;
+                connectionFinded.Enable = true;
+            }else
+            {
+                connectionFinded = new MediaServerConnection();
+                connectionFinded.LastConnection= DateTime.Now;
+                connectionFinded.MediaServerGuid = mediaServerGuid;
+                connectionFinded.UserGuid= userGuid;
+                connectionFinded.Enable = true;
+                _sharedData.ListConnections.Add(connectionFinded);
+            }
+            await Task.CompletedTask;
+        }
 
         public async Task AddConnectionToUserClientsGroup(string userGuid)
         {
@@ -38,6 +63,10 @@ namespace SinovadDemoWebApi.CustomHub
         public async Task UpdateTranscoderSettings(string mediaServerGuid)
         {
             await Clients.Group(mediaServerGuid).SendAsync("UpdateTranscoderSettings");
+        }
+        public async Task CheckMediaServerConnection(string mediaServerGuid)
+        {
+            await Clients.Group(mediaServerGuid).SendAsync("CheckMediaServerConnection");
         }
     }
 
