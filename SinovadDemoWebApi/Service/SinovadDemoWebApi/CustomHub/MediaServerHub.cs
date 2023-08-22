@@ -25,6 +25,19 @@ namespace SinovadDemoWebApi.CustomHub
         {
             await Clients.Group(userGuid).SendAsync("UpdateMediaServers");
         }
+
+        public async Task AddConnectionToUserClientsGroup(string userGuid)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId,userGuid);
+        } 
+        public async Task AddConnectionToMediaServerClientsGroup(string mediaServerGuid)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, mediaServerGuid);
+        }
+        public async Task AddConnectionToLibraryClientsGroup(string libraryGuid)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, libraryGuid);
+        }
     }
 
 }
