@@ -8,9 +8,9 @@ namespace SinovadDemoWebApi.CustomHub
         {
             await Clients.Group(mediaServerGuid).SendAsync("UpdateItemsByMediaServer");
         }
-        public async Task UpdateItemsByLibrary(string libraryGuid)
+        public async Task UpdateItemsByLibrary(string mediaServerGuid,string libraryGuid)
         {
-            await Clients.Group(libraryGuid).SendAsync("UpdateItemsByLibrary");
+            await Clients.Group(mediaServerGuid).SendAsync("UpdateItemsByLibrary", libraryGuid);
         }
         public async Task UpdateLibraries(string mediaServerGuid)
         {
@@ -20,12 +20,10 @@ namespace SinovadDemoWebApi.CustomHub
         {
             await Clients.Group(mediaServerGuid).SendAsync("UpdateTranscoderSettings");
         }
-
         public async Task UpdateMediaServers(string userGuid)
         {
             await Clients.Group(userGuid).SendAsync("UpdateMediaServers");
         }
-
         public async Task AddConnectionToUserClientsGroup(string userGuid)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId,userGuid);
@@ -34,10 +32,7 @@ namespace SinovadDemoWebApi.CustomHub
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, mediaServerGuid);
         }
-        public async Task AddConnectionToLibraryClientsGroup(string libraryGuid)
-        {
-            await Groups.AddToGroupAsync(Context.ConnectionId, libraryGuid);
-        }
+
     }
 
 }
