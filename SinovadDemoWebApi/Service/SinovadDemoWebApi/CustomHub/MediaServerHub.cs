@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using SinovadDemoWebApi.Shared;
 
 namespace SinovadDemoWebApi.CustomHub
 {
@@ -52,22 +53,14 @@ namespace SinovadDemoWebApi.CustomHub
         public async Task AddConnectionToUserClientsGroup(string userGuid)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId,userGuid);
+            var currentMilisecond = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+            var enableConnections = _sharedData.ListConnections.FindAll(x => currentMilisecond - x.LastConnection.Ticks / TimeSpan.TicksPerMillisecond <= 5000);
+            foreach (var connection in enableConnections)
+            {
+                await Clients.Group(connection.UserGuid).SendAsync("EnableMediaServer", connection.MediaServerGuid);
+            }
         } 
 
-        // for media server client
-
-        public async Task AddConnectionToMediaServerClientsGroup(string mediaServerGuid)
-        {
-            await Groups.AddToGroupAsync(Context.ConnectionId, mediaServerGuid);
-        }
-        public async Task UpdateTranscoderSettings(string mediaServerGuid)
-        {
-            await Clients.Group(mediaServerGuid).SendAsync("UpdateTranscoderSettings");
-        }
-        public async Task CheckMediaServerConnection(string mediaServerGuid)
-        {
-            await Clients.Group(mediaServerGuid).SendAsync("CheckMediaServerConnection");
-        }
     }
 
 }

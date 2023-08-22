@@ -1,4 +1,4 @@
-﻿namespace SinovadDemoWebApi.CustomHub
+﻿namespace SinovadDemoWebApi.Shared
 {
     public class MediaServerConnection
     {

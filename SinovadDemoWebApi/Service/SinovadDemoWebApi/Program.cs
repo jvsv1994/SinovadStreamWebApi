@@ -5,6 +5,7 @@ using SinovadDemo.Application.UseCases;
 using SinovadDemo.Infrastructure;
 using SinovadDemo.Persistence;
 using SinovadDemoWebApi.CustomHub;
+using SinovadDemoWebApi.HostedService;
 using SinovadDemoWebApi.Modules.Authentication;
 using SinovadDemoWebApi.Modules.HealthCheck;
 using SinovadDemoWebApi.Modules.Identity;
@@ -14,6 +15,7 @@ using SinovadDemoWebApi.Modules.RateLimiter;
 using SinovadDemoWebApi.Modules.Swagger;
 using SinovadDemoWebApi.Modules.Versioning;
 using SinovadDemoWebApi.Modules.Watch;
+using SinovadDemoWebApi.Shared;
 using WatchDog;
 
 var builder = WebApplication.CreateBuilder(args);

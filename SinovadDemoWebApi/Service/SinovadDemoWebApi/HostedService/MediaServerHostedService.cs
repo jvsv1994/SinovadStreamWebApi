@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using SinovadDemoWebApi.CustomHub;
+using SinovadDemoWebApi.Shared;
 
-namespace SinovadDemoWebApi.CustomHub
+namespace SinovadDemoWebApi.HostedService
 {
     public class MediaServerHostedService : IHostedService, IDisposable
     {
@@ -18,18 +20,19 @@ namespace SinovadDemoWebApi.CustomHub
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            _timer = new Timer(CheckMediaServerConnection,null,TimeSpan.Zero,TimeSpan.FromSeconds(5));
+            _timer = new Timer(CheckMediaServerConnection, null, TimeSpan.Zero, TimeSpan.FromSeconds(5));
             return Task.CompletedTask;
         }
 
-        private void CheckMediaServerConnection(object state) {
+        private void CheckMediaServerConnection(object state)
+        {
             var currentMilisecond = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
-            var enableConnections=_sharedData.ListConnections.FindAll(x => currentMilisecond - (x.LastConnection.Ticks / TimeSpan.TicksPerMillisecond) <= 5000);
+            var enableConnections = _sharedData.ListConnections.FindAll(x => currentMilisecond - x.LastConnection.Ticks / TimeSpan.TicksPerMillisecond <= 5000);
             foreach (var connection in enableConnections)
             {
                 _hubContext.Clients.Group(connection.UserGuid).SendAsync("EnableMediaServer", connection.MediaServerGuid);
             }
-            var disableConnections = _sharedData.ListConnections.FindAll(x => currentMilisecond - (x.LastConnection.Ticks / TimeSpan.TicksPerMillisecond) > 5000);
+            var disableConnections = _sharedData.ListConnections.FindAll(x => currentMilisecond - x.LastConnection.Ticks / TimeSpan.TicksPerMillisecond > 5000);
             foreach (var connection in disableConnections)
             {
                 _hubContext.Clients.Group(connection.UserGuid).SendAsync("DisableMediaServer", connection.MediaServerGuid);
