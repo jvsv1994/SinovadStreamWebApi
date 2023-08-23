@@ -200,5 +200,29 @@ namespace SinovadDemo.Application.UseCases.Catalogs
             return response;
         }
 
+        public async Task<Response<List<CatalogDetailDto>>> GetAllCatalogDetailsByCatalogIds(string catalogIds)
+        {
+            var response = new Response<List<CatalogDetailDto>>();
+            try
+            {
+                List<int> listIds = new List<int>();
+                if (!string.IsNullOrEmpty(catalogIds))
+                {
+                    listIds = catalogIds.Split(",").Select(x => Convert.ToInt32(x)).ToList();
+                }
+                var result = await _unitOfWork.CatalogDetails.GetAllByExpressionAsync(x => listIds.Contains(x.CatalogId));
+                response.Data = _mapper.Map<List<CatalogDetailDto>>(result);
+                response.IsSuccess = true;
+                response.Message = "Successful";
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _sharedService._tracer.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
+
     }
 }

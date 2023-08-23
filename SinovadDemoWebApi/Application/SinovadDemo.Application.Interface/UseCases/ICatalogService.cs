@@ -19,7 +19,7 @@ namespace SinovadDemo.Application.Interface.UseCases
         #region catalog details
         Task<Response<CatalogDetailDto>> GetCatalogDetailAsync(int catalogId, int catalogDetailId);
         Task<Response<List<CatalogDetailDto>>> GetDetailsByCatalogAsync(int catalogId);
-
+        Task<Response<List<CatalogDetailDto>>> GetAllCatalogDetailsByCatalogIds(string catalogIds);
         Task<ResponsePagination<List<CatalogDetailDto>>> GetAllCatalogDetailsWithPaginationByCatalogIdsAsync(string catalogIds, int page, int take);
 
         #endregion
