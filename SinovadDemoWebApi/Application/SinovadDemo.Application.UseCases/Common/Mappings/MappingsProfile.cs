@@ -10,6 +10,7 @@ namespace Pacagroup.Ecommerce.Application.UseCases.Common.Mappings
         {
             CreateMap<Catalog, CatalogDto>().ReverseMap();
             CreateMap<CatalogDetail, CatalogDetailDto>().ReverseMap();
+            CreateMap<Season, SeasonDto>().ReverseMap();
             CreateMap<Episode, EpisodeDto>().ReverseMap();
             CreateMap<Genre, GenreDto>().ReverseMap();
             CreateMap<Menu, MenuDto>().ReverseMap();
