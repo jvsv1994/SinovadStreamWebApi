@@ -22,9 +22,9 @@ namespace SinovadDemoWebApi.CustomHub
         {
             await Clients.Group(userGuid).SendAsync("UpdateLibrariesByMediaServer", mediaServerGuid);
         }
-        public async Task UpdateCurrentTimeMediaFilePlayBackRealTime(string userGuid, string mediaServerGuid,string mediaFilePlaybackRealTimeGuid,double currentTime)
+        public async Task UpdateCurrentTimeMediaFilePlayBackRealTime(string userGuid, string mediaServerGuid,string mediaFilePlaybackRealTimeGuid,double currentTime,bool isPlaying)
         {
-            await Clients.Group(userGuid).SendAsync("UpdateCurrentTimeMediaFilePlayBackRealTime", mediaServerGuid, mediaFilePlaybackRealTimeGuid, currentTime);
+            await Clients.Group(userGuid).SendAsync("UpdateCurrentTimeMediaFilePlayBackRealTime", mediaServerGuid, mediaFilePlaybackRealTimeGuid, currentTime, isPlaying);
         }
 
         public async Task AddMediaFilePlayBackRealTime(string userGuid, string mediaServerGuid, string mediaFilePlaybackRealTimeGuid)
