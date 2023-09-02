@@ -22,24 +22,24 @@ namespace SinovadDemoWebApi.CustomHub
         {
             await Clients.Group(userGuid).SendAsync("UpdateLibrariesByMediaServer", mediaServerGuid);
         }
-        public async Task UpdateCurrentTimeMediaFilePlayBackRealTime(string userGuid, string mediaServerGuid,string mediaFilePlaybackRealTimeGuid,double currentTime,bool isPlaying)
+        public async Task UpdateCurrentTimeMediaFilePlayBack(string userGuid, string mediaServerGuid,string mediaFilePlaybackGuid,double currentTime,bool isPlaying)
         {
-            await Clients.Group(userGuid).SendAsync("UpdateCurrentTimeMediaFilePlayBackRealTime", mediaServerGuid, mediaFilePlaybackRealTimeGuid, currentTime, isPlaying);
+            await Clients.Group(userGuid).SendAsync("UpdateCurrentTimeMediaFilePlayBack", mediaServerGuid, mediaFilePlaybackGuid, currentTime, isPlaying);
         }
 
-        public async Task AddMediaFilePlayBackRealTime(string userGuid, string mediaServerGuid, string mediaFilePlaybackRealTimeGuid)
+        public async Task AddMediaFilePlayBack(string userGuid, string mediaServerGuid, string mediaFilePlaybackGuid)
         {
-            await Clients.Group(userGuid).SendAsync("AddMediaFilePlayBackRealTime", mediaServerGuid, mediaFilePlaybackRealTimeGuid);
+            await Clients.Group(userGuid).SendAsync("AddMediaFilePlayBack", mediaServerGuid, mediaFilePlaybackGuid);
         }
 
-        public async Task RemoveMediaFilePlayBackRealTime(string userGuid, string mediaServerGuid, string mediaFilePlaybackRealTimeGuid)
+        public async Task RemoveMediaFilePlayBack(string userGuid, string mediaServerGuid, string mediaFilePlaybackGuid)
         {
-            await Clients.Group(userGuid).SendAsync("RemoveMediaFilePlayBackRealTime", mediaServerGuid, mediaFilePlaybackRealTimeGuid);
+            await Clients.Group(userGuid).SendAsync("RemoveMediaFilePlayBack", mediaServerGuid, mediaFilePlaybackGuid);
         }
 
-        public async Task RemoveLastTranscodedMediaFileProcess(string userGuid, string mediaServerGuid, string mediaFilePlaybackRealTimeGuid)
+        public async Task RemoveLastTranscodedMediaFileProcess(string userGuid, string mediaServerGuid, string mediaFilePlaybackGuid)
         {
-            await Clients.Group(userGuid).SendAsync("RemoveLastTranscodedMediaFileProcess", mediaServerGuid, mediaFilePlaybackRealTimeGuid);
+            await Clients.Group(userGuid).SendAsync("RemoveLastTranscodedMediaFileProcess", mediaServerGuid, mediaFilePlaybackGuid);
         }
         public async Task UpdateItemsByMediaServer(string userGuid, string mediaServerGuid)
         {
