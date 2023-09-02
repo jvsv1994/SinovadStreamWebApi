@@ -37,6 +37,10 @@ namespace SinovadDemoWebApi.CustomHub
             await Clients.Group(userGuid).SendAsync("RemoveMediaFilePlayBack", mediaServerGuid, mediaFilePlaybackGuid);
         }
 
+        public async Task RemovedMediaFilePlayBack(string userGuid, string mediaServerGuid, string mediaFilePlaybackGuid)
+        {
+            await Clients.Group(userGuid).SendAsync("RemovedMediaFilePlayBack", mediaServerGuid, mediaFilePlaybackGuid);
+        }
         public async Task RemoveLastTranscodedMediaFileProcess(string userGuid, string mediaServerGuid, string mediaFilePlaybackGuid)
         {
             await Clients.Group(userGuid).SendAsync("RemoveLastTranscodedMediaFileProcess", mediaServerGuid, mediaFilePlaybackGuid);
