@@ -8,7 +8,7 @@ namespace SinovadDemo.Application.Interface.UseCases
     {
         #region catalogs
         Task<Response<CatalogDto>> GetAsync(int id);
-        Task<ResponsePagination<List<CatalogDto>>> GetAllWithPaginationAsync(int page, int take);
+        Task<ResponsePagination<List<CatalogDto>>> GetAllWithPaginationAsync(int page, int take, string sortBy, string sortDirection, string searchText, string searchBy);
         Response<object> Create(CatalogDto catalogDto);
         Response<object> Update(CatalogDto catalogDto);
         Response<object> Delete(int id);
