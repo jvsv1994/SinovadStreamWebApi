@@ -8,13 +8,11 @@ namespace SinovadDemo.Application.Shared
 {
     public class SharedService
     {
-        public IAppLogger<SharedService> _tracer;
         public MyConfig _config;
 
-        public SharedService(IAppLogger<SharedService> logger,IOptions<MyConfig> config)
+        public SharedService(IOptions<MyConfig> config)
         {
             _config = config.Value;
-            _tracer = logger;
         }
 
         public string GetFormattedText(string input)

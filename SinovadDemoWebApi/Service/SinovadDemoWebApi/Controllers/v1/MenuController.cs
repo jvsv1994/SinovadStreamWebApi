@@ -72,6 +72,28 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message);
         }
 
+        [HttpDelete("Delete/{menuId}")]
+        public ActionResult Delete(int menuId)
+        {
+            var response = _menuService.Delete(menuId);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response.Message);
+        }
+
+        [HttpDelete("DeleteList/{listIds}")]
+        public ActionResult DeleteList(string listIds)
+        {
+            var response = _menuService.DeleteList(listIds);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response.Message);
+        }
+
     }
 
 }

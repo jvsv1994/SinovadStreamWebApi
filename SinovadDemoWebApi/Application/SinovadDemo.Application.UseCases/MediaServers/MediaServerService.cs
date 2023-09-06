@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.Options;
+﻿using AutoMapper;
+using Microsoft.Extensions.Options;
 using SinovadDemo.Application.Configuration;
 using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.Helpers;
 using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Application.Interface.UseCases;
-using SinovadDemo.Application.Shared;
 using SinovadDemo.Domain.Entities;
 using SinovadDemo.Transversal.Common;
 
@@ -12,20 +12,20 @@ namespace SinovadDemo.Application.UseCases.MediaServers
 {
     public class MediaServerService : IMediaServerService
     {
-        private IUnitOfWork _unitOfWork;
-
-        private readonly SharedService _sharedService;
+        private readonly IUnitOfWork _unitOfWork;
 
         private readonly IOptions<MyConfig> _config;
 
         private readonly AutoMapper.IMapper _mapper;
 
-        public MediaServerService(IUnitOfWork unitOfWork, SharedService sharedService, IOptions<MyConfig> config, AutoMapper.IMapper mapper)
+        private readonly IAppLogger<MediaServerService> _logger;
+
+        public MediaServerService(IUnitOfWork unitOfWork, IOptions<MyConfig> config, IMapper mapper, IAppLogger<MediaServerService> logger)
         {
             _unitOfWork = unitOfWork;
-            _sharedService = sharedService;
             _config = config;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<Response<MediaServerDto>> GetAsync(int id)
@@ -41,7 +41,7 @@ namespace SinovadDemo.Application.UseCases.MediaServers
             catch (Exception ex)
             {
                 response.Message = ex.StackTrace;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -59,7 +59,7 @@ namespace SinovadDemo.Application.UseCases.MediaServers
             catch (Exception ex)
             {
                 response.Message = ex.StackTrace;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -79,7 +79,7 @@ namespace SinovadDemo.Application.UseCases.MediaServers
             }catch (Exception ex)
             {
                 response.Message = ex.StackTrace;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -102,7 +102,7 @@ namespace SinovadDemo.Application.UseCases.MediaServers
             catch (Exception ex)
             {
                 response.Message = ex.StackTrace;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -120,7 +120,7 @@ namespace SinovadDemo.Application.UseCases.MediaServers
             catch (Exception ex)
             {
                 response.Message = ex.StackTrace;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -137,7 +137,7 @@ namespace SinovadDemo.Application.UseCases.MediaServers
             }catch (Exception ex)
             {
                 response.Message = ex.StackTrace;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -159,7 +159,7 @@ namespace SinovadDemo.Application.UseCases.MediaServers
             catch (Exception ex)
             {
                 response.Message = ex.StackTrace;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -178,7 +178,7 @@ namespace SinovadDemo.Application.UseCases.MediaServers
             catch (Exception ex)
             {
                 response.Message = ex.StackTrace;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -197,7 +197,7 @@ namespace SinovadDemo.Application.UseCases.MediaServers
             catch (Exception ex)
             {
                 response.Message = ex.StackTrace;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -230,7 +230,7 @@ namespace SinovadDemo.Application.UseCases.MediaServers
             }catch (Exception ex)
             {
                 response.Message = ex.StackTrace;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -249,7 +249,7 @@ namespace SinovadDemo.Application.UseCases.MediaServers
             catch (Exception ex)
             {
                 response.Message = ex.StackTrace;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -267,7 +267,7 @@ namespace SinovadDemo.Application.UseCases.MediaServers
             catch (Exception ex)
             {
                 response.Message = ex.StackTrace;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -290,7 +290,7 @@ namespace SinovadDemo.Application.UseCases.MediaServers
             catch (Exception ex)
             {
                 response.Message = ex.StackTrace;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }

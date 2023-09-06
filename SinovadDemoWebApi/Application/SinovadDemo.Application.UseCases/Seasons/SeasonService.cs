@@ -1,7 +1,7 @@
-﻿using SinovadDemo.Application.DTO;
+﻿using AutoMapper;
+using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Application.Interface.UseCases;
-using SinovadDemo.Application.Shared;
 using SinovadDemo.Domain.Entities;
 using SinovadDemo.Transversal.Common;
 
@@ -10,17 +10,17 @@ namespace SinovadDemo.Application.UseCases.Seasons
 
     public class SeasonService : ISeasonService
     {
-        private IUnitOfWork _unitOfWork;
-
-        private readonly SharedService _sharedService;
+        private readonly IUnitOfWork _unitOfWork;
 
         private readonly AutoMapper.IMapper _mapper;
 
-        public SeasonService(IUnitOfWork unitOfWork, SharedService sharedService, AutoMapper.IMapper mapper)
+        private readonly IAppLogger<SeasonService> _logger;
+
+        public SeasonService(IUnitOfWork unitOfWork, IMapper mapper, IAppLogger<SeasonService> logger)
         {
             _unitOfWork = unitOfWork;
-            _sharedService = sharedService;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<Response<SeasonDto>> GetTvSeasonAsync(int tvSerieId,int seasonNumber)
@@ -36,7 +36,7 @@ namespace SinovadDemo.Application.UseCases.Seasons
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -54,7 +54,7 @@ namespace SinovadDemo.Application.UseCases.Seasons
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -76,7 +76,7 @@ namespace SinovadDemo.Application.UseCases.Seasons
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -95,7 +95,7 @@ namespace SinovadDemo.Application.UseCases.Seasons
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -114,7 +114,7 @@ namespace SinovadDemo.Application.UseCases.Seasons
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -132,7 +132,7 @@ namespace SinovadDemo.Application.UseCases.Seasons
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -155,7 +155,7 @@ namespace SinovadDemo.Application.UseCases.Seasons
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }

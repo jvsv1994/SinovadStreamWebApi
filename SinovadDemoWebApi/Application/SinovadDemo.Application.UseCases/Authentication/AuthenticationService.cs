@@ -15,7 +15,7 @@ namespace SinovadDemo.Application.UseCases.Authentication
 {
     public  class AuthenticationService : IAuthenticationService
     {
-        private IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
         private readonly SignInManager<User> _signInManager;
 

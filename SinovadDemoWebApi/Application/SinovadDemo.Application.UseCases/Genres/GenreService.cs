@@ -1,8 +1,8 @@
-﻿using SinovadDemo.Application.DTO;
+﻿using AutoMapper;
+using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.Interface.Infrastructure;
 using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Application.Interface.UseCases;
-using SinovadDemo.Application.Shared;
 using SinovadDemo.Domain.Entities;
 using SinovadDemo.Transversal.Common;
 
@@ -10,20 +10,20 @@ namespace SinovadDemo.Application.UseCases.Genres
 {
     public class GenreService : IGenreService
     {
-        private IUnitOfWork _unitOfWork;
-
-        private SharedService _sharedService;
+        private readonly IUnitOfWork _unitOfWork;
 
         private readonly ITmdbService _tmdbService;
 
         private readonly AutoMapper.IMapper _mapper;
 
-        public GenreService(IUnitOfWork unitOfWork,ITmdbService tmdbService, SharedService sharedService,AutoMapper.IMapper mapper)
+        private readonly IAppLogger<GenreService> _logger;
+
+        public GenreService(IUnitOfWork unitOfWork, ITmdbService tmdbService, IMapper mapper, IAppLogger<GenreService> logger)
         {
             _unitOfWork = unitOfWork;
-            _sharedService = sharedService;
             _tmdbService = tmdbService;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<Response<List<GenreDto>>> GetAllAsync()
@@ -39,7 +39,7 @@ namespace SinovadDemo.Application.UseCases.Genres
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -60,7 +60,7 @@ namespace SinovadDemo.Application.UseCases.Genres
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -78,7 +78,7 @@ namespace SinovadDemo.Application.UseCases.Genres
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -98,7 +98,7 @@ namespace SinovadDemo.Application.UseCases.Genres
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -117,7 +117,7 @@ namespace SinovadDemo.Application.UseCases.Genres
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -136,7 +136,7 @@ namespace SinovadDemo.Application.UseCases.Genres
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -154,7 +154,7 @@ namespace SinovadDemo.Application.UseCases.Genres
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -177,7 +177,7 @@ namespace SinovadDemo.Application.UseCases.Genres
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -202,7 +202,7 @@ namespace SinovadDemo.Application.UseCases.Genres
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }

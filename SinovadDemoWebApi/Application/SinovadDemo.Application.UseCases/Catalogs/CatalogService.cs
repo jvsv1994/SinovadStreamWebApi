@@ -1,7 +1,7 @@
-﻿using SinovadDemo.Application.DTO;
+﻿using AutoMapper;
+using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Application.Interface.UseCases;
-using SinovadDemo.Application.Shared;
 using SinovadDemo.Domain.Entities;
 using SinovadDemo.Transversal.Common;
 
@@ -9,18 +9,19 @@ namespace SinovadDemo.Application.UseCases.Catalogs
 {
     public class CatalogService : ICatalogService
     {
-        private IUnitOfWork _unitOfWork;
-
-        private readonly SharedService _sharedService;
+        private readonly IUnitOfWork _unitOfWork;
 
         private readonly AutoMapper.IMapper _mapper;
 
-        public CatalogService(IUnitOfWork unitOfWork, SharedService sharedService, AutoMapper.IMapper mapper)
+        private readonly IAppLogger<CatalogService> _logger;
+
+        public CatalogService(IUnitOfWork unitOfWork, IMapper mapper, IAppLogger<CatalogService> logger)
         {
             _unitOfWork = unitOfWork;
-            _sharedService = sharedService;
             _mapper = mapper;
+            _logger = logger;
         }
+
         public async Task<Response<CatalogDto>> GetAsync(int id)
         {
             var response = new Response<CatalogDto>();
@@ -34,7 +35,7 @@ namespace SinovadDemo.Application.UseCases.Catalogs
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -54,7 +55,7 @@ namespace SinovadDemo.Application.UseCases.Catalogs
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -73,7 +74,7 @@ namespace SinovadDemo.Application.UseCases.Catalogs
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -92,7 +93,7 @@ namespace SinovadDemo.Application.UseCases.Catalogs
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -110,7 +111,7 @@ namespace SinovadDemo.Application.UseCases.Catalogs
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -133,7 +134,7 @@ namespace SinovadDemo.Application.UseCases.Catalogs
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -151,7 +152,7 @@ namespace SinovadDemo.Application.UseCases.Catalogs
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -169,7 +170,7 @@ namespace SinovadDemo.Application.UseCases.Catalogs
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -195,7 +196,7 @@ namespace SinovadDemo.Application.UseCases.Catalogs
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -218,7 +219,7 @@ namespace SinovadDemo.Application.UseCases.Catalogs
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }

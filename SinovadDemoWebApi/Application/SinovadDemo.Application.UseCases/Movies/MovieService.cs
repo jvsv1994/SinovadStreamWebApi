@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Caching.Distributed;
+﻿using AutoMapper;
+using Microsoft.Extensions.Caching.Distributed;
 using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Application.Interface.UseCases;
-using SinovadDemo.Application.Shared;
 using SinovadDemo.Domain.Entities;
 using SinovadDemo.Transversal.Common;
 using System.Text;
@@ -13,17 +13,16 @@ namespace SinovadDemo.Application.UseCases.Movies
 
     public class MovieService : IMovieService
     {
-        private IUnitOfWork _unitOfWork;
-        private readonly SharedService _sharedService;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IDistributedCache _distributedCache;
         private readonly AutoMapper.IMapper _mapper;
-
-        public MovieService(IUnitOfWork unitOfWork, SharedService sharedService, IDistributedCache distributedCache, AutoMapper.IMapper mapper)
+        private readonly IAppLogger<MovieService> _logger;
+        public MovieService(IUnitOfWork unitOfWork, IDistributedCache distributedCache, IMapper mapper, IAppLogger<MovieService> logger)
         {
             _unitOfWork = unitOfWork;
-            _sharedService = sharedService;
             _distributedCache = distributedCache;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<Response<List<MovieDto>>> GetAllAsync()
@@ -59,7 +58,7 @@ namespace SinovadDemo.Application.UseCases.Movies
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -80,7 +79,7 @@ namespace SinovadDemo.Application.UseCases.Movies
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -111,7 +110,7 @@ namespace SinovadDemo.Application.UseCases.Movies
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -131,7 +130,7 @@ namespace SinovadDemo.Application.UseCases.Movies
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -156,7 +155,7 @@ namespace SinovadDemo.Application.UseCases.Movies
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -175,7 +174,7 @@ namespace SinovadDemo.Application.UseCases.Movies
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -199,7 +198,7 @@ namespace SinovadDemo.Application.UseCases.Movies
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }

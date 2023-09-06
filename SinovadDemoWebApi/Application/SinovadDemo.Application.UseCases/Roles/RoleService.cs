@@ -10,7 +10,7 @@ namespace SinovadDemo.Application.UseCases.Roles
 {
     public class RoleService : IRoleService
     {
-        private IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
         private readonly IAppLogger<RoleService> _logger;
 

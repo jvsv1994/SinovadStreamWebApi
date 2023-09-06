@@ -1,7 +1,7 @@
-﻿using SinovadDemo.Application.DTO;
+﻿using AutoMapper;
+using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Application.Interface.UseCases;
-using SinovadDemo.Application.Shared;
 using SinovadDemo.Domain.Entities;
 using SinovadDemo.Transversal.Common;
 
@@ -10,17 +10,16 @@ namespace SinovadDemo.Application.UseCases.TvSeries
 
     public class TvSerieService : ITvSerieService
     {
-        private IUnitOfWork _unitOfWork;
-
-        private readonly SharedService _sharedService;
+        private readonly IUnitOfWork _unitOfWork;
 
         private readonly AutoMapper.IMapper _mapper;
 
-        public TvSerieService(IUnitOfWork unitOfWork, SharedService sharedService, AutoMapper.IMapper mapper)
+        private readonly IAppLogger<TvSerieService> _logger;
+        public TvSerieService(IUnitOfWork unitOfWork, IMapper mapper, IAppLogger<TvSerieService> logger)
         {
             _unitOfWork = unitOfWork;
-            _sharedService = sharedService;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<Response<List<TvSerieDto>>> GetAllAsync()
@@ -36,7 +35,7 @@ namespace SinovadDemo.Application.UseCases.TvSeries
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -57,7 +56,7 @@ namespace SinovadDemo.Application.UseCases.TvSeries
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -77,7 +76,7 @@ namespace SinovadDemo.Application.UseCases.TvSeries
             }catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -108,7 +107,7 @@ namespace SinovadDemo.Application.UseCases.TvSeries
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -128,7 +127,7 @@ namespace SinovadDemo.Application.UseCases.TvSeries
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -153,7 +152,7 @@ namespace SinovadDemo.Application.UseCases.TvSeries
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -183,7 +182,7 @@ namespace SinovadDemo.Application.UseCases.TvSeries
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -218,7 +217,7 @@ namespace SinovadDemo.Application.UseCases.TvSeries
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }

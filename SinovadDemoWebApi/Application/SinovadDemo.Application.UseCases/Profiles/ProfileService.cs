@@ -1,7 +1,6 @@
 ﻿using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Application.Interface.UseCases;
-using SinovadDemo.Application.Shared;
 using SinovadDemo.Domain.Entities;
 using SinovadDemo.Transversal.Common;
 
@@ -9,17 +8,17 @@ namespace SinovadDemo.Application.UseCases.Profiles
 {
     public class ProfileService : IProfileService
     {
-        private IUnitOfWork _unitOfWork;
-
-        private readonly SharedService _sharedService;
+        private readonly IUnitOfWork _unitOfWork;
 
         private readonly AutoMapper.IMapper _mapper;
 
-        public ProfileService(IUnitOfWork unitOfWork, SharedService sharedService, AutoMapper.IMapper mapper)
+        private readonly IAppLogger<ProfileService> _logger;
+
+        public ProfileService(IUnitOfWork unitOfWork, AutoMapper.IMapper mapper, IAppLogger<ProfileService> logger)
         {
             _unitOfWork = unitOfWork;
-            _sharedService = sharedService;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<Response<ProfileDto>> GetAsync(int id)
@@ -35,7 +34,7 @@ namespace SinovadDemo.Application.UseCases.Profiles
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -53,7 +52,7 @@ namespace SinovadDemo.Application.UseCases.Profiles
             catch (Exception ex)
             {
                 response.Message = ex.StackTrace;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -74,7 +73,7 @@ namespace SinovadDemo.Application.UseCases.Profiles
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -93,7 +92,7 @@ namespace SinovadDemo.Application.UseCases.Profiles
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -112,7 +111,7 @@ namespace SinovadDemo.Application.UseCases.Profiles
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -131,7 +130,7 @@ namespace SinovadDemo.Application.UseCases.Profiles
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -149,7 +148,7 @@ namespace SinovadDemo.Application.UseCases.Profiles
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
@@ -172,7 +171,7 @@ namespace SinovadDemo.Application.UseCases.Profiles
             catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }

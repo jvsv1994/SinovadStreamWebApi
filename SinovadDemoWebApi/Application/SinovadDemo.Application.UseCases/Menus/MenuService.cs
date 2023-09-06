@@ -8,13 +8,13 @@ namespace SinovadDemo.Application.UseCases.Users
 {
     public class MenuService : IMenuService
     {
-        private IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
-        private readonly IAppLogger<UserService> _logger;
+        private readonly IAppLogger<MenuService> _logger;
 
         private readonly AutoMapper.IMapper _mapper;
 
-        public MenuService(IUnitOfWork unitOfWork, IAppLogger<UserService> logger, AutoMapper.IMapper mapper)
+        public MenuService(IUnitOfWork unitOfWork, IAppLogger<MenuService> logger, AutoMapper.IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
@@ -85,6 +85,47 @@ namespace SinovadDemo.Application.UseCases.Users
             {
                 var entity = _mapper.Map<Menu>(dto);
                 _unitOfWork.Menus.Update(entity);
+                _unitOfWork.Save();
+                response.IsSuccess = true;
+                response.Message = "Successful";
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
+        public Response<object> Delete(int id)
+        {
+            var response = new Response<object>();
+            try
+            {
+                _unitOfWork.Menus.Delete(id);
+                _unitOfWork.Save();
+                response.IsSuccess = true;
+                response.Message = "Successful";
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
+        public Response<object> DeleteList(string ids)
+        {
+            var response = new Response<object>();
+            try
+            {
+                List<int> listIds = new List<int>();
+                if (!string.IsNullOrEmpty(ids))
+                {
+                    listIds = ids.Split(",").Select(x => Convert.ToInt32(x)).ToList();
+                }
+                _unitOfWork.Menus.DeleteByExpression(x => listIds.Contains(x.Id));
                 _unitOfWork.Save();
                 response.IsSuccess = true;
                 response.Message = "Successful";

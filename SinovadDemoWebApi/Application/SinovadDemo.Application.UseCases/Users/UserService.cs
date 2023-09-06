@@ -15,7 +15,7 @@ namespace SinovadDemo.Application.UseCases.Users
 {
     public class UserService : IUserService
     {
-        private IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
         private readonly UserManager<User> _userManager;
 
@@ -25,11 +25,11 @@ namespace SinovadDemo.Application.UseCases.Users
 
         private readonly AccessUserDtoValidator _accessUserDtoValidator;
 
-        private readonly IAppLogger<UserService> _logger;
-
         private readonly IOptions<MyConfig> _config;
 
         private readonly AutoMapper.IMapper _mapper;
+
+        private readonly IAppLogger<UserService> _logger;
 
         public UserService(IUnitOfWork unitOfWork, IAppLogger<UserService> logger, IOptions<MyConfig> config, UserManager<User> userManager, SignInManager<User> signInManager, IEmailSenderService emalSenderService, AccessUserDtoValidator accessUserDtoValidator,AutoMapper.IMapper mapper)
         {

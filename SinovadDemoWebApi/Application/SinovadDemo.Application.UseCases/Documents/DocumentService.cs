@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using SinovadDemo.Application.Configuration;
 using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Application.Interface.UseCases;
-using SinovadDemo.Application.Shared;
 using SinovadDemo.Transversal.Common;
 using System.Net;
 
@@ -12,17 +10,17 @@ namespace SinovadDemo.Application.UseCases.Documents
 {
     public class DocumentService : IDocumentService
     {
-        private IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
-        private IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
 
+        private readonly IAppLogger<DocumentService> _logger;
 
-        private readonly SharedService _sharedService;
-
-        public DocumentService(IUnitOfWork unitOfWork, IConfiguration configuration)
+        public DocumentService(IUnitOfWork unitOfWork, IConfiguration configuration, IAppLogger<DocumentService> logger)
         {
-            _unitOfWork= unitOfWork;
-            _configuration= configuration;
+            _unitOfWork = unitOfWork;
+            _configuration = configuration;
+            _logger = logger;
         }
 
         public Response<object> UploadAvatarProfile(DocumentDto document)
@@ -63,7 +61,7 @@ namespace SinovadDemo.Application.UseCases.Documents
             }catch (Exception ex)
             {
                 response.Message = ex.Message;
-                _sharedService._tracer.LogError(ex.StackTrace);
+                _logger.LogError(ex.StackTrace);
             }
             return response;
         }
