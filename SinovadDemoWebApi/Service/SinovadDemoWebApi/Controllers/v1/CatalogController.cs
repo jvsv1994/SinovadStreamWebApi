@@ -19,8 +19,8 @@ namespace SinovadDemoWebApi.Controllers.v1
             _catalogService = catalogService;
         }
 
-        [HttpGet("GetAllAsync")]
-        public async Task<ActionResult> GetAllAsync(int page = 1, int take = 1000)
+        [HttpGet("GetAllWithPaginationAsync")]
+        public async Task<ActionResult> GetAllWithPaginationAsync(int page = 1, int take = 1000)
         {
             var response = await _catalogService.GetAllWithPaginationAsync(page, take);
             if (response.IsSuccess)
