@@ -75,9 +75,10 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
         new Menu { Id = 3, ParentId = 1, SortOrder = 1, Title = "Roles", Path = "/manage/roles", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-check", Enabled = true, Guid = Guid.NewGuid() },
         new Menu { Id = 4, ParentId = 1, SortOrder = 2, Title = "Usuarios", Path = "/manage/users", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-user", Enabled = true, Guid = Guid.NewGuid() },
         new Menu { Id = 5, ParentId = 1, SortOrder = 3, Title = "Menu", Path = "/manage/menus", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-check", Enabled = true, Guid = Guid.NewGuid() },
-        new Menu { Id = 6, ParentId = 2, SortOrder = 1, Title = "Peliculas", Path = "/manage/movies", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-film", Enabled = true, Guid = Guid.NewGuid() },
-        new Menu { Id = 7, ParentId = 2, SortOrder = 2, Title = "Series", Path = "/manage/tvseries", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-tv", Enabled = true, Guid = Guid.NewGuid() },
-        new Menu { Id = 8, ParentId = 2, SortOrder = 3, Title = "Generos", Path = "/manage/genres", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-check", Enabled = true, Guid = Guid.NewGuid()});
+        new Menu { Id = 6, ParentId = 1, SortOrder = 3, Title = "Catálogos", Path = "/manage/catalogs", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-check", Enabled = true, Guid = Guid.NewGuid() },
+        new Menu { Id = 7, ParentId = 2, SortOrder = 1, Title = "Peliculas", Path = "/manage/movies", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-film", Enabled = true, Guid = Guid.NewGuid() },
+        new Menu { Id = 8, ParentId = 2, SortOrder = 2, Title = "Series", Path = "/manage/tvseries", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-tv", Enabled = true, Guid = Guid.NewGuid() },
+        new Menu { Id = 9, ParentId = 2, SortOrder = 3, Title = "Generos", Path = "/manage/genres", IconTypeCatalogId = (int)CatalogEnum.IconType, IconTypeCatalogDetailId = (int)IconType.FontAwesome, IconClass = "fa-solid fa-list-check", Enabled = true, Guid = Guid.NewGuid()});
 
         modelBuilder.Entity<User>(entity =>
         {
@@ -228,10 +229,11 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
            new RoleMenu { RoleId = 1, MenuId = 6 },
            new RoleMenu { RoleId = 1, MenuId = 7 },
            new RoleMenu { RoleId = 1, MenuId = 8 },
+           new RoleMenu { RoleId = 1, MenuId = 9 },
            new RoleMenu { RoleId = 2, MenuId = 2 },
-           new RoleMenu { RoleId = 2, MenuId = 6 },
            new RoleMenu { RoleId = 2, MenuId = 7 },
-           new RoleMenu { RoleId = 2, MenuId = 8 });
+           new RoleMenu { RoleId = 2, MenuId = 8 },
+           new RoleMenu { RoleId = 2, MenuId = 9 });
 
 
         modelBuilder.Entity<MediaServer>(entity =>
