@@ -39,13 +39,13 @@ namespace SinovadDemo.Application.UseCases.Catalogs
             }
             return response;
         }
-        public async Task<ResponsePagination<List<CatalogDto>>> GetAllWithPaginationAsync(int page, int take)
+        public async Task<ResponsePagination<List<CatalogDto>>> GetAllWithPaginationAsync(int page, int take, string sortBy, string sortDirection, string searchText, string searchBy)
         {
             var response = new ResponsePagination<List<CatalogDto>>();
             try
             {
-                var result = await _unitOfWork.Catalogs.GetAllWithPaginationAsync(page, take, "Id", "desc","","");
-                response.Data = _mapper.Map<List<CatalogDto>>(result);
+                var result = await _unitOfWork.Catalogs.GetAllWithPaginationAsync(page, take, sortBy, sortDirection, searchText, searchBy);
+                response.Data = _mapper.Map<List<CatalogDto>>(result.Items);
                 response.PageNumber = page;
                 response.TotalPages = result.Pages;
                 response.TotalCount = result.Total;
