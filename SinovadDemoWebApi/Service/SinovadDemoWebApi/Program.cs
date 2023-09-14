@@ -16,6 +16,7 @@ using SinovadDemoWebApi.Modules.Swagger;
 using SinovadDemoWebApi.Modules.Versioning;
 using SinovadDemoWebApi.Modules.Watch;
 using SinovadDemoWebApi.Shared;
+using System.Text.Json.Serialization;
 using WatchDog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +25,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.PropertyNamingPolicy = null;
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
 builder.Services.AddSignalR();
 builder.Services.AddHostedService<MediaServerHostedService>();

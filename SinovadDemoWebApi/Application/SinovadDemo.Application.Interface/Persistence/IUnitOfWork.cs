@@ -1,12 +1,10 @@
-﻿using Generic.Core.Models;
-using SinovadDemo.Domain.Entities;
+﻿using SinovadDemo.Domain.Entities;
 
 namespace SinovadDemo.Application.Interface.Persistence
 {
     public interface IUnitOfWork : IDisposable
     {
-        public IAppUserRepository AppUsers { get; }
-        public IGenericRepository<User> Users { get; }
+        public IUserRepository Users { get; }
         public IMenuRepository Menus { get; }
         public IRoleRepository Roles { get; }
         public IGenericRepository<MediaServer> MediaServers { get; }

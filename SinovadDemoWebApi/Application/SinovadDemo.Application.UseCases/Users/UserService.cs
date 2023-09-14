@@ -73,10 +73,10 @@ namespace SinovadDemo.Application.UseCases.Users
             try
             {
                 _logger.LogInformation("Getting user data from user with Guid " + userGuid);
-                var user = await _unitOfWork.Users.GetByExpressionAsync(x => x.Guid.ToString() == userGuid);
+                var user = await _unitOfWork.Users.GetUserRelatedData(x => x.Guid.ToString() == userGuid);
                 if(user!=null)
                 {
-                    response.Data = await GetUserSessionData(user);
+                    response.Data = GetUserSessionData(user);
                     response.Message = "Successful";
                 }
                 response.IsSuccess = true;
@@ -89,18 +89,15 @@ namespace SinovadDemo.Application.UseCases.Users
             return response;
         }
 
-        private async Task<UserSessionDto> GetUserSessionData(User user)
+        private UserSessionDto GetUserSessionData(User user)
         {
             var userDto = _mapper.Map<UserDto>(user);
             userDto.IsPasswordSetted = user.PasswordHash != null ? true : false;
             var userSessionDto = new UserSessionDto();
             userSessionDto.User = userDto;
-            var mediaServers = await _unitOfWork.MediaServers.GetAllByExpressionAsync(x => x.UserId == user.Id);
-            userSessionDto.MediaServers = _mapper.Map<List<MediaServerDto>>(mediaServers);
-            var profiles = await _unitOfWork.Profiles.GetAllByExpressionAsync(x => x.UserId == user.Id);
-            userSessionDto.Profiles = _mapper.Map<List<ProfileDto>>(profiles);
-            var linkedAccounts = await _unitOfWork.LinkedAccounts.GetAllByExpressionAsync(x => x.UserId == user.Id);
-            userSessionDto.LinkedAccounts = _mapper.Map<List<LinkedAccountDto>>(linkedAccounts);
+            userSessionDto.MediaServers = _mapper.Map<List<MediaServerDto>>(user.MediaServers);
+            userSessionDto.Profiles = _mapper.Map<List<ProfileDto>>(user.Profiles);
+            userSessionDto.LinkedAccounts = _mapper.Map<List<LinkedAccountDto>>(user.LinkedAccounts);
             return userSessionDto;
         }
 
@@ -112,10 +109,10 @@ namespace SinovadDemo.Application.UseCases.Users
                 var mediaServer = await _unitOfWork.MediaServers.GetByExpressionAsync(x => x.SecurityIdentifier == securityIdentifier);
                 if(mediaServer!=null)
                 {
-                    var user = await _unitOfWork.Users.GetByExpressionAsync(x => x.Id == mediaServer.UserId);
+                    var user = await _unitOfWork.Users.GetUserRelatedData(x => x.Id == mediaServer.UserId);
                     if(user!=null)
                     {
-                        response.Data = await GetUserSessionData(user);
+                        response.Data =  GetUserSessionData(user);
                         response.Message = "Successful";
                     }
                 }

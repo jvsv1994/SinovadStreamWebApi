@@ -6,7 +6,6 @@ namespace SinovadDemo.Persistence.Repositories
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private ApplicationDbContext _context;
-        private IGenericRepository<User> _users;
         private IMenuRepository _menus;
         private IRoleRepository _roles;
         private IGenericRepository<MediaServer> _mediaServers;
@@ -21,7 +20,7 @@ namespace SinovadDemo.Persistence.Repositories
         private ITvSerieRepository _tvSeries;
         private IGenericRepository<TvSerieGenre> _tvSerieGenres;
         private IEpisodeRepository _episodes;
-        private IAppUserRepository _appUsers;
+        private IUserRepository _users;
 
 
         public UnitOfWork(ApplicationDbContext context)
@@ -29,13 +28,13 @@ namespace SinovadDemo.Persistence.Repositories
             _context = context;
         }
 
-        public IAppUserRepository AppUsers
+        public IUserRepository Users
         {
             get
             {
-                return _appUsers == null ?
-                _appUsers = new AppUserRepository(_context) :
-                _appUsers;
+                return _users == null ?
+                _users = new UserRepository(_context) :
+                _users;
             }
         }
 
@@ -65,16 +64,6 @@ namespace SinovadDemo.Persistence.Repositories
                 return _episodes == null ?
                 _episodes = new EpisodeRepository(_context) :
                 _episodes;
-            }
-        }
-
-        public IGenericRepository<User> Users
-        {
-            get
-            {
-                return _users == null ?
-                _users = new GenericRepository<User>(_context) :
-                _users;
             }
         }
 
