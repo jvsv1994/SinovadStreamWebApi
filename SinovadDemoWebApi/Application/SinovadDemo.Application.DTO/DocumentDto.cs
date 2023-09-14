@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-#nullable disable
+
 
 namespace SinovadDemo.Application.DTO
 {

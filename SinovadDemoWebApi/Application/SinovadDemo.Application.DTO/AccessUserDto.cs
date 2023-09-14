@@ -1,8 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-#nullable disable
-
-namespace SinovadDemo.Application.DTO
+﻿namespace SinovadDemo.Application.DTO
 {
     public class AccessUserDto
     {

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <DocumentationFile>D:\PROYECTOS JORGE SOLIS\NET\Sinovad\SinovadStreamWebApi\SinovadDemoWebApi\Service\SinovadDemoWebApi\SinovadDemoWebApi.xml</DocumentationFile>

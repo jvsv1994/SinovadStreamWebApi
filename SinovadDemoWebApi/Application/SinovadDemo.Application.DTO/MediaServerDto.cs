@@ -1,5 +1,5 @@
 ﻿
-#nullable disable
+
 
 using SinovadDemo.Domain.Enums;
 

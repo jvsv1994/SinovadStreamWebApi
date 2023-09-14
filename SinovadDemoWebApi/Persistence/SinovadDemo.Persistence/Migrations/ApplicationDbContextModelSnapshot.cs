@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SinovadDemo.Domain.Entities;
 
-#nullable disable
+
 
 namespace SinovadDemo.Persistence.Migrations
 {
