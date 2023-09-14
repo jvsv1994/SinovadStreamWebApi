@@ -1,6 +1,5 @@
-﻿using SinovadDemo.Transversal.Collection;
+﻿using SinovadDemo.Application.DTO;
 using SinovadDemo.Transversal.Common;
-using SinovadDemo.Application.DTO;
 
 namespace SinovadDemo.Application.Interface.UseCases
 {
@@ -9,10 +8,10 @@ namespace SinovadDemo.Application.Interface.UseCases
         Task<Response<List<MovieDto>>> GetAllAsync();
         Task<ResponsePagination<List<MovieDto>>> GetAllWithPaginationAsync(int page, int take, string sortBy, string sortDirection, string searchText, string searchBy);
         Task<Response<MovieDto>> GetAsync(int id);
-        Response<object> Create(MovieDto movieDto);
-        Response<object> Update(MovieDto movieDto);
-        Response<object> Delete(int id);
-        Response<object> DeleteList(string ids);
+        Task<Response<object>> Create(MovieDto movieDto);
+        Task<Response<object>> Update(MovieDto movieDto);
+        Task<Response<object>> Delete(int id);
+        Task<Response<object>> DeleteList(string ids);
     }
 
 }

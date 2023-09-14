@@ -22,9 +22,9 @@ namespace SinovadDemoWebApi.Controllers.v2
         }
 
         [HttpPut("Update/{movieId}")]
-        public ActionResult Update(int movieId,[FromBody] MovieDto movieDto)
+        public async Task<ActionResult> Update(int movieId,[FromBody] MovieDto movieDto)
         {
-            var res=_movieService.GetAsync(movieId).Result;
+            var res=await _movieService.GetAsync(movieId);
             if(res.Data==null)
             {
                 return NotFound(res.Message);
@@ -33,7 +33,7 @@ namespace SinovadDemoWebApi.Controllers.v2
             {
                 return BadRequest();   
             }
-            var response = _movieService.Update(movieDto);
+            var response = await _movieService.Update(movieDto);
             if (response.IsSuccess)
             {
                 return Ok(response);

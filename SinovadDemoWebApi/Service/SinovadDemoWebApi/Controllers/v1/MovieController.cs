@@ -53,9 +53,9 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpPost("Create")]
-        public ActionResult Create([FromBody] MovieDto movieDto)
+        public async Task<ActionResult> Create([FromBody] MovieDto movieDto)
         {
-            var response = _movieService.Create(movieDto);
+            var response = await _movieService.Create(movieDto);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -64,9 +64,9 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpPut("Update")]
-        public ActionResult Update([FromBody] MovieDto movieDto)
+        public async Task<ActionResult> Update([FromBody] MovieDto movieDto)
         {
-            var response = _movieService.Update(movieDto);
+            var response = await _movieService.Update(movieDto);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -75,9 +75,9 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpDelete("Delete/{movieId}")]
-        public ActionResult Delete(int movieId)
+        public async Task<ActionResult> Delete(int movieId)
         {
-            var response = _movieService.Delete(movieId);
+            var response = await _movieService.Delete(movieId);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -86,9 +86,9 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpDelete("DeleteList/{listIds}")]
-        public ActionResult DeleteList(string listIds)
+        public async Task<ActionResult> DeleteList(string listIds)
         {
-            var response = _movieService.DeleteList(listIds);
+            var response = await _movieService.DeleteList(listIds);
             if (response.IsSuccess)
             {
                 return Ok(response);

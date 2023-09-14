@@ -115,15 +115,15 @@ namespace SinovadDemo.Application.UseCases.Movies
             return response;
         }
 
-        public Response<object> Create(MovieDto movieDto)
+        public async Task<Response<object>> Create(MovieDto movieDto)
         {
             var response = new Response<object>();
             try
             {
                 var movie = _mapper.Map<Movie>(movieDto);
                 MapMovieGenres(movieDto, movie);
-                _unitOfWork.Movies.Add(movie);
-                _unitOfWork.Save();
+                await _unitOfWork.Movies.AddAsync(movie);
+                await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -135,7 +135,7 @@ namespace SinovadDemo.Application.UseCases.Movies
             return response;
         }
 
-        public Response<object> Update(MovieDto movieDto)
+        public async Task<Response<object>> Update(MovieDto movieDto)
         {
             var response = new Response<object>();
             try
@@ -148,11 +148,10 @@ namespace SinovadDemo.Application.UseCases.Movies
                     _unitOfWork.MovieGenres.DeleteList(listMovieGenres);
                 }
                 _unitOfWork.Movies.Update(movie);
-                _unitOfWork.Save();
+                await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
                 response.Message = "Successful";
-            }
-            catch (Exception ex)
+            }catch (Exception ex)
             {
                 response.Message = ex.Message;
                 _logger.LogError(ex.StackTrace);
@@ -160,14 +159,14 @@ namespace SinovadDemo.Application.UseCases.Movies
             return response;
         }
 
-        public Response<object> Delete(int id)
+        public async Task<Response<object>> Delete(int id)
         {
             var response = new Response<object>();
             try
             {
                 _unitOfWork.MovieGenres.DeleteByExpression(x => x.MovieId == id);
                 _unitOfWork.Movies.Delete(id);
-                _unitOfWork.Save();
+                await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -179,7 +178,7 @@ namespace SinovadDemo.Application.UseCases.Movies
             return response;
         }
 
-        public Response<object> DeleteList(string ids)
+        public async Task<Response<object>> DeleteList(string ids)
         {
             var response = new Response<object>();
             try
@@ -191,7 +190,7 @@ namespace SinovadDemo.Application.UseCases.Movies
                 }
                 _unitOfWork.MovieGenres.DeleteByExpression(x => listIds.Contains(x.MovieId));
                 _unitOfWork.Movies.DeleteByExpression(x => listIds.Contains(x.Id));
-                _unitOfWork.Save();
+                await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
