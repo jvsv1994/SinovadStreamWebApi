@@ -52,10 +52,10 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message);
         }
 
-        [HttpPost("Create")]
-        public async Task<ActionResult> Create([FromBody] MovieDto movieDto)
+        [HttpPost("CreateAsync")]
+        public async Task<ActionResult> CreateAsync([FromBody] MovieDto movieDto)
         {
-            var response = await _movieService.Create(movieDto);
+            var response = await _movieService.CreateAsync(movieDto);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -63,10 +63,15 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message);
         }
 
-        [HttpPut("Update")]
-        public async Task<ActionResult> Update([FromBody] MovieDto movieDto)
+        [HttpPut("UpdateAsync/{movieId:int}")]
+        public async Task<ActionResult> UpdateAsync([FromRoute] int movieId, [FromBody] MovieDto movieDto)
         {
-            var response = await _movieService.Update(movieDto);
+            var exists = await _movieService.CheckExistAsync(movieId);
+            if (!exists)
+            {
+                return NotFound();
+            }
+            var response = await _movieService.UpdateAsync(movieDto);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -74,10 +79,15 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message);
         }
 
-        [HttpDelete("Delete/{movieId}")]
-        public async Task<ActionResult> Delete(int movieId)
+        [HttpDelete("DeleteAsync/{movieId:int}")]
+        public async Task<ActionResult> DeleteAsync(int movieId)
         {
-            var response = await _movieService.Delete(movieId);
+            var exists = await _movieService.CheckExistAsync(movieId);
+            if (!exists)
+            {
+                return NotFound();
+            }
+            var response = await _movieService.DeleteAsync(movieId);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -85,10 +95,10 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message);
         }
 
-        [HttpDelete("DeleteList/{listIds}")]
-        public async Task<ActionResult> DeleteList(string listIds)
+        [HttpDelete("DeleteListAsync/{listIds}")]
+        public async Task<ActionResult> DeleteListAsync(string listIds)
         {
-            var response = await _movieService.DeleteList(listIds);
+            var response = await _movieService.DeleteListAsync(listIds);
             if (response.IsSuccess)
             {
                 return Ok(response);

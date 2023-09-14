@@ -5,7 +5,7 @@ using SinovadDemo.Transversal.Paging;
 using System.Linq.Expressions;
 using SinovadDemo.Domain.Entities;
 
-
+#nullable disable
 
 namespace SinovadDemo.Persistence.Repositories
 {
@@ -37,6 +37,17 @@ namespace SinovadDemo.Persistence.Repositories
                 return res;
             }
             throw new Exception("Not Found");
+        }
+
+        public async Task<bool> CheckExist(Expression<Func<TEntity, bool>> predicate)
+        {
+            var entity=await _table.AsNoTracking().FirstOrDefaultAsync(predicate);
+            if(entity!=null)
+            {
+                return true;
+            }else{
+                return false;
+            }
         }
 
         public TEntity GetByExpression(Expression<Func<TEntity, bool>> predicate)

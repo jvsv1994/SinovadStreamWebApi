@@ -1,4 +1,4 @@
-﻿
+﻿#nullable disable
 
 namespace SinovadDemo.Transversal.Common
 {

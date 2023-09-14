@@ -115,7 +115,7 @@ namespace SinovadDemo.Application.UseCases.Movies
             return response;
         }
 
-        public async Task<Response<object>> Create(MovieDto movieDto)
+        public async Task<Response<object>> CreateAsync(MovieDto movieDto)
         {
             var response = new Response<object>();
             try
@@ -135,7 +135,7 @@ namespace SinovadDemo.Application.UseCases.Movies
             return response;
         }
 
-        public async Task<Response<object>> Update(MovieDto movieDto)
+        public async Task<Response<object>> UpdateAsync(MovieDto movieDto)
         {
             var response = new Response<object>();
             try
@@ -159,7 +159,7 @@ namespace SinovadDemo.Application.UseCases.Movies
             return response;
         }
 
-        public async Task<Response<object>> Delete(int id)
+        public async Task<Response<object>> DeleteAsync(int id)
         {
             var response = new Response<object>();
             try
@@ -178,7 +178,7 @@ namespace SinovadDemo.Application.UseCases.Movies
             return response;
         }
 
-        public async Task<Response<object>> DeleteList(string ids)
+        public async Task<Response<object>> DeleteListAsync(string ids)
         {
             var response = new Response<object>();
             try
@@ -202,6 +202,11 @@ namespace SinovadDemo.Application.UseCases.Movies
             return response;
         }
 
+        public async Task<bool> CheckExistAsync(int id)
+        {
+            return await _unitOfWork.Movies.CheckExist(x => x.Id == id);
+        }
+
         private void MapMovieGenres(MovieDto movieDto, Movie movie)
         {
             if (movieDto.ListItemGenres != null && movieDto.ListItemGenres.Count > 0)
@@ -215,5 +220,6 @@ namespace SinovadDemo.Application.UseCases.Movies
                 movie.MovieGenres = movieGenres;
             }
         }
+
     }
 }

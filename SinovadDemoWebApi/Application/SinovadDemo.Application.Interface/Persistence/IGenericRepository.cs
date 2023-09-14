@@ -5,6 +5,7 @@ namespace SinovadDemo.Application.Interface.Persistence
 {
     public interface IGenericRepository<TEntity> where TEntity : class
     {
+        Task<bool> CheckExist(Expression<Func<TEntity, bool>> predicate);
         TEntity Get(int id);
         Task<TEntity> GetAsync(int id, CancellationToken cancellationToken = default);
         TEntity GetByExpression(Expression<Func<TEntity, bool>> predicate);

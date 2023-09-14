@@ -33,7 +33,7 @@ namespace SinovadDemoWebApi.Controllers.v2
             {
                 return BadRequest();   
             }
-            var response = await _movieService.Update(movieDto);
+            var response = await _movieService.UpdateAsync(movieDto);
             if (response.IsSuccess)
             {
                 return Ok(response);
