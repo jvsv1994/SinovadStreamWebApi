@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-#nullable disable
-
-namespace SinovadDemo.Application.DTO
+﻿namespace SinovadDemo.Application.DTO
 {
     public class GenreDto
     {

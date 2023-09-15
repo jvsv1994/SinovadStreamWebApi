@@ -1,8 +1,4 @@
-﻿using SinovadDemo.Domain.Entities;
-
-#nullable disable
-
-namespace SinovadDemo.Application.DTO
+﻿namespace SinovadDemo.Application.DTO
 {
     public class TvSerieDto
     {

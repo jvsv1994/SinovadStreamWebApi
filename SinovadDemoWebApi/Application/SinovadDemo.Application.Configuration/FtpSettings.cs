@@ -1,5 +1,4 @@
-﻿#nullable disable
-
+﻿
 namespace SinovadDemo.Application.Configuration
 {
     public class FtpSettings

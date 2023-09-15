@@ -1,5 +1,4 @@
-﻿#nullable disable
-
+﻿
 namespace SinovadDemo.Application.DTO
 {
     public class EpisodeDto

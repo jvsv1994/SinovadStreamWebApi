@@ -5,8 +5,6 @@ using SinovadDemo.Transversal.Paging;
 using System.Linq.Expressions;
 using SinovadDemo.Domain.Entities;
 
-#nullable disable
-
 namespace SinovadDemo.Persistence.Repositories
 {
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class

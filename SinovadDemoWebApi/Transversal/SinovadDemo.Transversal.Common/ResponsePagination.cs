@@ -1,8 +1,4 @@
-﻿#nullable disable
-
-using FluentValidation.Results;
-
-namespace SinovadDemo.Transversal.Common
+﻿namespace SinovadDemo.Transversal.Common
 {
     public class ResponsePagination<T>:ResponseGeneric<T>
     {

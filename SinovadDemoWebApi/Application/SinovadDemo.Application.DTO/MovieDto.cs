@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-#nullable disable
+﻿
+using System.ComponentModel.DataAnnotations;
 
 namespace SinovadDemo.Application.DTO
 {
@@ -11,6 +7,12 @@ namespace SinovadDemo.Application.DTO
     {
 
         public int Id { get; set; }
+
+        [Required(ErrorMessage ="El campo Título es requerido")]
+        public string Title { get; set; }
+
+        [Required(ErrorMessage = "El campo Fecha de Lanzamiento es requerido")]
+        public DateTime ReleaseDate { get; set; }
         public bool? Adult { get; set; }
         public int? TmdbId { get; set; }
         public string OriginalLanguage { get; set; }
@@ -19,8 +21,6 @@ namespace SinovadDemo.Application.DTO
         public double? Popularity { get; set; }
         public string PosterPath { get; set; }
         public string BackdropPath { get; set; }
-        public DateTime? ReleaseDate { get; set; }
-        public string Title { get; set; }
         public string Directors { get; set; }
         public string Actors { get; set; }
         public string Genres { get; set; }

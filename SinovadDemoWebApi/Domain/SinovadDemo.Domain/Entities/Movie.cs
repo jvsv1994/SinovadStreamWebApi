@@ -4,6 +4,10 @@ namespace SinovadDemo.Domain.Entities;
 
 public partial class Movie : BaseEntity
 {
+    public string Title { get; set; } = null!;
+
+    public DateTime ReleaseDate { get; set; }
+
     public bool? Adult { get; set; }
 
     public int? TmdbId { get; set; }
@@ -19,10 +23,6 @@ public partial class Movie : BaseEntity
     public string? PosterPath { get; set; }
 
     public string? BackdropPath { get; set; }
-
-    public DateTime? ReleaseDate { get; set; }
-
-    public string Title { get; set; } = null!;
 
     public string? Directors { get; set; }
 

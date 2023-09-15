@@ -1,9 +1,4 @@
-﻿
-#nullable disable
-
-using SinovadDemo.Domain.Enums;
-
-namespace SinovadDemo.Application.DTO
+﻿namespace SinovadDemo.Application.DTO
 {
     public class MediaServerDto
     {

@@ -1,5 +1,4 @@
-﻿#nullable disable
-
+﻿
 using FluentValidation.Results;
 
 namespace SinovadDemo.Transversal.Common
