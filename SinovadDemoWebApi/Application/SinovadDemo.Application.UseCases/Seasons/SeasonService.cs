@@ -81,14 +81,14 @@ namespace SinovadDemo.Application.UseCases.Seasons
             return response;
         }
 
-        public Response<object> Create(SeasonDto seasonDto)
+        public async Task<Response<object>> CreateAsync(SeasonDto seasonDto)
         {
             var response = new Response<object>();
             try
             {
                 var season = _mapper.Map<Season>(seasonDto);
-                _unitOfWork.Seasons.Add(season);
-                _unitOfWork.Save();
+                await _unitOfWork.Seasons.AddAsync(season);
+                await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -100,14 +100,14 @@ namespace SinovadDemo.Application.UseCases.Seasons
             return response;
         }
 
-        public Response<object> Update(SeasonDto seasonDto)
+        public async Task<Response<object>> UpdateAsync(SeasonDto seasonDto)
         {
             var response = new Response<object>();
             try
             {
                 var season = _mapper.Map<Season>(seasonDto);
                 _unitOfWork.Seasons.Update(season);
-                _unitOfWork.Save();
+                await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -119,13 +119,13 @@ namespace SinovadDemo.Application.UseCases.Seasons
             return response;
         }
 
-        public Response<object> Delete(int id)
+        public async Task<Response<object>> DeleteAsync(int id)
         {
             var response = new Response<object>();
             try
             {
                 _unitOfWork.Seasons.Delete(id);
-                _unitOfWork.Save();
+                await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -137,7 +137,7 @@ namespace SinovadDemo.Application.UseCases.Seasons
             return response;
         }
 
-        public Response<object> DeleteList(string ids)
+        public async Task<Response<object>> DeleteListAsync(string ids)
         {
             var response = new Response<object>();
             try
@@ -148,7 +148,7 @@ namespace SinovadDemo.Application.UseCases.Seasons
                     listIds = ids.Split(",").Select(x => Convert.ToInt32(x)).ToList();
                 }
                 _unitOfWork.Seasons.DeleteByExpression(x => listIds.Contains(x.Id));
-                _unitOfWork.Save();
+                await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -158,6 +158,10 @@ namespace SinovadDemo.Application.UseCases.Seasons
                 _logger.LogError(ex.StackTrace);
             }
             return response;
+        }
+        public async Task<bool> CheckExistAsync(int id)
+        {
+            return await _unitOfWork.Seasons.CheckExist(x => x.Id == id);
         }
 
     }
