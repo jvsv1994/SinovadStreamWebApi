@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.Interface.UseCases;
-using SinovadDemo.Application.UseCases.Movies;
-using SinovadDemo.Domain.Enums;
 using SinovadDemo.Transversal.Common;
 using System.Security.Claims;
 

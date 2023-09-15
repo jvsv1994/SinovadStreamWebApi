@@ -62,10 +62,10 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message);
         }
 
-        [HttpPost("Create")]
-        public ActionResult Create([FromBody] TvSerieDto TvSerieDto)
+        [HttpPost("CreateAsync")]
+        public async Task<ActionResult> CreateAsync([FromBody] TvSerieDto TvSerieDto)
         {
-            var response = _tvSerieService.Create(TvSerieDto);
+            var response = await _tvSerieService.CreateAsync(TvSerieDto);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -73,10 +73,15 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message);
         }
 
-        [HttpPut("Update")]
-        public ActionResult Update([FromBody] TvSerieDto TvSerieDto)
+        [HttpPut("UpdateAsync/{tvSerieId:int}")]
+        public async Task<ActionResult> UpdateAsync([FromRoute] int tvSerieId,[FromBody] TvSerieDto TvSerieDto)
         {
-            var response = _tvSerieService.Update(TvSerieDto);
+            var exists = await _tvSerieService.CheckExistAsync(tvSerieId);
+            if (!exists)
+            {
+                return NotFound();
+            }
+            var response = await _tvSerieService.UpdateAsync(TvSerieDto);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -84,10 +89,15 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message);
         }
 
-        [HttpDelete("Delete/{tvSerieId}")]
-        public ActionResult Delete(int tvSerieId)
+        [HttpDelete("DeleteAsync/{tvSerieId:int}")]
+        public async Task<ActionResult> DeleteAsync([FromRoute]int tvSerieId)
         {
-            var response = _tvSerieService.Delete(tvSerieId);
+            var exists = await _tvSerieService.CheckExistAsync(tvSerieId);
+            if (!exists)
+            {
+                return NotFound();
+            }
+            var response = await _tvSerieService.DeleteAsync(tvSerieId);
             if (response.IsSuccess)
             {
                 return Ok(response);
@@ -95,10 +105,10 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message);
         }
 
-        [HttpDelete("DeleteList/{listIds}")]
-        public ActionResult DeleteList(string listIds)
+        [HttpDelete("DeleteListAsync/{listIds}")]
+        public async Task<ActionResult> DeleteListAsync(string listIds)
         {
-            var response = _tvSerieService.DeleteList(listIds);
+            var response = await _tvSerieService.DeleteListAsync(listIds);
             if (response.IsSuccess)
             {
                 return Ok(response);

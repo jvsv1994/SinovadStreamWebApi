@@ -112,15 +112,15 @@ namespace SinovadDemo.Application.UseCases.TvSeries
             return response;
         }
 
-        public Response<object> Create(TvSerieDto tvSerieDto)
+        public async Task<Response<object>> CreateAsync(TvSerieDto tvSerieDto)
         {
             var response = new Response<object>();
             try
             {
                 var tvSerie = _mapper.Map<TvSerie>(tvSerieDto);
                 MapTvSerieGenres(tvSerieDto, tvSerie);
-                _unitOfWork.TvSeries.Add(tvSerie);
-                _unitOfWork.Save();
+                await _unitOfWork.TvSeries.AddAsync(tvSerie);
+                await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -132,7 +132,7 @@ namespace SinovadDemo.Application.UseCases.TvSeries
             return response;
         }
 
-        public Response<object> Update(TvSerieDto tvSerieDto)
+        public async Task<Response<object>> UpdateAsync(TvSerieDto tvSerieDto)
         {
             var response = new Response<object>();
             try
@@ -145,7 +145,7 @@ namespace SinovadDemo.Application.UseCases.TvSeries
                     _unitOfWork.TvSerieGenres.DeleteList(listtvSerieGenres);
                 }
                 _unitOfWork.TvSeries.Update(tvSerie);
-                _unitOfWork.Save();
+                await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -157,7 +157,7 @@ namespace SinovadDemo.Application.UseCases.TvSeries
             return response;
         }
 
-        public Response<object> Delete(int id)
+        public async Task<Response<object>> DeleteAsync(int id)
         {
             var response = new Response<object>();
             try
@@ -175,7 +175,7 @@ namespace SinovadDemo.Application.UseCases.TvSeries
                 //}
                 _unitOfWork.TvSerieGenres.DeleteByExpression(x =>x.TvSerieId==id);
                 _unitOfWork.TvSeries.Delete(id);
-                _unitOfWork.Save();
+                await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -187,7 +187,7 @@ namespace SinovadDemo.Application.UseCases.TvSeries
             return response;
         }
 
-        public Response<object> DeleteList(string ids)
+        public async Task<Response<object>> DeleteListAsync(string ids)
         {
             var response = new Response<object>();
             try
@@ -210,7 +210,7 @@ namespace SinovadDemo.Application.UseCases.TvSeries
                 //}
                 _unitOfWork.TvSerieGenres.DeleteByExpression(x => listIds.Contains(x.TvSerieId));
                 _unitOfWork.TvSeries.DeleteByExpression(x => listIds.Contains(x.Id));
-                _unitOfWork.Save();
+                await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -234,6 +234,11 @@ namespace SinovadDemo.Application.UseCases.TvSeries
                                                     }).ToList();
                 tvSerie.TvSerieGenres = tvSerieGenres;
             }
+        }
+
+        public async Task<bool> CheckExistAsync(int id)
+        {
+            return await _unitOfWork.TvSeries.CheckExist(x => x.Id == id);
         }
 
     }
