@@ -39,13 +39,7 @@ namespace SinovadDemo.Persistence.Repositories
 
         public async Task<bool> CheckExist(Expression<Func<TEntity, bool>> predicate)
         {
-            var entity=await _table.AsNoTracking().FirstOrDefaultAsync(predicate);
-            if(entity!=null)
-            {
-                return true;
-            }else{
-                return false;
-            }
+            return await _table.AsNoTracking().AnyAsync(predicate);    
         }
 
         public TEntity GetByExpression(Expression<Func<TEntity, bool>> predicate)

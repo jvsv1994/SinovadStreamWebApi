@@ -1,12 +1,13 @@
-﻿
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace SinovadDemo.Application.DTO
 {
-    public class MovieDto
+    public class MovieCreationDto
     {
-        public int Id { get; set; }
+        [Required(ErrorMessage = "El campo Título es requerido")]
         public string Title { get; set; }
+
+        [Required(ErrorMessage = "El campo Fecha de Lanzamiento es requerido")]
         public DateTime ReleaseDate { get; set; }
         public bool? Adult { get; set; }
         public string OriginalLanguage { get; set; }
@@ -18,5 +19,7 @@ namespace SinovadDemo.Application.DTO
         public string Directors { get; set; }
         public string Actors { get; set; }
         public string Genres { get; set; }
+        public List<int> GenresIds { get; set; }
+
     }
 }

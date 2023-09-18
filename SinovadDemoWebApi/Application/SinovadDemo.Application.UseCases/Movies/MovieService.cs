@@ -84,50 +84,45 @@ namespace SinovadDemo.Application.UseCases.Movies
             return response;
         }
 
-        public async Task<Response<MovieDto>> GetAsync(int id)
+        public async Task<Response<MovieWithGenresDto>> GetAsync(int id)
+        {
+            var response = new Response<MovieWithGenresDto>();
+            try
+            {
+                var movie = await _unitOfWork.Movies.GetMovie(id);
+                var mdto = _mapper.Map<MovieWithGenresDto>(movie);
+                response.Data = mdto;
+                response.IsSuccess = true;
+                response.Message = "Successful";
+            }catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
+        public async Task<Response<MovieDto>> CreateAsync(MovieCreationDto movieCreationDto)
         {
             var response = new Response<MovieDto>();
             try
             {
-                var movie = await _unitOfWork.Movies.GetAsync(id);
-                var mdto = _mapper.Map<MovieDto>(movie);
-                var movieGenres = await _unitOfWork.MovieGenres.GetAllAsync();
-                var genres = await _unitOfWork.Genres.GetAllAsync();
-                var listItemGenres = (from mg in movieGenres
-                                      join g in genres on mg.GenreId equals g.Id
-                                      where mg.MovieId == id
-                                      select new MovieGenreDto
-                                      {
-                                          MovieId = id,
-                                          GenreId = g.Id,
-                                          GenreName = g.Name
-                                      }).ToList();
-                mdto.ListItemGenres = listItemGenres;
-                response.Data = mdto;
-                response.IsSuccess = true;
-                response.Message = "Successful";
-            }
-            catch (Exception ex)
-            {
-                response.Message = ex.Message;
-                _logger.LogError(ex.StackTrace);
-            }
-            return response;
-        }
-
-        public async Task<Response<object>> CreateAsync(MovieDto movieDto)
-        {
-            var response = new Response<object>();
-            try
-            {
-                var movie = _mapper.Map<Movie>(movieDto);
-                MapMovieGenres(movieDto, movie);
+                if(movieCreationDto.GenresIds==null || movieCreationDto.GenresIds.Count == 0)
+                {
+                    throw new Exception("No se puede crear una película sin géneros");
+                }
+                var genresIds=await _unitOfWork.Genres.GetIdsByExpression(genre=> movieCreationDto.GenresIds.Contains(genre.Id));
+                if(movieCreationDto.GenresIds.Count!=genresIds.Count)
+                {
+                    throw new Exception("No existe uno de los géneros enviados");
+                }
+                var movie = _mapper.Map<Movie>(movieCreationDto);
                 await _unitOfWork.Movies.AddAsync(movie);
                 await _unitOfWork.SaveAsync();
+                response.Data=_mapper.Map<MovieDto>(movie);
                 response.IsSuccess = true;
                 response.Message = "Successful";
-            }
-            catch (Exception ex)
+            }catch (Exception ex)
             {
                 response.Message = ex.Message;
                 _logger.LogError(ex.StackTrace);
@@ -135,18 +130,27 @@ namespace SinovadDemo.Application.UseCases.Movies
             return response;
         }
 
-        public async Task<Response<object>> UpdateAsync(MovieDto movieDto)
+        public async Task<Response<object>> UpdateAsync(int id, MovieCreationDto movieCreationDto)
         {
             var response = new Response<object>();
             try
             {
-                var movie = _mapper.Map<Movie>(movieDto);
-                MapMovieGenres(movieDto, movie);
-                var listMovieGenres = _unitOfWork.MovieGenres.GetAllByExpressionAsync(c => c.MovieId == movie.Id).Result.ToList();
+                if (movieCreationDto.GenresIds == null || movieCreationDto.GenresIds.Count==0)
+                {
+                    throw new Exception("No se puede guardar una película sin géneros");
+                }
+                var genresIds = await _unitOfWork.Genres.GetIdsByExpression(genre => movieCreationDto.GenresIds.Contains(genre.Id));
+                if (movieCreationDto.GenresIds.Count != genresIds.Count)
+                {
+                    throw new Exception("No existe uno de los géneros enviados");
+                }
+                var listMovieGenres = _unitOfWork.MovieGenres.GetAllByExpressionAsync(c => c.MovieId == id).Result.ToList();
                 if (listMovieGenres != null && listMovieGenres.Count > 0)
                 {
                     _unitOfWork.MovieGenres.DeleteList(listMovieGenres);
                 }
+                var movie = _mapper.Map<Movie>(movieCreationDto);
+                movie.Id = id;
                 _unitOfWork.Movies.Update(movie);
                 await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
@@ -205,20 +209,6 @@ namespace SinovadDemo.Application.UseCases.Movies
         public async Task<bool> CheckExistAsync(int id)
         {
             return await _unitOfWork.Movies.CheckExist(x => x.Id == id);
-        }
-
-        private void MapMovieGenres(MovieDto movieDto, Movie movie)
-        {
-            if (movieDto.ListItemGenres != null && movieDto.ListItemGenres.Count > 0)
-            {
-                var list = movieDto.ListItemGenres.AsEnumerable();
-                List<MovieGenre> movieGenres = (from mg in list
-                                                select new MovieGenre
-                                                {
-                                                    GenreId = mg.GenreId,
-                                                }).ToList();
-                movie.MovieGenres = movieGenres;
-            }
         }
 
     }

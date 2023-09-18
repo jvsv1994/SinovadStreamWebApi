@@ -20,8 +20,8 @@ namespace SinovadDemoWebApi.Controllers.v1
             _movieService = movieService;
         }
 
-        [HttpGet("GetAsync/{id}")]
-        public async Task<ActionResult<Response<MovieDto>>> GetAsync(int id)
+        [HttpGet("GetAsync/{id}",Name ="getMovie")]
+        public async Task<ActionResult<Response<MovieWithGenresDto>>> GetAsync(int id)
         {
             var response = await _movieService.GetAsync(id);
             if (!response.IsSuccess)
@@ -54,30 +54,30 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpPost("CreateAsync")]
-        public async Task<ActionResult<Response<object>>> CreateAsync([FromBody] MovieDto movieDto)
+        public async Task<ActionResult> CreateAsync([FromBody] MovieCreationDto movieDto)
         {
             var response = await _movieService.CreateAsync(movieDto);
             if (!response.IsSuccess)
             {
                 return BadRequest(response.Message);
             }
-            return response;
+            return CreatedAtRoute("getMovie", new {id=response.Data.Id},response.Data);
         }
 
         [HttpPut("UpdateAsync/{movieId:int}")]
-        public async Task<ActionResult<Response<object>>> UpdateAsync([FromRoute] int movieId, [FromBody] MovieDto movieDto)
+        public async Task<ActionResult> UpdateAsync([FromRoute] int movieId, [FromBody] MovieCreationDto movieCreationDto)
         {
             var exists = await _movieService.CheckExistAsync(movieId);
             if (!exists)
             {
                 return NotFound();
             }
-            var response = await _movieService.UpdateAsync(movieDto);
+            var response = await _movieService.UpdateAsync(movieId,movieCreationDto);
             if (!response.IsSuccess)
             {
                 return BadRequest(response.Message);
             }
-            return response;
+            return NoContent();
         }
 
         [HttpDelete("DeleteAsync/{movieId:int}")]

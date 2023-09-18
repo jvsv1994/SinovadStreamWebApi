@@ -53,7 +53,6 @@ namespace SinovadDemo.Infrastructure.Tmdb
             if (movieFinded!=null)
             {
                 movieDto= new MovieDto();
-                movieDto.TmdbId = movieFinded.Id;
                 movieDto.Adult = movieFinded.Adult;
                 movieDto.OriginalLanguage = movieFinded.OriginalLanguage;
                 movieDto.OriginalTitle = movieFinded.OriginalTitle;
@@ -62,11 +61,7 @@ namespace SinovadDemo.Infrastructure.Tmdb
                 movieDto.PosterPath = movieFinded.PosterPath;
                 movieDto.BackdropPath = movieFinded.BackdropPath;
                 movieDto.ReleaseDate = (DateTime)movieFinded.ReleaseDate;
-                movieDto.Title = movieFinded.Title;
-                if(movieFinded.Genres!=null && movieFinded.Genres.Count>0)
-                {
-                    movieDto.ListGenreNames = movieFinded.Genres.Select(g => g.Name).ToList();
-                }   
+                movieDto.Title = movieFinded.Title; 
             }
             return movieDto;
         }

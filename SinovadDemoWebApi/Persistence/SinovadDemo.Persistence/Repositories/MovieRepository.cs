@@ -1,7 +1,6 @@
-﻿using SinovadDemo.Application.DTO;
+﻿using Microsoft.EntityFrameworkCore;
 using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Domain.Entities;
-using SinovadDemo.Domain.Enums;
 
 namespace SinovadDemo.Persistence.Repositories
 {
@@ -23,5 +22,9 @@ namespace SinovadDemo.Persistence.Repositories
             return _context.Movies.Where(movie => movie.Imdbid != null && listImdbIds.Contains(movie.Imdbid)).Select(it => it.Imdbid).ToList();
         }
 
+        public async Task<Movie> GetMovie(int id, CancellationToken cancellationToken = default)
+        {
+            return await _context.Movies.Include(movie=>movie.MovieGenres).ThenInclude(movieGenre=>movieGenre.Genre).FirstOrDefaultAsync(movie=>movie.Id==id, cancellationToken);
+        }
     }
 }

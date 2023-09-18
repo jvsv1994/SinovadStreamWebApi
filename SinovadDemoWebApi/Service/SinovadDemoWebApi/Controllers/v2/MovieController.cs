@@ -22,18 +22,14 @@ namespace SinovadDemoWebApi.Controllers.v2
         }
 
         [HttpPut("Update/{movieId}")]
-        public async Task<ActionResult> Update(int movieId,[FromBody] MovieDto movieDto)
+        public async Task<ActionResult> Update(int movieId,[FromBody] MovieCreationDto movieDto)
         {
-            var res=await _movieService.GetAsync(movieId);
-            if(res.Data==null)
+            var exists = await _movieService.CheckExistAsync(movieId);
+            if (!exists)
             {
-                return NotFound(res.Message);
+                return NotFound();
             }
-            if(movieDto==null)
-            {
-                return BadRequest();   
-            }
-            var response = await _movieService.UpdateAsync(movieDto);
+            var response = await _movieService.UpdateAsync(movieId,movieDto);
             if (response.IsSuccess)
             {
                 return Ok(response);

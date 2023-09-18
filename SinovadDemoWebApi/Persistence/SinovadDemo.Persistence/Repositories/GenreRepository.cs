@@ -1,5 +1,7 @@
-﻿using SinovadDemo.Application.Interface.Persistence;
+﻿using Microsoft.EntityFrameworkCore;
+using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Domain.Entities;
+using System.Linq.Expressions;
 
 namespace SinovadDemo.Persistence.Repositories
 {
@@ -24,6 +26,11 @@ namespace SinovadDemo.Persistence.Repositories
                 tvSerieId = tvserie.Id
             }).Where(item => item.tvSerieId == tvSerieId).Select(item => item.genre).ToList();
             return list;
+        }
+
+        public async Task<List<int>> GetIdsByExpression(Expression<Func<Genre, bool>> expression)
+        {
+            return await _context.Genres.Where(expression).Select(genre => genre.Id).ToListAsync();
         }
 
     }

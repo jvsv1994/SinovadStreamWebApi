@@ -8,5 +8,6 @@ namespace SinovadDemo.Application.Interface.Persistence
 
         List<int> GetListTMDdMovieIdsFinded(List<int> listTMDbIds);
         List<string> GetListImdbMovieIdsFinded(List<string> listImdbIds);
+        Task<Movie> GetMovie(int id, CancellationToken cancellationToken = default);
     }
 }

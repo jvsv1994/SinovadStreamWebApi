@@ -7,9 +7,9 @@ namespace SinovadDemo.Application.Interface.UseCases
     {
         Task<Response<List<MovieDto>>> GetAllAsync();
         Task<ResponsePagination<List<MovieDto>>> GetAllWithPaginationAsync(int page, int take, string sortBy, string sortDirection, string searchText, string searchBy);
-        Task<Response<MovieDto>> GetAsync(int id);
-        Task<Response<object>> CreateAsync(MovieDto movieDto);
-        Task<Response<object>> UpdateAsync(MovieDto movieDto);
+        Task<Response<MovieWithGenresDto>> GetAsync(int id);
+        Task<Response<MovieDto>> CreateAsync(MovieCreationDto movieDto);
+        Task<Response<object>> UpdateAsync(int id,MovieCreationDto movieDto);
         Task<Response<object>> DeleteAsync(int id);
         Task<Response<object>> DeleteListAsync(string ids);
         Task<bool> CheckExistAsync(int id);

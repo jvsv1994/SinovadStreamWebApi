@@ -30,7 +30,6 @@ namespace SinovadDemo.Infrastructure.Imdb
             if (titleData!= null)
             {
                 movieDto = new MovieDto();
-                movieDto.Imdbid = titleData.Id;
                 movieDto.Adult = false;
                 movieDto.OriginalLanguage = titleData.Languages;
                 movieDto.OriginalTitle = titleData.OriginalTitle;
@@ -38,10 +37,6 @@ namespace SinovadDemo.Infrastructure.Imdb
                 movieDto.PosterPath = titleData.Image;
                 movieDto.ReleaseDate = DateTime.Parse(titleData.ReleaseDate);
                 movieDto.Title = titleData.Title;
-                if (titleData.GenreList != null && titleData.GenreList.Count > 0)
-                {
-                    movieDto.ListGenreNames = titleData.GenreList.Select(it => it.Key).ToList();
-                }
             }
             return movieDto;
         }
