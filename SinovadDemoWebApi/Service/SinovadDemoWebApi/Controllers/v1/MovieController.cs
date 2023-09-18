@@ -70,7 +70,7 @@ namespace SinovadDemoWebApi.Controllers.v1
             var exists = await _movieService.CheckExistAsync(movieId);
             if (!exists)
             {
-                return NotFound();
+                return NotFound("Id de Película no existe");
             }
             var response = await _movieService.UpdateAsync(movieId,movieCreationDto);
             if (!response.IsSuccess)

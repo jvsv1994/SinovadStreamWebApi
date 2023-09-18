@@ -144,14 +144,10 @@ namespace SinovadDemo.Application.UseCases.Movies
                 {
                     throw new Exception("No existe uno de los géneros enviados");
                 }
-                var listMovieGenres = _unitOfWork.MovieGenres.GetAllByExpressionAsync(c => c.MovieId == id).Result.ToList();
-                if (listMovieGenres != null && listMovieGenres.Count > 0)
-                {
-                    _unitOfWork.MovieGenres.DeleteList(listMovieGenres);
-                }
-                var movie = _mapper.Map<Movie>(movieCreationDto);
-                movie.Id = id;
-                _unitOfWork.Movies.Update(movie);
+
+                var movieFinded=await _unitOfWork.Movies.GetMovie(id);
+                movieFinded = _mapper.Map(movieCreationDto, movieFinded);
+                _unitOfWork.Movies.Update(movieFinded);
                 await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
                 response.Message = "Successful";
