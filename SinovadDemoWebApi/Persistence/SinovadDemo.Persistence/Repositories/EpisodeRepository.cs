@@ -1,4 +1,5 @@
-﻿using SinovadDemo.Application.Interface.Persistence;
+﻿using Microsoft.EntityFrameworkCore;
+using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Domain.Entities;
 
 namespace SinovadDemo.Persistence.Repositories
@@ -25,14 +26,13 @@ namespace SinovadDemo.Persistence.Repositories
             return list;
         }
 
-        public Episode GetEpisode(int tvSerieId,int seasonNumber,int episodeNumber)
+        public async Task<Episode> SearchEpisode(int tvSerieId,int seasonNumber,int episodeNumber)
         {
-            var ep = (from episode in _context.Episodes
+           return await (from episode in _context.Episodes
                               join season in _context.Seasons on episode.SeasonId equals season.Id
                               join tvserie in _context.TvSeries on season.TvSerieId equals tvserie.Id
                               where tvserie.Id == tvSerieId && season.SeasonNumber == seasonNumber && episode.EpisodeNumber == episodeNumber
-                              select episode).FirstOrDefault();
-            return ep;
+                              select episode).FirstOrDefaultAsync();
         }
 
     }

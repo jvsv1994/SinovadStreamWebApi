@@ -19,17 +19,6 @@ namespace SinovadDemoWebApi.Controllers.v1
             _tvSerieService = tvSerieService;
         }
 
-        [HttpGet("SearchAsync/{query}")]
-        public async Task<ActionResult<Response<TvSerieWithGenresDto>>> SearchAsync(string query)
-        {
-            var response = await _tvSerieService.SearchAsync(query);
-            if (!response.IsSuccess)
-            {
-                return BadRequest(response.Message);
-            }
-            return response;
-        }
-
         [HttpGet("GetAsync/{id:int}", Name = "getTvSerie")]
         public async Task<ActionResult<Response<TvSerieWithGenresDto>>> GetAsync(int id)
         {

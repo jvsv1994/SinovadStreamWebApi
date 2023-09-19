@@ -1,6 +1,5 @@
-﻿using SinovadDemo.Transversal.Collection;
+﻿using SinovadDemo.Application.DTO.Episode;
 using SinovadDemo.Transversal.Common;
-using SinovadDemo.Application.DTO;
 
 namespace SinovadDemo.Application.Interface.UseCases
 {
@@ -10,11 +9,12 @@ namespace SinovadDemo.Application.Interface.UseCases
         Task<Response<EpisodeDto>> GetAsync(int id);
         Task<Response<List<EpisodeDto>>> GetAllAsync();
         Task<ResponsePagination<List<EpisodeDto>>> GetAllWithPaginationBySeasonAsync(int seasonId, int page, int take, string sortBy, string sortDirection, string searchText, string searchBy);
-        Response<object> Create(EpisodeDto episodeDto);
-        Response<object> CreateList(List<EpisodeDto> listEpisodeDto);
-        Response<object> Update(EpisodeDto episodeDto);
-        Response<object> Delete(int id);
-        Response<object> DeleteList(string ids);
+        Task<Response<EpisodeDto>> CreateAsync(int seasonId, EpisodeCreationDto episodeDto);
+        Task<Response<object>> CreateListAsync(int seasonId,List<EpisodeCreationDto> listEpisodeDto);
+        Task<Response<object>> UpdateAsync(int episodeId,EpisodeCreationDto episodeDto);
+        Task<Response<object>> DeleteAsync(int id);
+        Task<Response<object>> DeleteListAsync(string ids);
+        Task<bool> CheckExistAsync(int id);
     }
 
 }

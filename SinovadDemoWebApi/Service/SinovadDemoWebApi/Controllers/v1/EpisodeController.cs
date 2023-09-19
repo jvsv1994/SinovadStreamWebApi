@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SinovadDemo.Application.DTO;
+using SinovadDemo.Application.DTO.Episode;
 using SinovadDemo.Application.Interface.UseCases;
+using SinovadDemo.Transversal.Common;
 
 namespace SinovadDemoWebApi.Controllers.v1
 {
-    [Route("api/v{version:apiVersion}/episodes")]
+    [Route("api/v{version:apiVersion}/seasons/{seasonId:int}/episodes")]
     [ApiController]
     [Authorize]
     [ApiVersion("1.0", Deprecated = true)]
@@ -13,24 +14,16 @@ namespace SinovadDemoWebApi.Controllers.v1
     {
         private readonly IEpisodeService _episodeService;
 
-        public EpisodeController(IEpisodeService episodeService)
+        private readonly ISeasonService _seasonService;
+
+        public EpisodeController(IEpisodeService episodeService, ISeasonService seasonService)
         {
             _episodeService = episodeService;
+            _seasonService = seasonService;
         }
 
-        [HttpGet("GetTvEpisodeAsync")]
-        public async Task<ActionResult> GetTvEpisodeAsync([FromQuery] int tvSerieId, [FromQuery] int seasonNumber, [FromQuery] int episodeNumber)
-        {
-            var response = await _episodeService.GetTvEpisodeAsync(tvSerieId, seasonNumber, episodeNumber);
-            if (response.IsSuccess)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response.Message);
-        }
-
-        [HttpGet("GetAsync/{episodeId}")]
-        public async Task<ActionResult> GetAll(int episodeId)
+        [HttpGet("GetAsync/{episodeId}", Name = "getEpisode")]
+        public async Task<ActionResult<EpisodeDto>> GetAsync([FromRoute] int episodeId)
         {
             var response = await _episodeService.GetAsync(episodeId);
             if (response.IsSuccess)
@@ -42,7 +35,7 @@ namespace SinovadDemoWebApi.Controllers.v1
 
 
         [HttpGet("GetAllAsync")]
-        public async Task<ActionResult> GetAllAsync()
+        public async Task<ActionResult<List<EpisodeDto>>> GetAllAsync()
         {
             var response = await _episodeService.GetAllAsync();
             if (response.IsSuccess)
@@ -52,8 +45,10 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message);
         }
 
-        [HttpGet("GetAllWithPaginationBySeasonAsync/{seasonId}")]
-        public async Task<ActionResult> GetAllWithPaginationBySeasonAsync(int seasonId, [FromQuery] int page = 1, [FromQuery] int take = 1000, [FromQuery] string sortBy = "EpisodeNumber", [FromQuery] string sortDirection = "asc", [FromQuery] string searchText = "", [FromQuery] string searchBy = "")
+        [HttpGet("GetAllWithPaginationAsync")]
+        public async Task<ActionResult<ResponsePagination<List<EpisodeDto>>>> GetAllWithPaginationAsync([FromRoute] int seasonId, [FromQuery] int page = 1, [FromQuery] int take = 1000,
+            [FromQuery] string sortBy = "EpisodeNumber", [FromQuery] string sortDirection = "asc", [FromQuery] string searchText = "",
+            [FromQuery] string searchBy = "")
         {
             var response = await _episodeService.GetAllWithPaginationBySeasonAsync(seasonId, page, take, sortBy, sortDirection, searchText, searchBy);
             if (response.IsSuccess)
@@ -63,59 +58,74 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message);
         }
 
-        [HttpPost("Create")]
-        public ActionResult Create([FromBody] EpisodeDto dto)
+        [HttpPost("CreateAsync")]
+        public async Task<ActionResult> CreateAsync([FromRoute] int seasonId, [FromBody] EpisodeCreationDto episodeCreationDto)
         {
-            var response = _episodeService.Create(dto);
-            if (response.IsSuccess)
+            var exists = await _seasonService.CheckExistAsync(seasonId);
+            if (!exists)
             {
-                return Ok(response);
+                return NotFound("Temporada no encontrada");
             }
-            return BadRequest(response.Message);
+            var response = await _episodeService.CreateAsync(seasonId, episodeCreationDto);
+            if (!response.IsSuccess)
+            {
+                return BadRequest(response.Message);
+            }
+            return CreatedAtRoute("getEpisode", new { seasonId = response.Data.SeasonId, episodeId = response.Data.Id }, response.Data);
         }
 
-        [HttpPost("CreateList")]
-        public ActionResult CreateList([FromBody] List<EpisodeDto> list)
+        [HttpPost("CreateListAsync")]
+        public async Task<ActionResult> CreateListAsync([FromRoute]int seasonId,[FromBody] List<EpisodeCreationDto> list)
         {
-            var response = _episodeService.CreateList(list);
-            if (response.IsSuccess)
+            var exists = await _seasonService.CheckExistAsync(seasonId);
+            if (!exists)
             {
-                return Ok(response);
+                return NotFound("Temporada no encontrada");
             }
-            return BadRequest(response.Message);
+            var response = await _episodeService.CreateListAsync(seasonId,list);
+            if(!response.IsSuccess)
+            {
+                return BadRequest(response.Message);
+            }
+            return NoContent();   
         }
 
-        [HttpPut("Update")]
-        public ActionResult Update([FromBody] EpisodeDto dto)
+        [HttpPut("UpdateAsync/{episodeId:int}")]
+        public async Task<ActionResult> UpdateAsync([FromRoute]int episodeId,[FromBody] EpisodeCreationDto episodeCreationDto)
         {
-            var response = _episodeService.Update(dto);
-            if (response.IsSuccess)
+            var exists = await _episodeService.CheckExistAsync(episodeId);
+            if (!exists)
             {
-                return Ok(response);
+                return NotFound("Episodio no encontrado");
             }
-            return BadRequest(response.Message);
+            var response = await _episodeService.UpdateAsync(episodeId, episodeCreationDto);
+            if (!response.IsSuccess)
+            {
+                return BadRequest(response.Message);
+            }
+            return NoContent();
         }
 
-        [HttpDelete("Delete/{episodeId}")]
-        public ActionResult Delete(int episodeId)
+        [HttpDelete("DeleteAsync/{episodeId}")]
+        public async Task<ActionResult> DeleteAsync([FromRoute] int episodeId)
         {
-            var response = _episodeService.Delete(episodeId);
-            if (response.IsSuccess)
+            var response = await _episodeService.DeleteAsync(episodeId);
+            if (!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message);
             }
-            return BadRequest(response.Message);
+            return NoContent();
         }
 
-        [HttpDelete("DeleteList/{listIds}")]
-        public ActionResult DeleteList(string listIds)
+        [HttpDelete("DeleteListAsync/{listIds}")]
+        public async Task<ActionResult> DeleteListAsync([FromRoute] string listIds)
         {
-            var response = _episodeService.DeleteList(listIds);
-            if (response.IsSuccess)
+            var response =await _episodeService.DeleteListAsync(listIds);
+            if (!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message);
             }
-            return BadRequest(response.Message);
+            return NoContent();
         }
 
         //[HttpPost("ChangeSeasonInEpisodeList")]

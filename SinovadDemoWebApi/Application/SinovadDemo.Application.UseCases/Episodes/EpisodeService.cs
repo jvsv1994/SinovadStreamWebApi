@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
-using SinovadDemo.Application.DTO;
+using MySqlX.XDevAPI;
+using SinovadDemo.Application.DTO.Episode;
+using SinovadDemo.Application.DTO.Season;
 using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Domain.Entities;
@@ -25,7 +27,7 @@ namespace SinovadDemo.Application.UseCases.Episodes
             var response = new Response<EpisodeDto>();
             try
             {
-                var result = _unitOfWork.Episodes.GetEpisode(tvSerieId, seasonNumber, episodeNumber);
+                var result = await _unitOfWork.Episodes.SearchEpisode(tvSerieId, seasonNumber, episodeNumber);
                 response.Data = _mapper.Map<EpisodeDto>(result);
                 response.IsSuccess = true;
                 response.Message = "Successful";
@@ -96,14 +98,16 @@ namespace SinovadDemo.Application.UseCases.Episodes
             return response;
         }
 
-        public Response<object> Create(EpisodeDto dto)
+        public async Task<Response<EpisodeDto>> CreateAsync(int seasonId,EpisodeCreationDto episodeCreationDto)
         {
-            var response = new Response<object>();
+            var response = new Response<EpisodeDto>();
             try
             {
-                var entity = _mapper.Map<Episode>(dto);
-                _unitOfWork.Episodes.Add(entity);
-                _unitOfWork.Save();
+                var episode = _mapper.Map<Episode>(episodeCreationDto);
+                episode.SeasonId=seasonId;
+                await _unitOfWork.Episodes.AddAsync(episode);
+                await _unitOfWork.SaveAsync();
+                response.Data = _mapper.Map<EpisodeDto>(episode);
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -115,14 +119,37 @@ namespace SinovadDemo.Application.UseCases.Episodes
             return response;
         }
 
-        public Response<object> CreateList(List<EpisodeDto> list)
+        public async Task<Response<object>> CreateListAsync(int seasonId, List<EpisodeCreationDto> list)
         {
             var response = new Response<object>();
             try
             {
-                var listEntities = _mapper.Map<List<Episode>>(list);
-                _unitOfWork.Episodes.AddList(listEntities);
-                _unitOfWork.Save();
+                var listEpisodes = _mapper.Map<List<Episode>>(list);
+                foreach (var episode in listEpisodes)
+                {
+                    episode.SeasonId = seasonId;    
+                }
+                await _unitOfWork.Episodes.AddListAsync(listEpisodes);
+                await _unitOfWork.SaveAsync();
+                response.IsSuccess = true;
+                response.Message = "Successful";
+            }catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
+        public async Task<Response<object>> UpdateAsync(int episodeId, EpisodeCreationDto episodeCreationDto)
+        {
+            var response = new Response<object>();
+            try
+            {
+                var episodeFinded = await _unitOfWork.Episodes.GetAsync(episodeId);
+                episodeFinded = _mapper.Map(episodeCreationDto, episodeFinded);
+                _unitOfWork.Episodes.Update(episodeFinded);
+                await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -134,32 +161,13 @@ namespace SinovadDemo.Application.UseCases.Episodes
             return response;
         }
 
-        public Response<object> Update(EpisodeDto dto)
-        {
-            var response = new Response<object>();
-            try
-            {
-                var entity = _mapper.Map<Episode>(dto);
-                _unitOfWork.Episodes.Update(entity);
-                _unitOfWork.Save();
-                response.IsSuccess = true;
-                response.Message = "Successful";
-            }
-            catch (Exception ex)
-            {
-                response.Message = ex.Message;
-                _logger.LogError(ex.StackTrace);
-            }
-            return response;
-        }
-
-        public Response<object> Delete(int id)
+        public async Task<Response<object>> DeleteAsync(int id)
         {
             var response = new Response<object>();
             try
             {
                 _unitOfWork.Episodes.Delete(id);
-                _unitOfWork.Save();
+                await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -171,7 +179,7 @@ namespace SinovadDemo.Application.UseCases.Episodes
             return response;
         }
 
-        public Response<object> DeleteList(string ids)
+        public async Task<Response<object>> DeleteListAsync(string ids)
         {
             var response = new Response<object>();
             try
@@ -182,7 +190,7 @@ namespace SinovadDemo.Application.UseCases.Episodes
                     listIds = ids.Split(",").Select(x => Convert.ToInt32(x)).ToList();
                 }
                 _unitOfWork.Episodes.DeleteByExpression(x => listIds.Contains(x.Id));
-                _unitOfWork.Save();
+                await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -192,6 +200,11 @@ namespace SinovadDemo.Application.UseCases.Episodes
                 _logger.LogError(ex.StackTrace);
             }
             return response;
+        }
+
+        public async Task<bool> CheckExistAsync(int id)
+        {
+            return await _unitOfWork.Episodes.CheckExist(x => x.Id == id);
         }
 
     }

@@ -22,22 +22,6 @@ namespace SinovadDemoWebApi.Controllers.v1
             _tvSerieService = tvSerieService;
         }
 
-        [HttpGet("GetBySeasonNumber/{seasonNumber:int}")]
-        public async Task<ActionResult<Response<SeasonDto>>> GetTvSeasonAsync([FromRoute] int tvSerieId,[FromRoute] int seasonNumber)
-        {
-            var exists=await  _tvSerieService.CheckExistAsync(tvSerieId);
-            if(!exists)
-            {
-                return NotFound();
-            }
-            var response = await _seasonService.GetTvSeasonAsync(tvSerieId,seasonNumber);
-            if (response.IsSuccess)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response.Message);
-        }
-
         [HttpGet("GetAsync/{seasonId:int}", Name = "getSeason")]
         public async Task<ActionResult<Response<SeasonDto>>> GetAsync([FromRoute] int seasonId)
         {
@@ -49,7 +33,7 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message);
         }
 
-        [HttpGet("GetAllWithPaginationByTvSerieAsync")]
+        [HttpGet("GetAllWithPaginationAsync")]
         public async Task<ActionResult<ResponsePagination<List<SeasonDto>>>> GetAllWithPaginationByTvSerieAsync([FromRoute]int tvSerieId, [FromQuery] int page = 1, 
             [FromQuery] int take = 1000, [FromQuery] string sortBy = "SeasonNumber", [FromQuery] string sortDirection = "asc", [FromQuery] string searchText = "", 
             [FromQuery] string searchBy = "")

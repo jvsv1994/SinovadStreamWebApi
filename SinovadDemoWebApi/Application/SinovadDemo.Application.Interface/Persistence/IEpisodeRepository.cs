@@ -7,7 +7,7 @@ namespace SinovadDemo.Application.Interface.Persistence
     {
         List<Episode> GetEpisodesByTvSerieId(int tvSerieId);
 
-        Episode GetEpisode(int tvSerieId, int seasonNumber, int episodeNumber);
+        Task<Episode> SearchEpisode(int tvSerieId, int seasonNumber, int episodeNumber);
 
     }
 }
