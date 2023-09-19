@@ -61,7 +61,7 @@ namespace SinovadDemoWebApi.Controllers.v1
             {
                 return BadRequest(response.Message);
             }
-            return CreatedAtRoute("getGenre", new { id = response.Data.Id });
+            return CreatedAtRoute("getGenre", new { id = response.Data.Id }, response.Data);
         }
 
         [HttpPut("UpdateAsync/{genreId:int}")]
