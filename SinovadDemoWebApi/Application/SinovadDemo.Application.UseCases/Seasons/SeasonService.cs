@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using SinovadDemo.Application.DTO;
+using SinovadDemo.Application.DTO.Season;
 using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Domain.Entities;
@@ -81,14 +81,16 @@ namespace SinovadDemo.Application.UseCases.Seasons
             return response;
         }
 
-        public async Task<Response<object>> CreateAsync(SeasonDto seasonDto)
+        public async Task<Response<SeasonDto>> CreateAsync(int tvSerieId,SeasonCreationDto seasonCreationDto)
         {
-            var response = new Response<object>();
+            var response = new Response<SeasonDto>();
             try
             {
-                var season = _mapper.Map<Season>(seasonDto);
+                var season = _mapper.Map<Season>(seasonCreationDto);
+                season.TvSerieId = tvSerieId;
                 await _unitOfWork.Seasons.AddAsync(season);
                 await _unitOfWork.SaveAsync();
+                response.Data = _mapper.Map<SeasonDto>(season);
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -100,18 +102,18 @@ namespace SinovadDemo.Application.UseCases.Seasons
             return response;
         }
 
-        public async Task<Response<object>> UpdateAsync(SeasonDto seasonDto)
+        public async Task<Response<object>> UpdateAsync(int seasonId,SeasonCreationDto seasonCreationDto)
         {
             var response = new Response<object>();
             try
             {
-                var season = _mapper.Map<Season>(seasonDto);
-                _unitOfWork.Seasons.Update(season);
+                var seasonFinded = await _unitOfWork.Seasons.GetAsync(seasonId);
+                seasonFinded = _mapper.Map(seasonCreationDto, seasonFinded);
+                _unitOfWork.Seasons.Update(seasonFinded);
                 await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
                 response.Message = "Successful";
-            }
-            catch (Exception ex)
+            }catch (Exception ex)
             {
                 response.Message = ex.Message;
                 _logger.LogError(ex.StackTrace);

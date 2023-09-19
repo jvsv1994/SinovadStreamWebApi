@@ -1,6 +1,7 @@
 ﻿using Generic.Core.Models;
 using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.DTO.Movie;
+using SinovadDemo.Application.DTO.Season;
 using SinovadDemo.Application.DTO.TvSerie;
 using SinovadDemo.Domain.Entities;
 
@@ -12,7 +13,6 @@ namespace Pacagroup.Ecommerce.Application.UseCases.Common.Mappings
         {
             CreateMap<Catalog, CatalogDto>().ReverseMap();
             CreateMap<CatalogDetail, CatalogDetailDto>().ReverseMap();
-            CreateMap<Season, SeasonDto>().ReverseMap();
             CreateMap<Episode, EpisodeDto>().ReverseMap();
             CreateMap<Genre, GenreDto>().ReverseMap();
             CreateMap<Menu, MenuDto>().ReverseMap();
@@ -27,6 +27,8 @@ namespace Pacagroup.Ecommerce.Application.UseCases.Common.Mappings
             CreateMap<TvSerie, TvSerieWithGenresDto>().ForMember(tvSerieDto => tvSerieDto.TvSerieGenres, options => options.MapFrom(MapTvSerieGenresDto));
             CreateMap<TvSerieGenre, TvSerieGenreDto>().ReverseMap();
 
+            CreateMap<SeasonCreationDto, Season>();
+            CreateMap<Season, SeasonDto>().ReverseMap();
 
             CreateMap<Role, RoleDto>().ReverseMap();
             CreateMap<MediaServer, MediaServerDto>().ReverseMap();
