@@ -15,7 +15,6 @@ namespace Pacagroup.Ecommerce.Application.UseCases.Common.Mappings
         {
             CreateMap<Catalog, CatalogDto>().ReverseMap();
             CreateMap<CatalogDetail, CatalogDetailDto>().ReverseMap();
-            CreateMap<Genre, GenreDto>().ReverseMap();
             CreateMap<Menu, MenuDto>().ReverseMap();
 
             CreateMap<MovieCreationDto, Movie>().ForMember(movie=>movie.MovieGenres,options=>options.MapFrom(MapMovieGenres));
@@ -33,6 +32,9 @@ namespace Pacagroup.Ecommerce.Application.UseCases.Common.Mappings
 
             CreateMap<EpisodeCreationDto, Episode>();
             CreateMap<Episode, EpisodeDto>().ReverseMap();
+
+            CreateMap<GenreCreationDto, Genre>();
+            CreateMap<Genre, GenreDto>().ReverseMap();
 
             CreateMap<Role, RoleDto>().ReverseMap();
             CreateMap<MediaServer, MediaServerDto>().ReverseMap();
