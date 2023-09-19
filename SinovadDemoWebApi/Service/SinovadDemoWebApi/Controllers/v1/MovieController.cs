@@ -81,7 +81,7 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpDelete("DeleteAsync/{movieId:int}")]
-        public async Task<ActionResult<Response<object>>> DeleteAsync(int movieId)
+        public async Task<ActionResult> DeleteAsync(int movieId)
         {
             var exists = await _movieService.CheckExistAsync(movieId);
             if (!exists)
@@ -93,18 +93,18 @@ namespace SinovadDemoWebApi.Controllers.v1
             {
                 return BadRequest(response.Message);
             }
-            return response;
+            return NoContent();
         }
 
         [HttpDelete("DeleteListAsync/{listIds}")]
-        public async Task<ActionResult<Response<object>>> DeleteListAsync(string listIds)
+        public async Task<ActionResult> DeleteListAsync(string listIds)
         {
             var response = await _movieService.DeleteListAsync(listIds);
             if (!response.IsSuccess)
             {
                 return BadRequest(response.Message);
             }
-            return response;
+            return NoContent();
         }
 
     }
