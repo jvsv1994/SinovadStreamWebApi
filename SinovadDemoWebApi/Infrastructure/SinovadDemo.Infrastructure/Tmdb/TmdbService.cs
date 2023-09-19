@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using SinovadDemo.Application.Configuration;
-using SinovadDemo.Application.DTO;
+using SinovadDemo.Application.DTO.Genre;
 using SinovadDemo.Application.DTO.Movie;
 using SinovadDemo.Application.DTO.TvSerie;
 using SinovadDemo.Application.Interface.Infrastructure;
@@ -137,7 +137,6 @@ namespace SinovadDemo.Infrastructure.Tmdb
             foreach (var genre in allGenres)
             {
                 var genreDto = new GenreDto();
-                genreDto.TmdbId = genre.Id;
                 genreDto.Name= genre.Name;
                 listGenres.Add(genreDto);
             }

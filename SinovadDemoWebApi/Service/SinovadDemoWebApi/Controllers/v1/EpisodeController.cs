@@ -23,26 +23,26 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpGet("GetAsync/{episodeId}", Name = "getEpisode")]
-        public async Task<ActionResult<EpisodeDto>> GetAsync([FromRoute] int episodeId)
+        public async Task<ActionResult<Response<EpisodeDto>>> GetAsync([FromRoute] int episodeId)
         {
             var response = await _episodeService.GetAsync(episodeId);
-            if (response.IsSuccess)
+            if (!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message);
             }
-            return BadRequest(response.Message);
+            return response;
         }
 
 
         [HttpGet("GetAllAsync")]
-        public async Task<ActionResult<List<EpisodeDto>>> GetAllAsync()
+        public async Task<ActionResult<Response<List<EpisodeDto>>>> GetAllAsync()
         {
             var response = await _episodeService.GetAllAsync();
-            if (response.IsSuccess)
+            if(!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message);
             }
-            return BadRequest(response.Message);
+            return response;
         }
 
         [HttpGet("GetAllWithPaginationAsync")]
@@ -51,11 +51,11 @@ namespace SinovadDemoWebApi.Controllers.v1
             [FromQuery] string searchBy = "")
         {
             var response = await _episodeService.GetAllWithPaginationBySeasonAsync(seasonId, page, take, sortBy, sortDirection, searchText, searchBy);
-            if (response.IsSuccess)
+            if (!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message);
             }
-            return BadRequest(response.Message);
+            return response;
         }
 
         [HttpPost("CreateAsync")]

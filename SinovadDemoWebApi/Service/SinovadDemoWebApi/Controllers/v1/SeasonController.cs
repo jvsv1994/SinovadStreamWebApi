@@ -26,11 +26,11 @@ namespace SinovadDemoWebApi.Controllers.v1
         public async Task<ActionResult<Response<SeasonDto>>> GetAsync([FromRoute] int seasonId)
         {
             var response = await _seasonService.GetAsync(seasonId);
-            if (response.IsSuccess)
+            if (!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message);
             }
-            return BadRequest(response.Message);
+            return response;
         }
 
         [HttpGet("GetAllWithPaginationAsync")]

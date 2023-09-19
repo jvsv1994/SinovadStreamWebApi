@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SinovadDemo.Application.DTO;
+using SinovadDemo.Application.DTO.Genre;
 using SinovadDemo.Application.Interface.UseCases;
+using SinovadDemo.Transversal.Common;
 
 namespace SinovadDemoWebApi.Controllers.v1
 {
@@ -18,94 +19,87 @@ namespace SinovadDemoWebApi.Controllers.v1
             _genreService = genreService;
         }
 
-        [HttpGet("GetAsync/{id}")]
-        public async Task<ActionResult> GetAsync(int id)
+        [HttpGet("GetAsync/{id}",Name ="getGenre")]
+        public async Task<ActionResult<Response<GenreDto>>> GetAsync(int id)
         {
             var response = await _genreService.GetAsync(id);
-            if (response.IsSuccess)
+            if (!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message);
             }
-            return BadRequest(response.Message);
+            return response;
         }
 
         [HttpGet("GetAllAsync")]
-        public async Task<ActionResult> GetAllAsync()
+        public async Task<ActionResult<Response<List<GenreDto>>>> GetAllAsync()
         {
             var response = await _genreService.GetAllAsync();
-            if (response.IsSuccess)
+            if (!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message);
             }
-            return BadRequest(response.Message);
+            return response;
         }
 
         [HttpGet("GetAllWithPaginationAsync")]
-        public async Task<ActionResult> GetAllWithPaginationAsync([FromQuery] int page = 1, [FromQuery] int take = 1000, [FromQuery] string sortBy = "Id", [FromQuery] string sortDirection = "asc", [FromQuery] string searchText = "", [FromQuery] string searchBy = "")
+        public async Task<ActionResult<ResponsePagination<List<GenreDto>>>> GetAllWithPaginationAsync([FromQuery] int page = 1, [FromQuery] int take = 1000, [FromQuery] string sortBy = "Id", [FromQuery] string sortDirection = "asc", [FromQuery] string searchText = "", [FromQuery] string searchBy = "")
         {
             var response = await _genreService.GetAllWithPaginationAsync(page, take, sortBy, sortDirection, searchText, searchBy);
-            if (response.IsSuccess)
+            if (!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message);
             }
-            return BadRequest(response.Message);
+            return response;
         }
 
 
-        [HttpPost("Create")]
-        public ActionResult Create([FromBody] GenreDto genreDto)
+        [HttpPost("CreateAsync")]
+        public async Task<ActionResult> CreateAsync([FromBody] GenreCreationDto genreCreationDto)
         {
-            var response = _genreService.Create(genreDto);
-            if (response.IsSuccess)
+            var response = await _genreService.CreateAsync(genreCreationDto);
+            if (!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message);
             }
-            return BadRequest(response.Message);
+            return CreatedAtRoute("getGenre", new { id = response.Data.Id });
         }
 
-        [HttpPut("Update")]
-        public ActionResult Update([FromBody] GenreDto genreDto)
+        [HttpPut("UpdateAsync/{genreId:int}")]
+        public async Task<ActionResult> UpdateAsync([FromRoute] int genreId,[FromBody] GenreCreationDto genreCreationDto)
         {
-            var response = _genreService.Update(genreDto);
-            if (response.IsSuccess)
+            var exists=await _genreService.CheckExistAsync(genreId);
+            if(!exists)
             {
-                return Ok(response);
+                return NotFound("Género no encontrado");
             }
-            return BadRequest(response.Message);
+            var response = await _genreService.UpdateAsync(genreId, genreCreationDto);
+            if (!response.IsSuccess)
+            {
+                return BadRequest(response.Message);
+            }
+            return NoContent();
         }
 
-        [HttpDelete("Delete/{genreId}")]
-        public ActionResult Delete(int genreId)
+        [HttpDelete("DeleteASync/{genreId}")]
+        public async Task<ActionResult> DeleteAsync(int genreId)
         {
-            var response = _genreService.Delete(genreId);
-            if (response.IsSuccess)
+            var response = await _genreService.DeleteAsync(genreId);
+            if (!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message);
             }
-            return BadRequest(response.Message);
+            return NoContent() ;
         }
 
-        [HttpDelete("DeleteList/{listIds}")]
-        public ActionResult DeleteList(string listIds)
+        [HttpDelete("DeleteListAsync/{listIds}")]
+        public async Task<ActionResult> DeleteListAsync(string listIds)
         {
-            var response = _genreService.DeleteList(listIds);
-            if (response.IsSuccess)
+            var response = await _genreService.DeleteListAsync(listIds);
+            if (!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message);
             }
-            return BadRequest(response.Message);
-        }
-
-
-        [HttpPost("CheckAndRegisterGenres")]
-        public ActionResult CheckAndRegisterGenres()
-        {
-            var response = _genreService.CheckAndRegisterGenres();
-            if (response.IsSuccess)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response.Message);
+            return NoContent();
         }
 
     }
