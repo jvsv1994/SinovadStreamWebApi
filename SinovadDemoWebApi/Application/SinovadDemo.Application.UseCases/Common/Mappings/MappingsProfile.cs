@@ -1,5 +1,7 @@
 ﻿using Generic.Core.Models;
 using SinovadDemo.Application.DTO;
+using SinovadDemo.Application.DTO.Movie;
+using SinovadDemo.Application.DTO.TvSerie;
 using SinovadDemo.Domain.Entities;
 
 namespace Pacagroup.Ecommerce.Application.UseCases.Common.Mappings
@@ -20,9 +22,13 @@ namespace Pacagroup.Ecommerce.Application.UseCases.Common.Mappings
             CreateMap<Movie, MovieWithGenresDto>().ForMember(movieDto=>movieDto.MovieGenres,options=>options.MapFrom(MapMovieGenresDto));
             CreateMap<MovieGenre, MovieGenreDto>().ReverseMap();
 
-            CreateMap<Role, RoleDto>().ReverseMap();
-            CreateMap<TvSerie, TvSerieDto>().ReverseMap();
+            CreateMap<TvSerieCreationDto, TvSerie>().ForMember(tvSerie => tvSerie.TvSerieGenres, options => options.MapFrom(MapTvSerieGenres));
+            CreateMap<TvSerie, TvSerieDto>();
+            CreateMap<TvSerie, TvSerieWithGenresDto>().ForMember(tvSerieDto => tvSerieDto.TvSerieGenres, options => options.MapFrom(MapTvSerieGenresDto));
             CreateMap<TvSerieGenre, TvSerieGenreDto>().ReverseMap();
+
+
+            CreateMap<Role, RoleDto>().ReverseMap();
             CreateMap<MediaServer, MediaServerDto>().ReverseMap();
             CreateMap<RegisterUserDto,User>();
             CreateMap<User, UserDto>().ForMember(x => x.IsPasswordSetted, y => y.MapFrom(y => y.PasswordHash!=null)).ReverseMap();
@@ -52,6 +58,32 @@ namespace Pacagroup.Ecommerce.Application.UseCases.Common.Mappings
             foreach (var movieGenre in movie.MovieGenres)
             {
                 result.Add(new MovieGenreDto() { GenreId = movieGenre.GenreId,MovieId= movieGenre.MovieId,GenreName= movieGenre.Genre.Name });
+            }
+            return result;
+        }
+
+        private List<TvSerieGenre> MapTvSerieGenres(TvSerieCreationDto tvSerieCreationDto, TvSerie tvSerie)
+        {
+            var result = new List<TvSerieGenre>();
+
+            if (tvSerieCreationDto.GenresIds == null) return result;
+
+            foreach (var genreId in tvSerieCreationDto.GenresIds)
+            {
+                result.Add(new TvSerieGenre() { GenreId = genreId });
+            }
+            return result;
+        }
+
+        private List<TvSerieGenreDto> MapTvSerieGenresDto(TvSerie tvSerie, TvSerieWithGenresDto tvSerieDto)
+        {
+            var result = new List<TvSerieGenreDto>();
+
+            if (tvSerie.TvSerieGenres == null) return result;
+
+            foreach (var tvSerieGenre in tvSerie.TvSerieGenres)
+            {
+                result.Add(new TvSerieGenreDto() { GenreId = tvSerieGenre.GenreId, TvSerieId = tvSerieGenre.TvSerieId, GenreName = tvSerieGenre.Genre.Name });
             }
             return result;
         }

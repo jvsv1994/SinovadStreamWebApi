@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
 using SinovadDemo.Application.Configuration;
 using SinovadDemo.Application.DTO;
+using SinovadDemo.Application.DTO.Movie;
+using SinovadDemo.Application.DTO.TvSerie;
 using SinovadDemo.Application.Interface.Infrastructure;
 using SinovadDemo.Application.Shared;
 using TMDbLib.Client;
@@ -104,11 +106,6 @@ namespace SinovadDemo.Infrastructure.Tmdb
                 tvSerieDto.FirstAirDate = (DateTime)tvShow.FirstAirDate;
                 tvSerieDto.LastAirDate = (DateTime)tvShow.LastAirDate;
                 tvSerieDto.Name = tvShow.Name;
-                if (tvShow.Genres != null && tvShow.Genres.Count > 0)
-                {
-                    tvSerieDto.ListGenreNames=tvShow.Genres.Select(it => it.Name).ToList();
-
-                }
             }
             return tvSerieDto;
         }

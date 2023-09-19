@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SinovadDemo.Application.DTO;
+using SinovadDemo.Application.DTO.Movie;
 using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Transversal.Common;
 

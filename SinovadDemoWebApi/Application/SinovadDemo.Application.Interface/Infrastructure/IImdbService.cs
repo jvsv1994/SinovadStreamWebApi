@@ -1,4 +1,4 @@
-﻿using SinovadDemo.Application.DTO;
+﻿using SinovadDemo.Application.DTO.Movie;
 
 namespace SinovadDemo.Application.Interface.Infrastructure
 {

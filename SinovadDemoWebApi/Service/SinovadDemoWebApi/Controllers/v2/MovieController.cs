@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
-using SinovadDemo.Application.DTO;
+using SinovadDemo.Application.DTO.Movie;
 using SinovadDemo.Application.Interface.UseCases;
 
 namespace SinovadDemoWebApi.Controllers.v2

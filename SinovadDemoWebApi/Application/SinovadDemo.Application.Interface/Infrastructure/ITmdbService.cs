@@ -1,4 +1,6 @@
 ﻿using SinovadDemo.Application.DTO;
+using SinovadDemo.Application.DTO.Movie;
+using SinovadDemo.Application.DTO.TvSerie;
 
 namespace SinovadDemo.Application.Interface.Infrastructure
 {

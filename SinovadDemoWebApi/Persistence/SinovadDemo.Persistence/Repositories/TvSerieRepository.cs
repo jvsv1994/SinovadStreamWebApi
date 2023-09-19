@@ -1,4 +1,5 @@
-﻿using SinovadDemo.Application.Interface.Persistence;
+﻿using Microsoft.EntityFrameworkCore;
+using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Domain.Entities;
 
 namespace SinovadDemo.Persistence.Repositories
@@ -21,5 +22,14 @@ namespace SinovadDemo.Persistence.Repositories
             return _context.TvSeries.Where(tvs => tvs.TmdbId != null && listTMDbIds.Contains(((int)tvs.TmdbId))).Select(tvs => tvs.TmdbId != null ? (int)tvs.TmdbId : 0).ToList();
         }
 
+        public async Task<TvSerie> GetTvSerie(int id, CancellationToken cancellationToken = default)
+        {
+            return await _context.TvSeries.Include(tvSerie => tvSerie.TvSerieGenres).ThenInclude(tvSerieGenre => tvSerieGenre.Genre).FirstOrDefaultAsync(tvSerie => tvSerie.Id == id, cancellationToken);
+        }
+
+        public async Task<TvSerie> SearchTvSerie(string query, CancellationToken cancellationToken = default)
+        {
+            return await _context.TvSeries.Include(tvSerie => tvSerie.TvSerieGenres).ThenInclude(tvSerieGenre => tvSerieGenre.Genre).FirstOrDefaultAsync(x => x.Name.ToLower().Trim().Contains(query.ToLower().Trim()), cancellationToken);
+        }
     }
 }

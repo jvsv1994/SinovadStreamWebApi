@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SinovadDemo.Application.DTO;
+using SinovadDemo.Application.DTO.TvSerie;
 using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Transversal.Common;
 
@@ -20,7 +20,7 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpGet("SearchAsync/{query}")]
-        public async Task<ActionResult<Response<TvSerieDto>>> SearchAsync(string query)
+        public async Task<ActionResult<Response<TvSerieWithGenresDto>>> SearchAsync(string query)
         {
             var response = await _tvSerieService.SearchAsync(query);
             if (!response.IsSuccess)
@@ -30,10 +30,10 @@ namespace SinovadDemoWebApi.Controllers.v1
             return response;
         }
 
-        [HttpGet("GetAsync/{tvSerieId:int}")]
-        public async Task<ActionResult<Response<TvSerieDto>>> GetAsync(int tvSerieId)
+        [HttpGet("GetAsync/{id:int}", Name = "getTvSerie")]
+        public async Task<ActionResult<Response<TvSerieWithGenresDto>>> GetAsync(int id)
         {
-            var response = await _tvSerieService.GetAsync(tvSerieId);
+            var response = await _tvSerieService.GetAsync(id);
             if (!response.IsSuccess)
             {
                 return BadRequest(response.Message);
@@ -64,34 +64,34 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpPost("CreateAsync")]
-        public async Task<ActionResult<Response<object>>> CreateAsync([FromBody] TvSerieDto TvSerieDto)
+        public async Task<ActionResult> CreateAsync([FromBody] TvSerieCreationDto tvSerieCreationDto)
         {
-            var response = await _tvSerieService.CreateAsync(TvSerieDto);
+            var response = await _tvSerieService.CreateAsync(tvSerieCreationDto);
             if (!response.IsSuccess)
             {
                 return BadRequest(response.Message);
             }
-            return response;
+            return CreatedAtRoute("getTvSerie", new { id = response.Data.Id }, response.Data);
         }
 
         [HttpPut("UpdateAsync/{tvSerieId:int}")]
-        public async Task<ActionResult<Response<object>>> UpdateAsync([FromRoute] int tvSerieId,[FromBody] TvSerieDto TvSerieDto)
+        public async Task<ActionResult> UpdateAsync([FromRoute] int tvSerieId,[FromBody] TvSerieCreationDto tvSerieCreationDto)
         {
             var exists = await _tvSerieService.CheckExistAsync(tvSerieId);
             if (!exists)
             {
                 return NotFound();
             }
-            var response = await _tvSerieService.UpdateAsync(TvSerieDto);
+            var response = await _tvSerieService.UpdateAsync(tvSerieId, tvSerieCreationDto);
             if (!response.IsSuccess)
             {
                 return BadRequest(response.Message);
             }
-            return response;
+            return NoContent();
         }
 
         [HttpDelete("DeleteAsync/{tvSerieId:int}")]
-        public async Task<ActionResult<Response<object>>> DeleteAsync([FromRoute]int tvSerieId)
+        public async Task<ActionResult> DeleteAsync([FromRoute]int tvSerieId)
         {
             var exists = await _tvSerieService.CheckExistAsync(tvSerieId);
             if (!exists)
@@ -103,18 +103,18 @@ namespace SinovadDemoWebApi.Controllers.v1
             {
                 return BadRequest(response.Message);
             }
-            return response;
+            return NoContent();
         }
 
         [HttpDelete("DeleteListAsync/{listIds}")]
-        public async Task<ActionResult<Response<object>>> DeleteListAsync(string listIds)
+        public async Task<ActionResult> DeleteListAsync(string listIds)
         {
             var response = await _tvSerieService.DeleteListAsync(listIds);
             if (!response.IsSuccess)
             {
                 return BadRequest(response.Message);
             }
-            return response;
+            return NoContent();
         }
 
     }

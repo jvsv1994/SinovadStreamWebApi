@@ -1,4 +1,4 @@
-﻿using SinovadDemo.Application.DTO;
+﻿using SinovadDemo.Application.DTO.TvSerie;
 using SinovadDemo.Transversal.Common;
 
 namespace SinovadDemo.Application.Interface.UseCases
@@ -7,14 +7,13 @@ namespace SinovadDemo.Application.Interface.UseCases
     {
         Task<Response<List<TvSerieDto>>> GetAllAsync();
         Task<ResponsePagination<List<TvSerieDto>>> GetAllWithPaginationAsync(int page, int take, string sortBy, string sortDirection, string searchText, string searchBy);
-        Task<Response<TvSerieDto>> GetAsync(int id);
-        Task<Response<TvSerieDto>> SearchAsync(string query);
-        Task<Response<object>> CreateAsync(TvSerieDto tvSerieDto);
-        Task<Response<object>> UpdateAsync(TvSerieDto tvSerieDto);
+        Task<Response<TvSerieWithGenresDto>> GetAsync(int id);
+        Task<Response<TvSerieWithGenresDto>> SearchAsync(string query);
+        Task<Response<TvSerieDto>> CreateAsync(TvSerieCreationDto tvSerieDto);
+        Task<Response<object>> UpdateAsync(int id,TvSerieCreationDto tvSerieDto);
         Task<Response<object>> DeleteAsync(int id);
         Task<Response<object>> DeleteListAsync(string ids);
         Task<bool> CheckExistAsync(int id);
-
 
     }
 

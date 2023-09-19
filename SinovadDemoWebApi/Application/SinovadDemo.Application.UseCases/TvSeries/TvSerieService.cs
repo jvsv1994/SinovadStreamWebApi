@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using SinovadDemo.Application.DTO;
+using SinovadDemo.Application.DTO.TvSerie;
 using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Domain.Entities;
@@ -61,15 +61,13 @@ namespace SinovadDemo.Application.UseCases.TvSeries
             return response;
         }
 
-        public async Task<Response<TvSerieDto>> SearchAsync(string query)
+        public async Task<Response<TvSerieWithGenresDto>> SearchAsync(string query)
         {
-            var response = new Response<TvSerieDto>();
+            var response = new Response<TvSerieWithGenresDto>();
             try
             {
-                var result = await _unitOfWork.TvSeries.GetByExpressionAsync(x => x.Name.ToLower().Trim().Contains(query.ToLower().Trim()));
-                var tvSerie = _mapper.Map<TvSerieDto>(result);
-                var listGenres = _unitOfWork.Genres.GetGenresByTvSerieId(tvSerie.Id);
-                tvSerie.ListGenres= _mapper.Map<List<GenreDto>>(listGenres);
+                var tvSerieFinded = await _unitOfWork.TvSeries.SearchTvSerie(query);
+                var tvSerie = _mapper.Map<TvSerieWithGenresDto>(tvSerieFinded);
                 response.Data = tvSerie;
                 response.IsSuccess = true;
                 response.Message = "Successful";
@@ -81,46 +79,42 @@ namespace SinovadDemo.Application.UseCases.TvSeries
             return response;
         }
 
-        public async Task<Response<TvSerieDto>> GetAsync(int id)
+        public async Task<Response<TvSerieWithGenresDto>> GetAsync(int id)
+        {
+            var response = new Response<TvSerieWithGenresDto>();
+            try
+            {
+                var tvSerie = await _unitOfWork.TvSeries.GetTvSerie(id);
+                var mdto = _mapper.Map<TvSerieWithGenresDto>(tvSerie);          
+                response.Data = mdto;
+                response.IsSuccess = true;
+                response.Message = "Successful";
+            }catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
+        public async Task<Response<TvSerieDto>> CreateAsync(TvSerieCreationDto tvSerieCreationDto)
         {
             var response = new Response<TvSerieDto>();
             try
             {
-                var tvSerie = await _unitOfWork.TvSeries.GetAsync(id);
-                var mdto = _mapper.Map<TvSerieDto>(tvSerie);
-                var tvSerieGenres = await _unitOfWork.TvSerieGenres.GetAllAsync();
-                var genres = await _unitOfWork.Genres.GetAllAsync();
-                var listItemGenres = (from mg in tvSerieGenres
-                                      join g in genres on mg.GenreId equals g.Id
-                                      where mg.TvSerieId == id
-                                      select new TvSerieGenreDto
-                                      {
-                                          TvSerieId = id,
-                                          GenreId = g.Id,
-                                          GenreName = g.Name
-                                      }).ToList();
-                mdto.ListItemGenres = listItemGenres;
-                response.Data = mdto;
-                response.IsSuccess = true;
-                response.Message = "Successful";
-            }
-            catch (Exception ex)
-            {
-                response.Message = ex.Message;
-                _logger.LogError(ex.StackTrace);
-            }
-            return response;
-        }
-
-        public async Task<Response<object>> CreateAsync(TvSerieDto tvSerieDto)
-        {
-            var response = new Response<object>();
-            try
-            {
-                var tvSerie = _mapper.Map<TvSerie>(tvSerieDto);
-                MapTvSerieGenres(tvSerieDto, tvSerie);
+                if (tvSerieCreationDto.GenresIds == null || tvSerieCreationDto.GenresIds.Count == 0)
+                {
+                    throw new Exception("No se puede guardar una serie sin géneros");
+                }
+                var genresIds = await _unitOfWork.Genres.GetIdsByExpression(genre => tvSerieCreationDto.GenresIds.Contains(genre.Id));
+                if (tvSerieCreationDto.GenresIds.Count != genresIds.Count)
+                {
+                    throw new Exception("No existe uno de los géneros enviados");
+                }
+                var tvSerie = _mapper.Map<TvSerie>(tvSerieCreationDto);
                 await _unitOfWork.TvSeries.AddAsync(tvSerie);
                 await _unitOfWork.SaveAsync();
+                response.Data = _mapper.Map<TvSerieDto>(tvSerie);
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -132,19 +126,24 @@ namespace SinovadDemo.Application.UseCases.TvSeries
             return response;
         }
 
-        public async Task<Response<object>> UpdateAsync(TvSerieDto tvSerieDto)
+        public async Task<Response<object>> UpdateAsync(int id, TvSerieCreationDto tvSerieCreationDto)
         {
             var response = new Response<object>();
             try
             {
-                var tvSerie = _mapper.Map<TvSerie>(tvSerieDto);
-                MapTvSerieGenres(tvSerieDto, tvSerie);
-                var listtvSerieGenres = _unitOfWork.TvSerieGenres.GetAllByExpressionAsync(x => x.TvSerieId == tvSerie.Id).Result.ToList();
-                if (listtvSerieGenres != null && listtvSerieGenres.Count > 0)
+                if (tvSerieCreationDto.GenresIds == null || tvSerieCreationDto.GenresIds.Count == 0)
                 {
-                    _unitOfWork.TvSerieGenres.DeleteList(listtvSerieGenres);
+                    throw new Exception("No se puede guardar una serie sin géneros");
                 }
-                _unitOfWork.TvSeries.Update(tvSerie);
+                var genresIds = await _unitOfWork.Genres.GetIdsByExpression(genre => tvSerieCreationDto.GenresIds.Contains(genre.Id));
+                if (tvSerieCreationDto.GenresIds.Count != genresIds.Count)
+                {
+                    throw new Exception("No existe uno de los géneros enviados");
+                }
+
+                var tvSerieFinded = await _unitOfWork.TvSeries.GetTvSerie(id);
+                tvSerieFinded = _mapper.Map(tvSerieCreationDto, tvSerieFinded);
+                _unitOfWork.TvSeries.Update(tvSerieFinded);
                 await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
                 response.Message = "Successful";
@@ -220,20 +219,6 @@ namespace SinovadDemo.Application.UseCases.TvSeries
                 _logger.LogError(ex.StackTrace);
             }
             return response;
-        }
-
-        private void MapTvSerieGenres(TvSerieDto tvSerieDto, TvSerie tvSerie)
-        {
-            if (tvSerieDto.ListItemGenres != null && tvSerieDto.ListItemGenres.Count > 0)
-            {
-                var list = tvSerieDto.ListItemGenres.AsEnumerable();
-                List<TvSerieGenre> tvSerieGenres = (from mg in list
-                                                    select new TvSerieGenre
-                                                    {
-                                                        GenreId = mg.GenreId,
-                                                    }).ToList();
-                tvSerie.TvSerieGenres = tvSerieGenres;
-            }
         }
 
         public async Task<bool> CheckExistAsync(int id)
