@@ -1,5 +1,4 @@
-﻿
-namespace SinovadDemo.Application.DTO
+﻿namespace SinovadDemo.Application.DTO.User
 {
     public partial class UserDto
     {

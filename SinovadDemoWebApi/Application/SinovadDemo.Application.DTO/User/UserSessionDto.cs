@@ -1,6 +1,6 @@
 ﻿using SinovadDemo.Application.DTO.Profile;
 
-namespace SinovadDemo.Application.DTO
+namespace SinovadDemo.Application.DTO.User
 {
     public class UserSessionDto
     {

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SinovadDemo.Application.DTO;
+using SinovadDemo.Application.DTO.User;
 using SinovadDemo.Application.Interface.UseCases;
 
 namespace SinovadDemo.Application.Test
@@ -48,7 +48,7 @@ namespace SinovadDemo.Application.Test
             var context = scope.ServiceProvider.GetService<IUserService>();
 
             //Arrange
-            var accessUserDto = new AccessUserDto();
+            var accessUserDto = new AuthenticateUserDto();
             accessUserDto.UserName = "jvsv1994";
             accessUserDto.Password = "alfondo28V.";
             var expected = "Successful";

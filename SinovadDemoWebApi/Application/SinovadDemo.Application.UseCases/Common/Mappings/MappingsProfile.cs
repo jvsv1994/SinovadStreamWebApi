@@ -6,6 +6,7 @@ using SinovadDemo.Application.DTO.Movie;
 using SinovadDemo.Application.DTO.Profile;
 using SinovadDemo.Application.DTO.Season;
 using SinovadDemo.Application.DTO.TvSerie;
+using SinovadDemo.Application.DTO.User;
 using SinovadDemo.Domain.Entities;
 
 namespace Pacagroup.Ecommerce.Application.UseCases.Common.Mappings
@@ -14,6 +15,10 @@ namespace Pacagroup.Ecommerce.Application.UseCases.Common.Mappings
     {
         public MappingsProfile()
         {
+            CreateMap<RegisterUserDto, User>();
+            CreateMap<RegisterUserFromProviderDto, User>();
+            CreateMap<User, UserDto>().ForMember(x => x.IsPasswordSetted, y => y.MapFrom(y => y.PasswordHash != null)).ReverseMap();
+
             CreateMap<Catalog, CatalogDto>().ReverseMap();
             CreateMap<CatalogDetail, CatalogDetailDto>().ReverseMap();
             CreateMap<Menu, MenuDto>().ReverseMap();
@@ -42,8 +47,7 @@ namespace Pacagroup.Ecommerce.Application.UseCases.Common.Mappings
 
             CreateMap<Role, RoleDto>().ReverseMap();
             CreateMap<MediaServer, MediaServerDto>().ReverseMap();
-            CreateMap<RegisterUserDto,User>();
-            CreateMap<User, UserDto>().ForMember(x => x.IsPasswordSetted, y => y.MapFrom(y => y.PasswordHash!=null)).ReverseMap();
+
             CreateMap<LinkedAccount, LinkedAccountDto>().ReverseMap();
         }
 

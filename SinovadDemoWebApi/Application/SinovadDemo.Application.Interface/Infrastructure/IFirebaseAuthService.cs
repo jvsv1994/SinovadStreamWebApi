@@ -1,10 +1,11 @@
-﻿using SinovadDemo.Application.DTO;
+﻿using SinovadDemo.Application.DTO.User;
+using SinovadDemo.Domain.Enums;
 
 namespace SinovadDemo.Application.Interface.Infrastructure
 {
     public interface IFirebaseAuthService
     {
-        Task<UserDto> ValidateGoogleCredentials(string accessToken);
+        Task<RegisterUserFromProviderDto> ValidateCredentials(string accessToken, LinkedAccountProvider LinkedAccountProviderCatalogDetailId);
 
     }
 }

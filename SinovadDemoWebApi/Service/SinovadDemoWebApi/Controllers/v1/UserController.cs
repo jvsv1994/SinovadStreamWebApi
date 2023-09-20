@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SinovadDemo.Application.DTO;
+using SinovadDemo.Application.DTO.User;
 using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Transversal.Common;
 using System.Security.Claims;
@@ -11,7 +12,7 @@ namespace SinovadDemoWebApi.Controllers.v1
     [Route("api/v{version:apiVersion}/users")]
     [ApiController]
     [Authorize]
-    [ApiVersion("1.0",Deprecated = true)]
+    [ApiVersion("1.0",Deprecated = false)]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -109,7 +110,7 @@ namespace SinovadDemoWebApi.Controllers.v1
 
         [HttpPost("Login")]
         [AllowAnonymous]
-        public async Task<ActionResult> Login([FromBody] AccessUserDto dto)
+        public async Task<ActionResult> Login([FromBody] AuthenticateUserDto dto)
         {
             if (dto == null)
             {

@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
-using SinovadDemo.Application.DTO;
+using SinovadDemo.Application.DTO.User;
 
 namespace SinovadDemo.Application.Validator
 {
-    public class AccessUserDtoValidator:AbstractValidator<AccessUserDto>
+    public class AccessUserDtoValidator:AbstractValidator<AuthenticateUserDto>
     {
         public AccessUserDtoValidator() { 
             RuleFor(u=>u.UserName).NotNull().NotEmpty();

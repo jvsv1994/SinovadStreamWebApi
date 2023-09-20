@@ -11,6 +11,7 @@ using SinovadDemo.Application.UseCases.Movies;
 using SinovadDemo.Application.UseCases.Profiles;
 using SinovadDemo.Application.UseCases.Roles;
 using SinovadDemo.Application.UseCases.Seasons;
+using SinovadDemo.Application.UseCases.SignUp;
 using SinovadDemo.Application.UseCases.TvSeries;
 using SinovadDemo.Application.UseCases.Users;
 using SinovadDemo.Application.Validator;
@@ -25,6 +26,7 @@ namespace SinovadDemo.Application.UseCases
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             //scoped services
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ISignUpService, SignUpService>();
             services.AddScoped<IMenuService, MenuService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IMediaServerService, MediaServerService>();

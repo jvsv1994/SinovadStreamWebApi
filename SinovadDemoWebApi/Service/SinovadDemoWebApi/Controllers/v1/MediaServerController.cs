@@ -9,7 +9,7 @@ namespace SinovadDemoWebApi.Controllers.v1
     [ApiController]
     [Route("api/v{version:apiVersion}/mediaServers")]
     [Authorize]
-    [ApiVersion("1.0", Deprecated = true)]
+    [ApiVersion("1.0", Deprecated = false)]
     public class MediaServerController : Controller
     {
         private readonly IMediaServerService _mediaServerService;

@@ -10,7 +10,7 @@ namespace SinovadDemoWebApi.Controllers.v1
     [ApiController]
     [Route("api/v{version:apiVersion}/users/{userId:int}/profiles")]
     [Authorize]
-    [ApiVersion("1.0", Deprecated = true)]
+    [ApiVersion("1.0", Deprecated = false)]
     public class ProfileController : Controller
     {
         private readonly IProfileService _profileService;

@@ -8,7 +8,7 @@ namespace SinovadDemoWebApi.Controllers.v1
     [Route("api/v{version:apiVersion}/roles")]
     [ApiController]
     [Authorize]
-    [ApiVersion("1.0",Deprecated = true)]
+    [ApiVersion("1.0",Deprecated = false)]
     public class RoleController : ControllerBase
     {
         private readonly IRoleService _roleService;

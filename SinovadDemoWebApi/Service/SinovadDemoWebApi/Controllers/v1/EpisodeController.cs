@@ -9,7 +9,7 @@ namespace SinovadDemoWebApi.Controllers.v1
     [Route("api/v{version:apiVersion}/seasons/{seasonId:int}/episodes")]
     [ApiController]
     [Authorize]
-    [ApiVersion("1.0", Deprecated = true)]
+    [ApiVersion("1.0", Deprecated = false)]
     public class EpisodeController : ControllerBase
     {
         private readonly IEpisodeService _episodeService;

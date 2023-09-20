@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using SinovadDemo.Application.Configuration;
 using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.DTO.Profile;
+using SinovadDemo.Application.DTO.User;
 using SinovadDemo.Application.Helpers;
 using SinovadDemo.Application.Interface.Infrastructure;
 using SinovadDemo.Application.Interface.Persistence;
@@ -361,7 +362,7 @@ namespace SinovadDemo.Application.UseCases.Users
             return response;
         }
 
-        public async Task<Response<string>> Login(AccessUserDto dto)
+        public async Task<Response<string>> Login(AuthenticateUserDto dto)
         {
             var response = new Response<string>();
             try
@@ -418,7 +419,7 @@ namespace SinovadDemo.Application.UseCases.Users
             return response;
         }
 
-        public async Task<Response<AuthenticationUserResponseDto>> ValidateUser(AccessUserDto dto)
+        public async Task<Response<AuthenticationUserResponseDto>> ValidateUser(AuthenticateUserDto dto)
         {
             var response = new Response<AuthenticationUserResponseDto>();
             try

@@ -9,7 +9,7 @@ namespace SinovadDemoWebApi.Controllers.v1
     [Route("api/v{version:apiVersion}/genres")]
     [ApiController]
     [Authorize]
-    [ApiVersion("1.0", Deprecated = true)]
+    [ApiVersion("1.0", Deprecated = false)]
     public class GenreController : ControllerBase
     {
         private readonly IGenreService _genreService;

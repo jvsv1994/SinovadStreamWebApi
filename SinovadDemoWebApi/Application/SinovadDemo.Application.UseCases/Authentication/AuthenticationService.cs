@@ -3,8 +3,8 @@ using Microsoft.Extensions.Options;
 using SinovadDemo.Application.Configuration;
 using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.DTO.Profile;
+using SinovadDemo.Application.DTO.User;
 using SinovadDemo.Application.Helpers;
-using SinovadDemo.Application.Interface.Infrastructure;
 using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Application.Validator;
@@ -26,19 +26,19 @@ namespace SinovadDemo.Application.UseCases.Authentication
 
         private readonly IOptions<MyConfig> _config;
 
-        private readonly IFirebaseAuthService _firebaseAuthService;
-
         private readonly AutoMapper.IMapper _mapper;
 
-        public AuthenticationService(IUnitOfWork unitOfWork, IAppLogger<AuthenticationService> logger, IOptions<MyConfig> config, SignInManager<User> signInManager, AccessUserDtoValidator accessUserDtoValidator,IFirebaseAuthService firebaseAuthService, AutoMapper.IMapper mapper)
+        private readonly ISignUpService _signUpService;
+
+        public AuthenticationService(IUnitOfWork unitOfWork, SignInManager<User> signInManager, AccessUserDtoValidator accessUserDtoValidator, IAppLogger<AuthenticationService> logger, IOptions<MyConfig> config, AutoMapper.IMapper mapper, ISignUpService signUpService)
         {
             _unitOfWork = unitOfWork;
-            _logger = logger;
-            _config = config;
             _signInManager = signInManager;
             _accessUserDtoValidator = accessUserDtoValidator;
-            _firebaseAuthService = firebaseAuthService;
-            _mapper=mapper;
+            _logger = logger;
+            _config = config;
+            _mapper = mapper;
+            _signUpService = signUpService;
         }
 
         public async Task<Response<bool>> ValidateUser(string username)
@@ -46,25 +46,21 @@ namespace SinovadDemo.Application.UseCases.Authentication
             var response = new Response<bool>();
             try
             {
-                var user = await _unitOfWork.Users.GetByExpressionAsync(x=>x.UserName==username);
-                if(user != null)
-                {
-                    response.Data = true;
-                    response.Message = "Valid user";
+                var exists = await _unitOfWork.Users.CheckIfExistAsync(x=>x.UserName==username);
+                if(exists){
+                    response.Data = exists;
+                    response.IsSuccess = true;
                 }else{
-                    response.Message = "Invalid user";
+                    response.Message = "Usuario inválido";
                 }
-                response.IsSuccess = true;
-            }
-            catch (Exception ex)
-            {
+            }catch (Exception ex){
                 response.Message = ex.Message;
                 _logger.LogError(ex.StackTrace);
             }
             return response;
         }
 
-        public async Task<Response<AuthenticationUserResponseDto>> AuthenticateUser(AccessUserDto dto)
+        public async Task<Response<AuthenticationUserResponseDto>> AuthenticateUser(AuthenticateUserDto dto)
         {
             var response = new Response<AuthenticationUserResponseDto>();
             try
@@ -72,14 +68,14 @@ namespace SinovadDemo.Application.UseCases.Authentication
                 var validation = _accessUserDtoValidator.Validate(dto);
                 if (!validation.IsValid)
                 {
-                    response.Message = "Validation errors";
+                    response.Message = "Errores de validación";
                     response.Errors = validation.Errors;
                 }else
                 {
-                    var user = await _unitOfWork.Users.GetByExpressionAsync(u => u.UserName == dto.UserName);
+                    var user = await _unitOfWork.Users.GetUserRelatedData(u => u.UserName == dto.UserName);
                     if (user == null)
                     {
-                        response.Message = "Invalid user";
+                        response.Message = "Usuario inválido";
                     }else
                     {
                         var res = await _signInManager.CheckPasswordSignInAsync(user, dto.Password, true);
@@ -88,32 +84,105 @@ namespace SinovadDemo.Application.UseCases.Authentication
                             if (user.Active)
                             {
                                 var data = new AuthenticationUserResponseDto();                   
-                                data.UserData = await GetUserSessionData(user);
+                                data.UserData = GetUserSessionData(user);
                                 var jwtHelper = new JWTHelper(_config.Value.JwtSettings.Secret, _config.Value.JwtSettings.Issuer, _config.Value.JwtSettings.Audience);
                                 var token = jwtHelper.CreateTokenWithUserGuid(user.Guid);
                                 data.ApiToken = token;
                                 response.Data = data;
+                                response.IsSuccess = true;
                             }else
                             {
-                                response.Message = "Inactive user, please confirm your email";
+                                response.Message = "Usuario inactivo, por favor confirma tu correo electrónico";
                             }
                         }else
                         {
                             if (res.IsLockedOut)
                             {
-                                response.Message = "The user has exceeded the maximum number of attempts, please try again later";
-                            }
-                            else
-                            {
-                                response.Message = "Invalid access";
+                                response.Message = "El usuario ha excedido el máximo número de intentos permitido, por favor intente más tarde";
+                            }else{
+                                response.Message = "Contraseña incorrecta";
                             }
                         }
+                    }
+                }
+            }catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
+        public async Task<Response<AuthenticationUserResponseDto>> AuthenticateLinkedAccount(RegisterUserFromProviderDto registerUserFromProviderDto)
+        {
+            var response = new Response<AuthenticationUserResponseDto>();
+            try
+            {
+                var linkedAccountFinded = await _unitOfWork.LinkedAccounts.GetByExpressionAsync(linkedAccount => linkedAccount.Email == registerUserFromProviderDto.Email &&
+                linkedAccount.LinkedAccountProviderCatalogDetailId == (int)registerUserFromProviderDto.LinkedAccountProviderCatalogDetailId);
+                if (linkedAccountFinded!=null)
+                {
+                    var user = await _unitOfWork.Users.GetUserRelatedData(user=>user.Id == linkedAccountFinded.UserId);
+                    var authenticateUserResponse = new AuthenticationUserResponseDto();
+                    authenticateUserResponse.UserData = GetUserSessionData(user);
+                    authenticateUserResponse.ApiToken = CreateWebToken(user);
+                    response.Data = authenticateUserResponse;
+                }else{
+                    var user = await _unitOfWork.Users.GetUserRelatedData(user => user.Email == registerUserFromProviderDto.Email);   
+                    if(user!=null)
+                    {
+                        var confirmLinkAccountData = new ConfirmLinkAccountDto();
+                        confirmLinkAccountData.UserId = user.Id;
+                        confirmLinkAccountData.Email = registerUserFromProviderDto.Email;
+                        confirmLinkAccountData.AccessToken = registerUserFromProviderDto.AccessToken;
+                        confirmLinkAccountData.LinkedAccountProvider = registerUserFromProviderDto.LinkedAccountProviderCatalogDetailId;
+                        var authenticateUserResponse = new AuthenticationUserResponseDto();
+                        authenticateUserResponse.ConfirmLinkAccountData = confirmLinkAccountData;
+                        response.Data = authenticateUserResponse;
+                    }else{
+                        await _signUpService.RegisterWithLinkedAccount(registerUserFromProviderDto);
+                        user = await _unitOfWork.Users.GetUserRelatedData(user => user.Id == linkedAccountFinded.UserId);
+                        var authenticateUserResponse = new AuthenticationUserResponseDto();
+                        authenticateUserResponse.UserData = GetUserSessionData(user);
+                        authenticateUserResponse.ApiToken = CreateWebToken(user);
+                        response.Data = authenticateUserResponse;
                     }
                 }
                 response.IsSuccess = true;
             }catch (Exception ex)
             {
-                response.Message = ex.Message;
+                response.Message = ex.StackTrace;
+                _logger.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
+        public async Task<Response<AuthenticationUserResponseDto>> AuthenticatePasswordAndConfirmLinkAccountToUser(ConfirmLinkAccountDto confirmLinkAccountDto)
+        {
+            var response = new Response<AuthenticationUserResponseDto>();
+            try
+            {
+                var user=await _unitOfWork.Users.GetUserRelatedData(x=>x.Id== confirmLinkAccountDto.UserId);
+                var res = await _signInManager.CheckPasswordSignInAsync(user, confirmLinkAccountDto.Password, true);
+                if(res.Succeeded)
+                {
+                    var linkedAccount = new LinkedAccount();
+                    linkedAccount.UserId = user.Id;
+                    linkedAccount.Email = user.Email;
+                    linkedAccount.AccessToken = confirmLinkAccountDto.AccessToken;
+                    linkedAccount.LinkedAccountProviderCatalogId = (int)CatalogEnum.LinkedAccountProvider;
+                    linkedAccount.LinkedAccountProviderCatalogDetailId = (int)confirmLinkAccountDto.LinkedAccountProvider;
+                    linkedAccount = await _unitOfWork.LinkedAccounts.AddAsync(linkedAccount);
+                    await _unitOfWork.SaveAsync();
+                    var authenticateUserResponse = new AuthenticationUserResponseDto();
+                    authenticateUserResponse.UserData = GetUserSessionData(user);       
+                    authenticateUserResponse.ApiToken = CreateWebToken(user);
+                    response.Data = authenticateUserResponse;
+                    response.IsSuccess = true;
+                }
+            }catch (Exception ex)
+            {
+                response.Message = ex.StackTrace;
                 _logger.LogError(ex.StackTrace);
             }
             return response;
@@ -129,7 +198,7 @@ namespace SinovadDemo.Application.UseCases.Authentication
                 {
                     var authenticateMediaServerResponse = new AuthenticationMediaServerResponseDto();
                     authenticateMediaServerResponse.MediaServer = _mapper.Map<MediaServerDto>(mediaServer);
-                    if(mediaServer.UserId!=null)
+                    if (mediaServer.UserId != null)
                     {
                         var user = await _unitOfWork.Users.GetByExpressionAsync(x => x.Id == mediaServer.UserId);
                         authenticateMediaServerResponse.User = _mapper.Map<UserDto>(user);
@@ -138,11 +207,12 @@ namespace SinovadDemo.Application.UseCases.Authentication
                     var token = jwtHelper.CreateTokenWithSecurityIdentifier(securityIdentifier);
                     authenticateMediaServerResponse.ApiToken = token;
                     response.Data = authenticateMediaServerResponse;
-                    response.Message = "Successful";
-                }else{
-                    response.Message = "Server not found";
+                    response.IsSuccess = true;
                 }
-                response.IsSuccess = true;
+                else
+                {
+                    response.Message = "No existe un servidor registrado con ese identificador";
+                }
             }
             catch (Exception ex)
             {
@@ -152,131 +222,22 @@ namespace SinovadDemo.Application.UseCases.Authentication
             return response;
         }
 
-        public async Task<Response<AuthenticationUserResponseDto>> AuthenticateLinkedAccount(AuthenticateLinkedAccountRequestDto linkedAccountDto)
+        private string CreateWebToken(User user)
         {
-            var response = new Response<AuthenticationUserResponseDto>();
-            try
-            {
-                UserDto userDataFinded=null;
-                if(linkedAccountDto.LinkedAccountProviderCatalogDetailId==LinkedAccountProvider.Google)
-                {
-                    userDataFinded = await _firebaseAuthService.ValidateGoogleCredentials(linkedAccountDto.AccessToken);
-                }
-                if (userDataFinded != null)
-                {
-                    var authenticateUserResponse = new AuthenticationUserResponseDto();
-                    User user = null;
-                    var linkedAccountList = await _unitOfWork.LinkedAccounts.GetAllByExpressionAsync(x => x.Email == userDataFinded.Email);
-                    var linkedAccount = linkedAccountList != null && linkedAccountList.Count() > 0 ? linkedAccountList.ToList()[0] : null;
-                    if (linkedAccount != null)
-                    {
-                        user = await _unitOfWork.Users.GetAsync(linkedAccount.UserId);
-                    }else
-                    {
-                        var userList = await _unitOfWork.Users.GetAllByExpressionAsync(x => x.Email == userDataFinded.Email);
-                        user= userList!=null && userList.Count() > 0 ? userList.ToList()[0] : null;
-                        if (user==null)
-                        {
-                            //register account
-                            var appUser = _mapper.Map<User>(userDataFinded);
-                            appUser.Created = DateTime.Now;
-                            appUser.LastModified = DateTime.Now;
-                            appUser.Active = true;
-                            var mainProfile = new Profile();
-                            mainProfile.FullName = appUser.FirstName.Split(" ")[0];
-                            mainProfile.Main = true;
-                            var aleatoryUsername= (userDataFinded.FirstName + userDataFinded.LastName + "_" + Guid.NewGuid()).Replace(" ","");
-                            appUser.UserName = aleatoryUsername.ToLower();
-                            appUser.Profiles.Add(mainProfile);
-                            linkedAccount = new LinkedAccount();
-                            linkedAccount.Email = appUser.Email;
-                            linkedAccount.AccessToken = linkedAccountDto.AccessToken;
-                            linkedAccount.LinkedAccountProviderCatalogId = (int)CatalogEnum.LinkedAccountProvider;
-                            linkedAccount.LinkedAccountProviderCatalogDetailId = (int)linkedAccountDto.LinkedAccountProviderCatalogDetailId;
-                            appUser.LinkedAccounts.Add(linkedAccount);
-                            user = await _unitOfWork.Users.AddAsync(appUser);
-                            await _unitOfWork.SaveAsync();
-                        }else {
-                            var confirmLinkAccountData = new ConfirmLinkAccountDto();
-                            confirmLinkAccountData.UserId = user.Id;
-                            confirmLinkAccountData.Email = userDataFinded.Email;
-                            confirmLinkAccountData.AccessToken = linkedAccountDto.AccessToken;
-                            confirmLinkAccountData.LinkedAccountProvider = linkedAccountDto.LinkedAccountProviderCatalogDetailId;
-                            authenticateUserResponse.ConfirmLinkAccountData = confirmLinkAccountData;
-                        }
-                    }
-                    if(linkedAccount!=null && user!=null)
-                    {
-                        authenticateUserResponse.UserData = await GetUserSessionData(user);
-                        var jwtHelper = new JWTHelper(_config.Value.JwtSettings.Secret, _config.Value.JwtSettings.Issuer, _config.Value.JwtSettings.Audience);
-                        var token = jwtHelper.CreateTokenWithUserGuid(user.Guid);
-                        authenticateUserResponse.ApiToken = token;
-                    }
-                    response.Data = authenticateUserResponse;
-                    response.Message = "Successful";
-                }
-                else{
-                    response.Message = "Invalid credentials";
-                }
-                response.IsSuccess = true;
-            }
-            catch (Exception ex)
-            {
-                response.Message = ex.StackTrace;
-                _logger.LogError(ex.StackTrace);
-            }
-            return response;
+            var jwtHelper = new JWTHelper(_config.Value.JwtSettings.Secret, _config.Value.JwtSettings.Issuer, _config.Value.JwtSettings.Audience);
+            var token = jwtHelper.CreateTokenWithUserGuid(user.Guid);
+            return token;
         }
 
-        public async Task<Response<AuthenticationUserResponseDto>> AuthenticatePasswordAndConfirmLinkAccountToUser(ConfirmLinkAccountDto confirmLinkAccountDto)
-        {
-            var response = new Response<AuthenticationUserResponseDto>();
-            try
-            {
-                var user=await _unitOfWork.Users.GetByExpressionAsync(x=>x.Id== confirmLinkAccountDto.UserId);
-                var res = await _signInManager.CheckPasswordSignInAsync(user, confirmLinkAccountDto.Password, true);
-                if(res.Succeeded)
-                {
-                    var linkedAccount = new LinkedAccount();
-                    linkedAccount.UserId = user.Id;
-                    linkedAccount.Email = user.Email;
-                    linkedAccount.AccessToken = confirmLinkAccountDto.AccessToken;
-                    linkedAccount.LinkedAccountProviderCatalogId = (int)CatalogEnum.LinkedAccountProvider;
-                    linkedAccount.LinkedAccountProviderCatalogDetailId = (int)confirmLinkAccountDto.LinkedAccountProvider;
-                    linkedAccount = await _unitOfWork.LinkedAccounts.AddAsync(linkedAccount);
-                    await _unitOfWork.SaveAsync();
-                    response.Message = "Success";
-                    var authenticateUserResponse = new AuthenticationUserResponseDto();
-                    authenticateUserResponse.UserData = await GetUserSessionData(user);
-                    var jwtHelper = new JWTHelper(_config.Value.JwtSettings.Secret, _config.Value.JwtSettings.Issuer, _config.Value.JwtSettings.Audience);
-                    var token = jwtHelper.CreateTokenWithUserGuid(user.Guid);
-                    authenticateUserResponse.ApiToken = token;
-                    response.Data = authenticateUserResponse;
-                }else{
-                    response.Message = "Invalid Password";
-                }
-                response.IsSuccess = true;
-            }
-            catch (Exception ex)
-            {
-                response.Message = ex.StackTrace;
-                _logger.LogError(ex.StackTrace);
-            }
-            return response;
-        }
-
-        private async Task<UserSessionDto> GetUserSessionData(User user)
+        private UserSessionDto GetUserSessionData(User user)
         {
             var userDto = _mapper.Map<UserDto>(user);
             userDto.IsPasswordSetted = user.PasswordHash != null ? true : false;
             var userSessionDto = new UserSessionDto();
             userSessionDto.User = userDto;
-            var mediaServers = await _unitOfWork.MediaServers.GetAllByExpressionAsync(x => x.UserId == user.Id);
-            userSessionDto.MediaServers = _mapper.Map<List<MediaServerDto>>(mediaServers);
-            var profiles = await _unitOfWork.Profiles.GetAllByExpressionAsync(x => x.UserId == user.Id);
-            userSessionDto.Profiles = _mapper.Map<List<ProfileDto>>(profiles);
-            var linkedAccounts = await _unitOfWork.LinkedAccounts.GetAllByExpressionAsync(x => x.UserId == user.Id);
-            userSessionDto.LinkedAccounts = _mapper.Map<List<LinkedAccountDto>>(linkedAccounts);
+            userSessionDto.MediaServers = _mapper.Map<List<MediaServerDto>>(user.MediaServers);
+            userSessionDto.Profiles = _mapper.Map<List<ProfileDto>>(user.Profiles);
+            userSessionDto.LinkedAccounts = _mapper.Map<List<LinkedAccountDto>>(user.LinkedAccounts);
             return userSessionDto;
         }
     }

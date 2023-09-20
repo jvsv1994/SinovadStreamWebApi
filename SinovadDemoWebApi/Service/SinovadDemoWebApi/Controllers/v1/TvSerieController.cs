@@ -9,7 +9,7 @@ namespace SinovadDemoWebApi.Controllers.v1
     [Route("api/v{version:apiVersion}/tvseries")]
     [ApiController]
     [Authorize]
-    [ApiVersion("1.0", Deprecated = true)]
+    [ApiVersion("1.0", Deprecated = false)]
     public class TvSerieController : ControllerBase
     {
         private readonly ITvSerieService _tvSerieService;

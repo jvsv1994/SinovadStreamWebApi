@@ -9,7 +9,7 @@ namespace SinovadDemoWebApi.Controllers.v1
     [Route("api/v{version:apiVersion}/documents")]
     [Authorize]
     [ApiController]
-    [ApiVersion("1.0", Deprecated = true)]
+    [ApiVersion("1.0", Deprecated = false)]
     public class DocumentController : Controller
     {
         private readonly IDocumentService _documentService;
