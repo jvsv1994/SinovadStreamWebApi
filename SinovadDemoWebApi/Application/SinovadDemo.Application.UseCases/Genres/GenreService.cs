@@ -183,7 +183,7 @@ namespace SinovadDemo.Application.UseCases.Genres
 
         public async Task<bool> CheckExistAsync(int id)
         {
-            return await _unitOfWork.Genres.CheckExist(x => x.Id == id);
+            return await _unitOfWork.Genres.CheckIfExistAsync(x => x.Id == id);
         }
 
     }

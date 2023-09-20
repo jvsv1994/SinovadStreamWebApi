@@ -1,4 +1,6 @@
-﻿namespace SinovadDemo.Application.DTO
+﻿using SinovadDemo.Application.DTO.Profile;
+
+namespace SinovadDemo.Application.DTO
 {
     public class UserSessionDto
     {

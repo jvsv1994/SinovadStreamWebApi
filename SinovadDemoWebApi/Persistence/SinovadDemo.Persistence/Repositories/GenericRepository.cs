@@ -37,7 +37,7 @@ namespace SinovadDemo.Persistence.Repositories
             throw new Exception("Not Found");
         }
 
-        public async Task<bool> CheckExist(Expression<Func<TEntity, bool>> predicate)
+        public async Task<bool> CheckIfExistAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return await _table.AsNoTracking().AnyAsync(predicate);    
         }

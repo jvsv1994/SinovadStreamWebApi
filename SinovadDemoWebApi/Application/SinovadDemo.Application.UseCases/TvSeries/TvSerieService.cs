@@ -223,7 +223,7 @@ namespace SinovadDemo.Application.UseCases.TvSeries
 
         public async Task<bool> CheckExistAsync(int id)
         {
-            return await _unitOfWork.TvSeries.CheckExist(x => x.Id == id);
+            return await _unitOfWork.TvSeries.CheckIfExistAsync(x => x.Id == id);
         }
 
     }

@@ -1,4 +1,4 @@
-﻿using SinovadDemo.Application.DTO;
+﻿using SinovadDemo.Application.DTO.Profile;
 using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Domain.Entities;
@@ -57,7 +57,24 @@ namespace SinovadDemo.Application.UseCases.Profiles
             return response;
         }
 
-        public async Task<ResponsePagination<List<ProfileDto>>> GetAllWithPaginationByUserAsync(int userId, int page, int take, string sortBy, string sortDirection, string searchText, string searchBy)
+        public async Task<Response<List<ProfileDto>>> GetAllAsync(int userId)
+        {
+            var response = new Response<List<ProfileDto>>();
+            try
+            {
+                var result = await _unitOfWork.Profiles.GetAllByExpressionAsync(x => x.UserId == userId);
+                response.Data = _mapper.Map<List<ProfileDto>>(result.ToList());
+                response.IsSuccess = true;
+                response.Message = "Successful";
+            }catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
+        public async Task<ResponsePagination<List<ProfileDto>>> GetAllWithPaginationAsync(int userId, int page, int take, string sortBy, string sortDirection, string searchText, string searchBy)
         {
             var response = new ResponsePagination<List<ProfileDto>>();
             try
@@ -78,18 +95,19 @@ namespace SinovadDemo.Application.UseCases.Profiles
             return response;
         }
 
-        public Response<object> Create(ProfileDto profileDto)
+        public async Task<Response<ProfileDto>> CreateAsync(int userId,ProfileCreationDto profileCreationDto)
         {
-            var response = new Response<object>();
+            var response = new Response<ProfileDto>();
             try
             {
-                var profile = _mapper.Map<Profile>(profileDto);
-                _unitOfWork.Profiles.Add(profile);
-                _unitOfWork.Save();
+                var profile = _mapper.Map<Profile>(profileCreationDto);
+                profile.UserId=userId;
+                await _unitOfWork.Profiles.AddAsync(profile);
+                await _unitOfWork.SaveAsync();
+                response.Data = _mapper.Map<ProfileDto>(profile);
                 response.IsSuccess = true;
                 response.Message = "Successful";
-            }
-            catch (Exception ex)
+            }catch (Exception ex)
             {
                 response.Message = ex.Message;
                 _logger.LogError(ex.StackTrace);
@@ -97,37 +115,18 @@ namespace SinovadDemo.Application.UseCases.Profiles
             return response;
         }
 
-        public Response<object> CreateList(List<ProfileDto> listProfileDto)
+        public async Task<Response<object>> UpdateAsync(int profileId,ProfileCreationDto profileCreationDto)
         {
             var response = new Response<object>();
             try
             {
-                var profiles = _mapper.Map<List<Profile>>(listProfileDto);
-                _unitOfWork.Profiles.AddList(profiles);
-                _unitOfWork.Save();
-                response.IsSuccess = true;
-                response.Message = "Successful";
-            }
-            catch (Exception ex)
-            {
-                response.Message = ex.Message;
-                _logger.LogError(ex.StackTrace);
-            }
-            return response;
-        }
-
-        public Response<object> Update(ProfileDto profileDto)
-        {
-            var response = new Response<object>();
-            try
-            {
-                var profile = _mapper.Map<Profile>(profileDto);
+                var profile = await _unitOfWork.Profiles.GetAsync(profileId);
+                profile = _mapper.Map(profileCreationDto, profile);
                 _unitOfWork.Profiles.Update(profile);
-                _unitOfWork.Save();
+                await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
                 response.Message = "Successful";
-            }
-            catch (Exception ex)
+            }catch (Exception ex)
             {
                 response.Message = ex.Message;
                 _logger.LogError(ex.StackTrace);
@@ -135,13 +134,13 @@ namespace SinovadDemo.Application.UseCases.Profiles
             return response;
         }
 
-        public Response<object> Delete(int id)
+        public async Task<Response<object>> DeleteAsync(int id)
         {
             var response = new Response<object>();
             try
             {
                 _unitOfWork.Profiles.Delete(id);
-                _unitOfWork.Save();
+                await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -153,28 +152,9 @@ namespace SinovadDemo.Application.UseCases.Profiles
             return response;
         }
 
-        public Response<object> DeleteList(string ids)
+        public async Task<bool> CheckIfExistAsync(int id)
         {
-            var response = new Response<object>();
-            try
-            {
-                List<int> listIds = new List<int>();
-                if (!string.IsNullOrEmpty(ids))
-                {
-                    listIds = ids.Split(",").Select(x => Convert.ToInt32(x)).ToList();
-                }
-                _unitOfWork.Profiles.DeleteByExpression(x => listIds.Contains(x.Id));
-                _unitOfWork.Save();
-                response.IsSuccess = true;
-                response.Message = "Successful";
-            }
-            catch (Exception ex)
-            {
-                response.Message = ex.Message;
-                _logger.LogError(ex.StackTrace);
-            }
-            return response;
+           return await _unitOfWork.Profiles.CheckIfExistAsync(profile=>profile.Id==id);
         }
-
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using SinovadDemo.Application.Configuration;
 using SinovadDemo.Application.DTO;
+using SinovadDemo.Application.DTO.Profile;
 using SinovadDemo.Application.Helpers;
 using SinovadDemo.Application.Interface.Infrastructure;
 using SinovadDemo.Application.Interface.Persistence;
@@ -659,5 +660,9 @@ namespace SinovadDemo.Application.UseCases.Users
             return response;
         }
 
+        public async Task<bool> CheckIfExistAsync(int id)
+        {
+            return await _unitOfWork.Users.CheckIfExistAsync(user=>user.Id==id);
+        }
     }
 }

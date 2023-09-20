@@ -204,7 +204,7 @@ namespace SinovadDemo.Application.UseCases.Movies
 
         public async Task<bool> CheckExistAsync(int id)
         {
-            return await _unitOfWork.Movies.CheckExist(x => x.Id == id);
+            return await _unitOfWork.Movies.CheckIfExistAsync(x => x.Id == id);
         }
 
     }

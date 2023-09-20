@@ -1,111 +1,114 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SinovadDemo.Application.DTO;
+using SinovadDemo.Application.DTO.Profile;
 using SinovadDemo.Application.Interface.UseCases;
-using SinovadDemo.Application.UseCases.MediaServers;
+using SinovadDemo.Transversal.Common;
 using System.ComponentModel.DataAnnotations;
 
 namespace SinovadDemoWebApi.Controllers.v1
 {
     [ApiController]
-    [Route("api/v{version:apiVersion}/profiles")]
+    [Route("api/v{version:apiVersion}/users/{userId}/profiles")]
     [Authorize]
     [ApiVersion("1.0", Deprecated = true)]
     public class ProfileController : Controller
     {
         private readonly IProfileService _profileService;
+        private readonly IUserService _userService;
 
-        public ProfileController(IProfileService profileService)
+        public ProfileController(IProfileService profileService, IUserService userService)
         {
             _profileService = profileService;
+            _userService = userService;
         }
 
-        [HttpGet("GetAsync/{profileId}")]
-        public async Task<ActionResult> GetAsync(int profileId)
+        [HttpGet("GetAsync/{profileId}",Name ="getProfile")]
+        public async Task<ActionResult<Response<ProfileDto>>> GetAsync([FromRoute]int profileId)
         {
             var response = await _profileService.GetAsync(profileId);
-            if (response.IsSuccess)
+            if (!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message);
             }
-            return BadRequest(response.Message);
+            return response;
         }
 
         [HttpGet("GetByGuidAsync/{guid}")]
-        public async Task<ActionResult> GetByGuidAsync([Required] string guid)
+        public async Task<ActionResult<Response<ProfileDto>>> GetByGuidAsync([FromRoute][Required] string guid)
         {
             var response = await _profileService.GetByGuidAsync(guid);
-            if (response.IsSuccess)
+            if (!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message); ;
             }
-            return BadRequest(response.Message); ;
+            return response;
         }
 
-        [HttpGet("GetAllWithPaginationByUserAsync/{userId}")]
-        public async Task<ActionResult> GetAll(int userId,[FromQuery] int page = 1,[FromQuery] int take = 1000, [FromQuery] string sortBy = "Id", [FromQuery] string sortDirection = "asc", [FromQuery] string searchText = "", [FromQuery] string searchBy = "")
+
+        [HttpGet("GetAllAsync")]
+        public async Task<ActionResult<Response<List<ProfileDto>>>> GetAllAsync([FromRoute] int userId)
         {
-            var response = await _profileService.GetAllWithPaginationByUserAsync(userId, page, take, sortBy, sortDirection, searchText, searchBy);
-            if (response.IsSuccess)
+            var response = await _profileService.GetAllAsync(userId);
+            if (!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message);
             }
-            return BadRequest(response.Message);
+            return response;
         }
 
-        [HttpPost("Create")]
-        public ActionResult Create([FromBody] ProfileDto dto)
+        [HttpGet("GetAllWithPaginationAsync")]
+        public async Task<ActionResult<ResponsePagination<List<ProfileDto>>>> GetAllWithPaginationAsync([FromRoute]int userId,[FromQuery] int page = 1,[FromQuery] int take = 1000, [FromQuery] string sortBy = "Id", 
+            [FromQuery] string sortDirection = "asc", [FromQuery] string searchText = "", [FromQuery] string searchBy = "")
         {
-            var response = _profileService.Create(dto);
-            if (response.IsSuccess)
+            var response = await _profileService.GetAllWithPaginationAsync(userId, page, take, sortBy, sortDirection, searchText, searchBy);
+            if (!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message);
             }
-            return BadRequest(response.Message);
+            return response;
         }
 
-        [HttpPost("CreateList")]
-        public ActionResult CreateList([FromBody] List<ProfileDto> list)
+        [HttpPost("CreateAsync")]
+        public async Task<ActionResult> CreateAsync([FromRoute] int userId,[FromBody] ProfileCreationDto profileCreationDto)
         {
-            var response = _profileService.CreateList(list);
-            if (response.IsSuccess)
+            var exists = await _userService.CheckIfExistAsync(userId);
+            if (!exists)
             {
-                return Ok(response);
+                return NotFound("El usuario no existe");
             }
-            return BadRequest(response.Message);
+            var response = await _profileService.CreateAsync(userId,profileCreationDto);
+            if (!response.IsSuccess)
+            {
+                return BadRequest(response.Message);
+            }
+            return CreatedAtRoute("getProfile", new { profileId = response.Data.Id }, response.Data);
         }
 
-        [HttpPut("Update")]
-        public ActionResult Update([FromBody] ProfileDto dto)
+        [HttpPut("UpdateAsync/{profileId:int}")]
+        public async Task<ActionResult> UpdateAsync([FromRoute] int profileId, [FromBody] ProfileCreationDto profileCreationDto)
         {
-            var response = _profileService.Update(dto);
-            if (response.IsSuccess)
+            var exists=await _profileService.CheckIfExistAsync(profileId);
+            if(!exists)
             {
-                return Ok(response);
+                return NotFound("El perfil no existe");
             }
-            return BadRequest(response.Message);
+            var response =await _profileService.UpdateAsync(profileId, profileCreationDto);
+            if (!response.IsSuccess)
+            {
+                return BadRequest(response.Message);
+            }
+            return NoContent();
         }
 
-        [HttpDelete("Delete/{profileId}")]
-        public ActionResult Delete(int profileId)
+        [HttpDelete("DeleteAsync/{profileId:int}")]
+        public async Task<ActionResult> DeleteAsync([FromRoute] int profileId)
         {
-            var response = _profileService.Delete(profileId);
-            if (response.IsSuccess)
+            var response = await _profileService.DeleteAsync(profileId);
+            if (!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message);
             }
-            return BadRequest(response.Message);
-        }
-
-        [HttpDelete("DeleteList/{listIds}")]
-        public ActionResult DeleteList(string listIds)
-        {
-            var response = _profileService.DeleteList(listIds);
-            if (response.IsSuccess)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response.Message);
+            return NoContent();
         }
 
     }

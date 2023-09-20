@@ -3,6 +3,7 @@ using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.DTO.Episode;
 using SinovadDemo.Application.DTO.Genre;
 using SinovadDemo.Application.DTO.Movie;
+using SinovadDemo.Application.DTO.Profile;
 using SinovadDemo.Application.DTO.Season;
 using SinovadDemo.Application.DTO.TvSerie;
 using SinovadDemo.Domain.Entities;

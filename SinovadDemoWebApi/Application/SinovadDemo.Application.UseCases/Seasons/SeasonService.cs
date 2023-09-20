@@ -163,7 +163,7 @@ namespace SinovadDemo.Application.UseCases.Seasons
         }
         public async Task<bool> CheckExistAsync(int id)
         {
-            return await _unitOfWork.Seasons.CheckExist(x => x.Id == id);
+            return await _unitOfWork.Seasons.CheckIfExistAsync(x => x.Id == id);
         }
 
     }

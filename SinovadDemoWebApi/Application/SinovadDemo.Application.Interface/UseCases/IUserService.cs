@@ -25,5 +25,6 @@ namespace SinovadDemo.Application.Interface.UseCases
         Response<object> Update(UserDto userDto);
         Response<object> Delete(int id);
         Response<object> DeleteList(string ids);
+        Task<bool> CheckIfExistAsync(int id);
     }
 }
