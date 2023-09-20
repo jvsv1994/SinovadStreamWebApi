@@ -91,7 +91,7 @@ namespace SinovadDemoWebApi.Controllers.v1
             {
                 return BadRequest(response.Message);
             }
-            return CreatedAtRoute("getProfile", new { profileId = response.Data.Id }, response.Data);
+            return CreatedAtRoute("getProfile", new {userId=response.Data.UserId,profileId = response.Data.Id }, response.Data);
         }
 
         [HttpPut("UpdateAsync/{profileId:int}")]
