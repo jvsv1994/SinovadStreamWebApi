@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 namespace SinovadDemoWebApi.Controllers.v1
 {
     [ApiController]
-    [Route("api/v{version:apiVersion}/users/{userId}/profiles")]
+    [Route("api/v{version:apiVersion}/users/{userId:int}/profiles")]
     [Authorize]
     [ApiVersion("1.0", Deprecated = true)]
     public class ProfileController : Controller
@@ -23,8 +23,13 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpGet("GetAsync/{profileId}",Name ="getProfile")]
-        public async Task<ActionResult<Response<ProfileDto>>> GetAsync([FromRoute]int profileId)
+        public async Task<ActionResult<Response<ProfileDto>>> GetAsync([FromRoute] int userId,[FromRoute]int profileId)
         {
+            var exists = await _userService.CheckIfExistAsync(userId);
+            if (!exists)
+            {
+                return NotFound("El usuario no existe");
+            }
             var response = await _profileService.GetAsync(profileId);
             if (!response.IsSuccess)
             {
@@ -34,8 +39,13 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpGet("GetByGuidAsync/{guid}")]
-        public async Task<ActionResult<Response<ProfileDto>>> GetByGuidAsync([FromRoute][Required] string guid)
+        public async Task<ActionResult<Response<ProfileDto>>> GetByGuidAsync([FromRoute] int userId,[FromRoute][Required] string guid)
         {
+            var exists = await _userService.CheckIfExistAsync(userId);
+            if (!exists)
+            {
+                return NotFound("El usuario no existe");
+            }
             var response = await _profileService.GetByGuidAsync(guid);
             if (!response.IsSuccess)
             {
@@ -85,8 +95,13 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpPut("UpdateAsync/{profileId:int}")]
-        public async Task<ActionResult> UpdateAsync([FromRoute] int profileId, [FromBody] ProfileCreationDto profileCreationDto)
+        public async Task<ActionResult> UpdateAsync([FromRoute] int userId, [FromRoute] int profileId, [FromBody] ProfileCreationDto profileCreationDto)
         {
+            var existsUser = await _userService.CheckIfExistAsync(userId);
+            if (!existsUser)
+            {
+                return NotFound("El usuario no existe");
+            }
             var exists=await _profileService.CheckIfExistAsync(profileId);
             if(!exists)
             {
@@ -101,8 +116,13 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpDelete("DeleteAsync/{profileId:int}")]
-        public async Task<ActionResult> DeleteAsync([FromRoute] int profileId)
+        public async Task<ActionResult> DeleteAsync([FromRoute] int userId, [FromRoute] int profileId)
         {
+            var existsUser = await _userService.CheckIfExistAsync(userId);
+            if (!existsUser)
+            {
+                return NotFound("El usuario no existe");
+            }
             var response = await _profileService.DeleteAsync(profileId);
             if (!response.IsSuccess)
             {
