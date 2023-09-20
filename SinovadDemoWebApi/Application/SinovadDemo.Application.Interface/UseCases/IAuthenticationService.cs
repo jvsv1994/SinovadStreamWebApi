@@ -1,5 +1,6 @@
 ﻿using SinovadDemo.Application.DTO;
-using SinovadDemo.Application.DTO.User;
+using SinovadDemo.Application.DTO.Authenticate;
+using SinovadDemo.Application.DTO.SignUp;
 using SinovadDemo.Transversal.Common;
 
 namespace SinovadDemo.Application.Interface.UseCases

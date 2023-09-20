@@ -1,13 +1,13 @@
 ﻿using SinovadDemo.Domain.Enums;
 
-namespace SinovadDemo.Application.DTO.User
+namespace SinovadDemo.Application.DTO.SignUp
 {
     public class RegisterUserFromProviderDto
     {
         public string Email { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public LinkedAccountProvider LinkedAccountProviderCatalogDetailId { get; set; } 
+        public LinkedAccountProvider LinkedAccountProviderCatalogDetailId { get; set; }
         public string AccessToken { get; set; }
     }
 }

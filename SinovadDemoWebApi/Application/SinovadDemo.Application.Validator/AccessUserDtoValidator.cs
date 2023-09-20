@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using SinovadDemo.Application.DTO.User;
+using SinovadDemo.Application.DTO.Authenticate;
 
 namespace SinovadDemo.Application.Validator
 {

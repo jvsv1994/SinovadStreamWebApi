@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using SinovadDemo.Application.Configuration;
 using SinovadDemo.Application.DTO;
+using SinovadDemo.Application.DTO.Authenticate;
 using SinovadDemo.Application.DTO.Profile;
 using SinovadDemo.Application.DTO.User;
 using SinovadDemo.Application.Helpers;
@@ -362,118 +363,6 @@ namespace SinovadDemo.Application.UseCases.Users
             return response;
         }
 
-        public async Task<Response<string>> Login(AuthenticateUserDto dto)
-        {
-            var response = new Response<string>();
-            try
-            {
-                var validation = _accessUserDtoValidator.Validate(dto);
-                if (!validation.IsValid)
-                {
-                    response.Message = "Validation errors";
-                    response.Errors = validation.Errors;
-                }
-                else
-                {
-                    var user = await _unitOfWork.Users.GetByExpressionAsync(u=>u.UserName== dto.UserName);
-                    if(user==null)
-                    {
-                        response.Message = "Invalid user";
-                    }else
-                    {
-                        var res = await _signInManager.CheckPasswordSignInAsync(user, dto.Password, true);
-                        if (res.Succeeded)
-                        {
-                            if (user.Active)
-                            {
-                                _logger.LogInformation("Successful autentication for the user " + dto.UserName);
-                                var jwtHelper = new JWTHelper(_config.Value.JwtSettings.Secret, _config.Value.JwtSettings.Issuer, _config.Value.JwtSettings.Audience);
-                                var token = jwtHelper.CreateTokenWithUserGuid(user.Guid);
-                                _logger.LogInformation("Token generated for the user " + dto.UserName + " : " + token);
-                                response.Data = token;
-                                response.IsSuccess = true;
-                                response.Message = "Successful";
-                            }else
-                            {
-                                response.Message = "Inactive user, please confirm your email";
-                            }
-                        }else
-                        {
-                            if (res.IsLockedOut)
-                            {
-                                response.Message = "The user has exceeded the maximum number of attempts, please try again later";
-                            }
-                            else
-                            {
-                                response.Message = "Invalid access";
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                response.Message = ex.Message;
-                _logger.LogError(ex.StackTrace);
-            }
-            return response;
-        }
-
-        public async Task<Response<AuthenticationUserResponseDto>> ValidateUser(AuthenticateUserDto dto)
-        {
-            var response = new Response<AuthenticationUserResponseDto>();
-            try
-            {
-                var validation = _accessUserDtoValidator.Validate(dto);
-                if (!validation.IsValid)
-                {
-                    response.Message = "Validation errors";
-                    response.Errors = validation.Errors;
-                }
-                else
-                {
-                    var user = await _unitOfWork.Users.GetByExpressionAsync(u => u.UserName == dto.UserName);
-                    if (user == null)
-                    {
-                        response.Message = "Invalid user";
-                    }else
-                    {
-                        var res = await _signInManager.CheckPasswordSignInAsync(user, dto.Password, true);
-                        if (res.Succeeded)
-                        {
-                            if (user.Active)
-                            {
-                                var data = new AuthenticationUserResponseDto();
-                                data.User= _mapper.Map<UserDto>(user);
-                                var jwtHelper = new JWTHelper(_config.Value.JwtSettings.Secret, _config.Value.JwtSettings.Issuer, _config.Value.JwtSettings.Audience);
-                                var token = jwtHelper.CreateTokenWithUserGuid(user.Guid);
-                                data.ApiToken = token;
-                                response.Data = data;
-                            }else{
-                                response.Message = "Inactive user, please confirm your email";
-                            }
-                        }else
-                        {
-                            if (res.IsLockedOut)
-                            {
-                                response.Message = "The user has exceeded the maximum number of attempts, please try again later";
-                            }
-                            else
-                            {
-                                response.Message = "Invalid access";
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                response.Message = ex.Message;
-                _logger.LogError(ex.StackTrace);
-            }
-            return response;
-        }
-
         public async Task<Response<bool>> ValidateConfirmEmailToken(ValidateConfirmEmailTokenDto dto)
         {
             var response = new Response<bool>();
@@ -497,85 +386,6 @@ namespace SinovadDemo.Application.UseCases.Users
             {
                 response.Message = ex.Message;
                 _logger.LogError(ex.StackTrace);
-            }
-            return response;
-        }
-
-        public async Task<Response<bool>> Register(RegisterUserDto dto)
-        {
-            var response = new Response<bool>();
-            try
-            {
-               var user= await _userManager.FindByEmailAsync(dto.Email);
-                if(user != null)
-                {
-                  response.Message = "Exist an account with this email";
-                }else{
-                    user = await _userManager.FindByNameAsync(dto.UserName);
-                    if (user != null)
-                    {
-                        response.Message = "Exist an account with this username";
-                    }else{
-                        var appUser = _mapper.Map<User>(dto);
-                        appUser.Created = DateTime.Now;
-                        appUser.LastModified = DateTime.Now;
-                        var mainProfile = new Profile();
-                        mainProfile.FullName = dto.FirstName.Split(" ")[0];
-                        mainProfile.Main = true;
-                        appUser.Profiles.Add(mainProfile);
-                        var result = await _userManager.CreateAsync(appUser, dto.Password);
-                        user = await _userManager.FindByNameAsync(dto.UserName);
-                        var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                        var mailRequest = new MailRequest();
-                        mailRequest.Email = dto.Email;
-                        mailRequest.Subject = "Confirmación de registro";
-                        string body = "" +
-                            "<div style='width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-color: black; position: absolute;'>" +
-                                "<div style='width: 100%; height: 100%; background: linear-gradient(196.06deg,#212121,#080808); color: white; padding: 40px;'>" +
-                                        "<div style = 'display: block; text-align: center; justify-content: center; color: red; font-weight: bold; font-size: 30px; margin-bottom: 20px;'>" +
-                                            "Sinovad" +
-                                        "</div>" +
-                                        "<div style='font-size: 23px; text-align: left; margin-bottom: 20px; font-weight: bold;'>" +
-                                            "Gracias por registrarte en Sinovad Stream" +
-                                        "</div>" +
-                                        "<div style='font-size: 23px; text-align: left; margin-bottom: 20px;color:white;'>" +
-                                            "Siga el enlace a continuación para activar su cuenta:" +
-                                        "</div>" +
-                                        "<div style='font-size: 20px; text-align: left; margin-bottom: 20px;'>" +
-                                            "<a href='{urlconfirmemail}' style='color: #5E83EE; font-size: 20px; cursor: pointer;'>" +
-                                            "Enlace de Confirmación" +
-                                            "</a>" +
-                                        "</div>" +
-                                 "</div>" +
-                            "</div>";
-
-                        var validateConfirmEmailTokenData = new ValidateConfirmEmailTokenDto();
-                        validateConfirmEmailTokenData.ConfirmEmailToken = confirmationToken;
-                        validateConfirmEmailTokenData.UserId = user.Id;
-                        var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(validateConfirmEmailTokenData));
-                        var base64 = Convert.ToBase64String(plainTextBytes);
-                        var urlRedirect = dto.ConfirmEmailUrl + "/" + base64;
-                        body = body.Replace("{urlconfirmemail}", urlRedirect);
-                        mailRequest.Body = body;
-                        await _emalSenderService.SendEmailAsync(mailRequest);
-                        if (result.Succeeded)
-                        {
-                            response.Data = true;
-                            response.IsSuccess = true;
-                            response.Message = "User registered successfully";
-                        }
-                        else
-                        {
-                            response.Message = string.Join("\n", result.Errors.Select(err => err.Description));
-                        }
-                    }
-
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.StackTrace);
-                response.Message = ex.Message;
             }
             return response;
         }

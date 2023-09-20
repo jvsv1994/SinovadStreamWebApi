@@ -1,6 +1,6 @@
 ﻿using Firebase.Auth;
 using Firebase.Auth.Providers;
-using SinovadDemo.Application.DTO.User;
+using SinovadDemo.Application.DTO.SignUp;
 using SinovadDemo.Application.Interface.Infrastructure;
 using SinovadDemo.Domain.Enums;
 

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SinovadDemo.Application.DTO.User
+namespace SinovadDemo.Application.DTO.Authenticate
 {
     public class AuthenticateUserDto
     {

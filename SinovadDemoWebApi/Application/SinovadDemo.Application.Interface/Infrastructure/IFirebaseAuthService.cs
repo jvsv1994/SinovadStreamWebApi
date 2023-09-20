@@ -1,4 +1,4 @@
-﻿using SinovadDemo.Application.DTO.User;
+﻿using SinovadDemo.Application.DTO.SignUp;
 using SinovadDemo.Domain.Enums;
 
 namespace SinovadDemo.Application.Interface.Infrastructure

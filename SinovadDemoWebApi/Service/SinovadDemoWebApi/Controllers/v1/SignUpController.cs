@@ -5,7 +5,7 @@ using SinovadDemo.Application.Interface.UseCases;
 
 namespace SinovadDemoWebApi.Controllers.v1
 {
-    [Route("api/v{version:apiVersion}/authentication")]
+    [Route("api/v{version:apiVersion}/signup")]
     [ApiController]
     [ApiVersion("1.0", Deprecated = false)]
     public class SignUpController:ControllerBase

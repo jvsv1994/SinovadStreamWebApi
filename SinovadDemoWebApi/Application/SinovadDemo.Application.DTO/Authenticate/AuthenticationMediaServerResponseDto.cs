@@ -1,6 +1,6 @@
 ﻿using SinovadDemo.Application.DTO.User;
 
-namespace SinovadDemo.Application.DTO
+namespace SinovadDemo.Application.DTO.Authenticate
 {
     public class AuthenticationMediaServerResponseDto
     {

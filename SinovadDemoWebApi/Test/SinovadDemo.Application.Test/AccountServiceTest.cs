@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SinovadDemo.Application.DTO.User;
+using SinovadDemo.Application.DTO.Authenticate;
 using SinovadDemo.Application.Interface.UseCases;
 
 namespace SinovadDemo.Application.Test
@@ -45,7 +45,7 @@ namespace SinovadDemo.Application.Test
         public void Login_WhenParametersAreRight_ShowSuccessMessage()
         {
             using var scope = _scopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetService<IUserService>();
+            var context = scope.ServiceProvider.GetService<IAuthenticationService>();
 
             //Arrange
             var accessUserDto = new AuthenticateUserDto();
@@ -54,7 +54,7 @@ namespace SinovadDemo.Application.Test
             var expected = "Successful";
 
             //Act
-            var result = context.Login(accessUserDto).Result;
+            var result = context.AuthenticateUser(accessUserDto).Result;
             var actual = result.Message;
 
             //Assert

@@ -5,6 +5,7 @@ using SinovadDemo.Application.DTO.Genre;
 using SinovadDemo.Application.DTO.Movie;
 using SinovadDemo.Application.DTO.Profile;
 using SinovadDemo.Application.DTO.Season;
+using SinovadDemo.Application.DTO.SignUp;
 using SinovadDemo.Application.DTO.TvSerie;
 using SinovadDemo.Application.DTO.User;
 using SinovadDemo.Domain.Entities;

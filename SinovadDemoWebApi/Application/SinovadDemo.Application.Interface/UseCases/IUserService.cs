@@ -1,6 +1,5 @@
 ﻿using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.DTO.User;
-using SinovadDemo.Domain.Enums;
 using SinovadDemo.Transversal.Common;
 
 namespace SinovadDemo.Application.Interface.UseCases
@@ -18,10 +17,7 @@ namespace SinovadDemo.Application.Interface.UseCases
         Task<Response<bool>> SetPassword(SetPasswordDto dto);
         Task<Response<bool>> ValidateResetPasswordToken(ValidateResetPasswordTokenDto dto);
         Task<Response<bool>> RecoverPassword(RecoverPasswordDto dto);
-        Task<Response<AuthenticationUserResponseDto>> ValidateUser(AuthenticateUserDto dto);
-        Task<Response<string>> Login(AuthenticateUserDto dto);
         Task<Response<bool>> ValidateConfirmEmailToken(ValidateConfirmEmailTokenDto dto);
-        Task<Response<bool>> Register(RegisterUserDto dto);
         Response<object> Create(UserDto userDto);
         Response<object> Update(UserDto userDto);
         Response<object> Delete(int id);

@@ -22,22 +22,6 @@ namespace SinovadDemoWebApi.Controllers.v1
             _userService = userService;
         }
 
-        [HttpPost("Register")]
-        [AllowAnonymous]
-        public async Task<ActionResult> Register([FromBody] RegisterUserDto dto)
-        {
-            if (dto == null)
-            {
-                return BadRequest();
-            }
-            var response = await _userService.Register(dto);
-            if (response.IsSuccess)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response.Message);
-        }
-
         [HttpGet("GetAllWithPaginationAsync")]
         public async Task<ActionResult> GetAllWithPaginationAsync(int page = 1, int take = 1000, string sortBy = "Id", string sortDirection = "asc", string searchText = "", string searchBy = "")
         {
@@ -106,29 +90,6 @@ namespace SinovadDemoWebApi.Controllers.v1
                 return Ok(response);
             }
             return BadRequest(response.Message);
-        }
-
-        [HttpPost("Login")]
-        [AllowAnonymous]
-        public async Task<ActionResult> Login([FromBody] AuthenticateUserDto dto)
-        {
-            if (dto == null)
-            {
-                return BadRequest();
-            }
-            var response = await _userService.Login(dto);
-            if (response.IsSuccess)
-            {
-                if (response.Data != null)
-                {
-                    return Ok(response);
-                }
-                else
-                {
-                    return NotFound(response);
-                }
-            }
-            return BadRequest(response);
         }
 
         [HttpPost("RecoverPassword")]
