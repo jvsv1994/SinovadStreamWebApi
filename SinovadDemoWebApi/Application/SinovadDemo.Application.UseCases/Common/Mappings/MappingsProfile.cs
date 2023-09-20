@@ -18,6 +18,9 @@ namespace Pacagroup.Ecommerce.Application.UseCases.Common.Mappings
             CreateMap<CatalogDetail, CatalogDetailDto>().ReverseMap();
             CreateMap<Menu, MenuDto>().ReverseMap();
 
+            CreateMap<ProfileCreationDto, Profile>();
+            CreateMap<Profile, ProfileDto>().ReverseMap();
+
             CreateMap<MovieCreationDto, Movie>().ForMember(movie=>movie.MovieGenres,options=>options.MapFrom(MapMovieGenres));
             CreateMap<Movie, MovieDto>();
             CreateMap<Movie, MovieWithGenresDto>().ForMember(movieDto=>movieDto.MovieGenres,options=>options.MapFrom(MapMovieGenresDto));
@@ -41,7 +44,6 @@ namespace Pacagroup.Ecommerce.Application.UseCases.Common.Mappings
             CreateMap<MediaServer, MediaServerDto>().ReverseMap();
             CreateMap<RegisterUserDto,User>();
             CreateMap<User, UserDto>().ForMember(x => x.IsPasswordSetted, y => y.MapFrom(y => y.PasswordHash!=null)).ReverseMap();
-            CreateMap<Profile, ProfileDto>().ReverseMap();
             CreateMap<LinkedAccount, LinkedAccountDto>().ReverseMap();
         }
 
