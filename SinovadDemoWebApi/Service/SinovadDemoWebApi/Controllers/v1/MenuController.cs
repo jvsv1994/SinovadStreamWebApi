@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SinovadDemo.Application.DTO;
+using SinovadDemo.Application.DTO.Menu;
 using SinovadDemo.Application.Interface.UseCases;
 
 namespace SinovadDemoWebApi.Controllers.v1

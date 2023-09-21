@@ -1,4 +1,5 @@
 ﻿using SinovadDemo.Application.DTO.Authenticate;
+using SinovadDemo.Application.DTO.MediaServer;
 using SinovadDemo.Application.DTO.Profile;
 
 namespace SinovadDemo.Application.DTO.User

@@ -1,4 +1,4 @@
-﻿using SinovadDemo.Application.DTO;
+﻿using SinovadDemo.Application.DTO.MediaServer;
 using SinovadDemo.Transversal.Collection;
 using SinovadDemo.Transversal.Common;
 

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Options;
 using SinovadDemo.Application.Configuration;
-using SinovadDemo.Application.DTO;
+using SinovadDemo.Application.DTO.MediaServer;
 using SinovadDemo.Application.Helpers;
 using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Application.Interface.UseCases;

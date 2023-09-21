@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using SinovadDemo.Application.Configuration;
-using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.DTO.Authenticate;
+using SinovadDemo.Application.DTO.MediaServer;
 using SinovadDemo.Application.DTO.Profile;
 using SinovadDemo.Application.DTO.SignUp;
 using SinovadDemo.Application.DTO.User;

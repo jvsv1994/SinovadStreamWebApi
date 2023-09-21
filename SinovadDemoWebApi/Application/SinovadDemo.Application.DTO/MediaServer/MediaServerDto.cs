@@ -1,4 +1,4 @@
-﻿namespace SinovadDemo.Application.DTO
+﻿namespace SinovadDemo.Application.DTO.MediaServer
 {
     public class MediaServerDto
     {

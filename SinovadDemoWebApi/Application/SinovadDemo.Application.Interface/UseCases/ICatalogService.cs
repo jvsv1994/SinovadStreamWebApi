@@ -1,6 +1,6 @@
 ﻿using SinovadDemo.Transversal.Collection;
 using SinovadDemo.Transversal.Common;
-using SinovadDemo.Application.DTO;
+using SinovadDemo.Application.DTO.Catalog;
 
 namespace SinovadDemo.Application.Interface.UseCases
 {

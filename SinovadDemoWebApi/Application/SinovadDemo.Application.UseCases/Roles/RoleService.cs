@@ -1,7 +1,6 @@
-﻿using Generic.Core.Models;
-using Microsoft.Extensions.Options;
-using SinovadDemo.Application.Configuration;
-using SinovadDemo.Application.DTO;
+﻿using AutoMapper;
+using Generic.Core.Models;
+using SinovadDemo.Application.DTO.Role;
 using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Transversal.Common;
@@ -14,18 +13,31 @@ namespace SinovadDemo.Application.UseCases.Roles
 
         private readonly IAppLogger<RoleService> _logger;
 
-        private readonly IOptions<MyConfig> _config;
-
         private readonly AutoMapper.IMapper _mapper;
 
-        public RoleService(IUnitOfWork unitOfWork, IAppLogger<RoleService> logger, IOptions<MyConfig> config, AutoMapper.IMapper mapper)
+        public RoleService(IUnitOfWork unitOfWork, IAppLogger<RoleService> logger, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
-            _config = config;
             _mapper = mapper;
         }
-     
+
+        public async Task<Response<RoleDto>> GetAsync(int roleId)
+        {
+            var response = new Response<RoleDto>();
+            try
+            {
+                var result = await _unitOfWork.Roles.GetAsync(roleId);
+                response.Data = _mapper.Map<RoleDto>(result);
+                response.IsSuccess = true;
+            }catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
         public async Task<ResponsePagination<List<RoleDto>>> GetAllWithPaginationAsync(int page, int take,string sortBy,string sortDirection,string searchText,string searchBy)
         {
             var response = new ResponsePagination<List<RoleDto>>();
@@ -46,14 +58,32 @@ namespace SinovadDemo.Application.UseCases.Roles
             return response;
         }
 
-        public Response<object> Create(RoleDto dto)
+        public async Task<Response<RoleDto>> CreateAsync(RoleCreationDto dto)
+        {
+            var response = new Response<RoleDto>();
+            try
+            {
+                var entity = _mapper.Map<Role>(dto);
+                var role=await _unitOfWork.Roles.AddAsync(entity);
+                await _unitOfWork.SaveAsync();
+                response.Data = _mapper.Map<RoleDto>(role);
+                response.IsSuccess = true;
+            } catch (Exception ex){
+                response.Message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
+        public async Task<Response<object>> UpdateAsync(int roleId,RoleCreationDto roleCreationDto)
         {
             var response = new Response<object>();
             try
             {
-                var entity = _mapper.Map<Role>(dto);
-                _unitOfWork.Roles.Add(entity);
-                _unitOfWork.Save();
+                var role =await _unitOfWork.Roles.GetAsync(roleId);
+                role = _mapper.Map(roleCreationDto, role);
+                _unitOfWork.Roles.Update(role);
+                await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -65,32 +95,13 @@ namespace SinovadDemo.Application.UseCases.Roles
             return response;
         }
 
-        public Response<object> Update(RoleDto dto)
-        {
-            var response = new Response<object>();
-            try
-            {
-                var entity = _mapper.Map<Role>(dto);
-                _unitOfWork.Roles.Update(entity);
-                _unitOfWork.Save();
-                response.IsSuccess = true;
-                response.Message = "Successful";
-            }
-            catch (Exception ex)
-            {
-                response.Message = ex.Message;
-                _logger.LogError(ex.StackTrace);
-            }
-            return response;
-        }
-
-        public Response<object> Delete(int id)
+        public async Task<Response<object>> DeleteAsync(int id)
         {
             var response = new Response<object>();
             try
             {
                 _unitOfWork.Roles.Delete(id);
-                _unitOfWork.Save();
+                await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -102,7 +113,7 @@ namespace SinovadDemo.Application.UseCases.Roles
             return response;
         }
 
-        public Response<object> DeleteList(string ids)
+        public async Task<Response<object>> DeleteListAsync(string ids)
         {
             var response = new Response<object>();
             try
@@ -113,7 +124,7 @@ namespace SinovadDemo.Application.UseCases.Roles
                     listIds = ids.Split(",").Select(x => Convert.ToInt32(x)).ToList();
                 }
                 _unitOfWork.Roles.DeleteByExpression(x => listIds.Contains(x.Id));
-                _unitOfWork.Save();
+                await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -123,6 +134,11 @@ namespace SinovadDemo.Application.UseCases.Roles
                 _logger.LogError(ex.StackTrace);
             }
             return response;
+        }
+
+        public async Task<bool> CheckIfExistAsync(int roleId)
+        {
+            return await _unitOfWork.Roles.CheckIfExistAsync(role=>role.Id==roleId);
         }
 
     }

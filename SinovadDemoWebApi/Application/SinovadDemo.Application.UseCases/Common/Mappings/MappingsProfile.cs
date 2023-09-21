@@ -1,10 +1,14 @@
 ﻿using Generic.Core.Models;
 using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.DTO.Authenticate;
+using SinovadDemo.Application.DTO.Catalog;
 using SinovadDemo.Application.DTO.Episode;
 using SinovadDemo.Application.DTO.Genre;
+using SinovadDemo.Application.DTO.MediaServer;
+using SinovadDemo.Application.DTO.Menu;
 using SinovadDemo.Application.DTO.Movie;
 using SinovadDemo.Application.DTO.Profile;
+using SinovadDemo.Application.DTO.Role;
 using SinovadDemo.Application.DTO.Season;
 using SinovadDemo.Application.DTO.SignUp;
 using SinovadDemo.Application.DTO.TvSerie;
@@ -47,7 +51,10 @@ namespace Pacagroup.Ecommerce.Application.UseCases.Common.Mappings
             CreateMap<GenreCreationDto, Genre>();
             CreateMap<Genre, GenreDto>().ReverseMap();
 
+            CreateMap<RoleCreationDto, Role>();
             CreateMap<Role, RoleDto>().ReverseMap();
+
+
             CreateMap<MediaServer, MediaServerDto>().ReverseMap();
 
             CreateMap<LinkedAccount, LinkedAccountDto>().ReverseMap();

@@ -1,5 +1,5 @@
 ﻿using Generic.Core.Models;
-using SinovadDemo.Application.DTO;
+using SinovadDemo.Application.DTO.Menu;
 using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Transversal.Common;

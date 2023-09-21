@@ -1,15 +1,18 @@
-﻿using SinovadDemo.Application.DTO;
+﻿using SinovadDemo.Application.DTO.Role;
 using SinovadDemo.Transversal.Common;
 
 namespace SinovadDemo.Application.Interface.UseCases
 {
     public interface IRoleService
     {
+        Task<Response<RoleDto>> GetAsync(int roleId);
         Task<ResponsePagination<List<RoleDto>>> GetAllWithPaginationAsync(int page, int take,string sortBy,string sortDirection, string searchText, string searchBy);
-        Response<object> Create(RoleDto dto);
-        Response<object> Update(RoleDto dto);
-        Response<object> Delete(int id);
-        Response<object> DeleteList(string ids);
+        Task<Response<RoleDto>> CreateAsync(RoleCreationDto dto);
+        Task<Response<object>> UpdateAsync(int roleId,RoleCreationDto dto);
+        Task<Response<object>> DeleteAsync(int id);
+        Task<Response<object>> DeleteListAsync(string ids);
+        Task<bool> CheckIfExistAsync(int id);
+
 
     }
 

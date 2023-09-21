@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.DTO.Authenticate;
+using SinovadDemo.Application.DTO.MediaServer;
 using SinovadDemo.Application.DTO.Profile;
 using SinovadDemo.Application.DTO.User;
 using SinovadDemo.Application.Interface.Infrastructure;

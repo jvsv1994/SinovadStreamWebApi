@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SinovadDemo.Application.DTO;
+using SinovadDemo.Application.DTO.Role;
 using SinovadDemo.Application.Interface.UseCases;
+using SinovadDemo.Transversal.Common;
 
 namespace SinovadDemoWebApi.Controllers.v1
 {
@@ -18,59 +19,75 @@ namespace SinovadDemoWebApi.Controllers.v1
             _roleService = roleService;
         }
 
+        [HttpGet("GetAsync/{roleId:int}",Name = "getRole")]
+        public async Task<ActionResult<Response<RoleDto>>> GetAsync([FromRoute]int roleId)
+        {
+            var response = await _roleService.GetAsync(roleId);
+            if (!response.IsSuccess)
+            {
+                return BadRequest(response.Message);
+            }
+            return response;
+        }
+
         [HttpGet("GetAllWithPaginationAsync")]
-        public async Task<ActionResult> GetAllWithPaginationAsync(int page = 1, int take = 1000,string sortBy = "Id",string sortDirection = "asc", string searchText = "", string searchBy = "")
+        public async Task<ActionResult<ResponsePagination<List<RoleDto>>>> GetAllWithPaginationAsync(int page = 1, int take = 1000,string sortBy = "Id",string sortDirection = "asc", string searchText = "", string searchBy = "")
         {
             var response = await _roleService.GetAllWithPaginationAsync(page,take, sortBy, sortDirection, searchText, searchBy);
-            if (response.IsSuccess)
+            if (!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message);
             }
-            return BadRequest(response.Message);
+            return response;
         }
 
-        [HttpPost("Create")]
-        public ActionResult Create([FromBody] RoleDto dto)
+        [HttpPost("CreateAsync")]
+        public async Task<ActionResult> CreateAsync([FromBody] RoleCreationDto dto)
         {
-            var response = _roleService.Create(dto);
-            if (response.IsSuccess)
+            var response = await _roleService.CreateAsync(dto);
+            if (!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message);
             }
-            return BadRequest(response.Message);
+            return CreatedAtRoute("getRole", new { roleId = response.Data.Id }, response.Data);
         }
 
-        [HttpPut("Update")]
-        public ActionResult Update([FromBody] RoleDto dto)
+        [HttpPut("UpdateAsync/{roleId:int}")]
+        public async Task<ActionResult> UpdateAsync([FromRoute]int roleId,[FromBody] RoleCreationDto roleDto)
         {
-            var response = _roleService.Update(dto);
-            if (response.IsSuccess)
+            var exists=await _roleService.CheckIfExistAsync(roleId);
+            if(!exists)
             {
-                return Ok(response);
+                return NotFound("El rol no existe");
             }
-            return BadRequest(response.Message);
+            var response = await _roleService.UpdateAsync(roleId, roleDto);
+            if (!response.IsSuccess)
+            {
+                return BadRequest(response.Message);
+            }
+            return NoContent();
         }
 
-        [HttpDelete("Delete/{roleId}")]
-        public ActionResult Delete([FromRoute] int roleId)
+        [HttpDelete("DeleteAsync/{roleId}")]
+        public async Task<ActionResult> DeleteAsync([FromRoute] int roleId)
         {
-            var response = _roleService.Delete(roleId);
-            if (response.IsSuccess)
+            var response = await _roleService.DeleteAsync(roleId);
+            if (!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message);
             }
-            return BadRequest(response.Message);
+            return NoContent();
         }
 
-        [HttpDelete("DeleteList/{listIds}")]
-        public ActionResult DeleteList(string listIds)
+        [HttpDelete("DeleteListAsync/{listIds}")]
+        public async Task<ActionResult> DeleteListAsync([FromRoute] string listIds)
         {
-            var response = _roleService.DeleteList(listIds);
-            if (response.IsSuccess)
+            var response = await _roleService.DeleteListAsync(listIds);
+            if (!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message);
             }
-            return BadRequest(response.Message);
+            return NoContent();
         }
 
     }

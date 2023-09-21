@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SinovadDemo.Application.DTO;
+using SinovadDemo.Application.DTO.MediaServer;
 using SinovadDemo.Application.Interface.UseCases;
 using System.ComponentModel.DataAnnotations;
 
