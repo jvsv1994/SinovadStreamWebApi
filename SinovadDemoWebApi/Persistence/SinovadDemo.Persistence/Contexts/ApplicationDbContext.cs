@@ -23,9 +23,9 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
 
     public virtual DbSet<MediaServer> MediaServers { get; set; }
 
-    //public virtual DbSet<Catalog> Catalogs { get; set; }
+    public virtual DbSet<Catalog> Catalogs { get; set; }
 
-    //public virtual DbSet<CatalogDetail> CatalogDetails { get; set; }
+    public virtual DbSet<CatalogDetail> CatalogDetails { get; set; }
 
     public virtual DbSet<Episode> Episodes { get; set; }
 
@@ -96,71 +96,71 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
             new Role { Id = 1, Name = "Administrador Principal", Enabled = true, Guid = Guid.NewGuid() },
             new Role { Id = 2, Name = "Administrador de Medios", Enabled = true, Guid = Guid.NewGuid() });
 
-        //modelBuilder.Entity<Catalog>(entity =>
-        //{
-        //    entity.HasKey(e => e.Id).HasName("PK__Catalog__3214EC275C8D2947");
+        modelBuilder.Entity<Catalog>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Catalog__3214EC275C8D2947");
 
-        //    entity.ToTable("Catalog");
-        //    entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
-        //    entity.Property(e => e.Id);
-        //    entity.Property(e => e.Name)
-        //        .HasMaxLength(1000)
-        //        .IsUnicode(false);
-        //});
+            entity.ToTable("Catalog");
+            entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
+            entity.Property(e => e.Id);
+            entity.Property(e => e.Name)
+                .HasMaxLength(1000)
+                .IsUnicode(false);
+        });
 
-        //modelBuilder.Entity<Catalog>().HasData(
-        //   new Catalog { Id = 1, Name = "Estado del Servidor Multimedia", Guid = Guid.NewGuid() },
-        //   new Catalog { Id = 2, Name = "Tipos de contenido Multimedia ", Guid = Guid.NewGuid() },
-        //   new Catalog { Id = 3, Name = "Tipos de transmisión de Video", Guid = Guid.NewGuid() },
-        //   new Catalog { Id = 4, Name = "Preajuste del transcodificador", Guid = Guid.NewGuid() },
-        //   new Catalog { Id = 5, Name = "Tipo de Icono", Guid = Guid.NewGuid() },
-        //   new Catalog { Id = 6, Name = "Proveedor de Cuenta Vinculada", Guid = Guid.NewGuid() });
+        modelBuilder.Entity<Catalog>().HasData(
+           new Catalog { Id = 1, Name = "Estado del Servidor Multimedia", Guid = Guid.NewGuid() },
+           new Catalog { Id = 2, Name = "Tipos de contenido Multimedia ", Guid = Guid.NewGuid() },
+           new Catalog { Id = 3, Name = "Tipos de transmisión de Video", Guid = Guid.NewGuid() },
+           new Catalog { Id = 4, Name = "Preajuste del transcodificador", Guid = Guid.NewGuid() },
+           new Catalog { Id = 5, Name = "Tipo de Icono", Guid = Guid.NewGuid() },
+           new Catalog { Id = 6, Name = "Proveedor de Cuenta Vinculada", Guid = Guid.NewGuid() });
 
-        //modelBuilder.Entity<CatalogDetail>(entity =>
-        //{
-        //    entity.HasKey(e => new { e.CatalogId, e.Id }).HasName("PK__CatalogD__5C6FE914EF292CEC");
+        modelBuilder.Entity<CatalogDetail>(entity =>
+        {
+            entity.HasKey(e => new { e.CatalogId, e.Id }).HasName("PK__CatalogD__5C6FE914EF292CEC");
 
-        //    entity.ToTable("CatalogDetail");
-        //    entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
-        //    entity.Property(e => e.Name)
-        //        .HasMaxLength(1000)
-        //        .IsUnicode(false);
-        //    entity.Property(e => e.TextValue)
-        //        .HasMaxLength(1000)
-        //        .IsUnicode(false);
-        //    entity.HasOne(d => d.Catalog).WithMany(p => p.CatalogDetails)
-        //        .HasForeignKey(d => d.CatalogId)
-        //        .OnDelete(DeleteBehavior.ClientSetNull)
-        //        .HasConstraintName("FK_CatalogDetail_Catalog_ID");
-        //});
+            entity.ToTable("CatalogDetail");
+            entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
+            entity.Property(e => e.Name)
+                .HasMaxLength(1000)
+                .IsUnicode(false);
+            entity.Property(e => e.TextValue)
+                .HasMaxLength(1000)
+                .IsUnicode(false);
+            entity.HasOne(d => d.Catalog).WithMany(p => p.CatalogDetails)
+                .HasForeignKey(d => d.CatalogId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CatalogDetail_Catalog_ID");
+        });
 
-        //modelBuilder.Entity<CatalogDetail>().HasData(
-        //new CatalogDetail { CatalogId = 1, Id = 1, Name = "Iniciado", Guid = Guid.NewGuid() },
-        //new CatalogDetail { CatalogId = 1, Id = 2, Name = "Pausado", Guid = Guid.NewGuid() },
+        modelBuilder.Entity<CatalogDetail>().HasData(
+        new CatalogDetail { CatalogId = 1, Id = 1, Name = "Iniciado", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 1, Id = 2, Name = "Pausado", Guid = Guid.NewGuid() },
 
-        //new CatalogDetail { CatalogId = 2, Id = 1, Name = "Película", Guid = Guid.NewGuid() },
-        //new CatalogDetail { CatalogId = 2, Id = 2, Name = "Serie de TV", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 2, Id = 1, Name = "Película", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 2, Id = 2, Name = "Serie de TV", Guid = Guid.NewGuid() },
 
-        //new CatalogDetail { CatalogId = 3, Id = 1, Name = "Normal", Guid = Guid.NewGuid() },
-        //new CatalogDetail { CatalogId = 3, Id = 2, Name = "MPEG-DASH", Guid = Guid.NewGuid() },
-        //new CatalogDetail { CatalogId = 3, Id = 3, Name = "HLS", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 3, Id = 1, Name = "Normal", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 3, Id = 2, Name = "MPEG-DASH", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 3, Id = 3, Name = "HLS", Guid = Guid.NewGuid() },
 
-        //new CatalogDetail { CatalogId = 4, Id = 1, Name = "ultrafast", TextValue = "ultrafast", Guid = Guid.NewGuid() },
-        //new CatalogDetail { CatalogId = 4, Id = 2, Name = "superfast", TextValue = "superfast", Guid = Guid.NewGuid() },
-        //new CatalogDetail { CatalogId = 4, Id = 3, Name = "veryfast", TextValue = "veryfast", Guid = Guid.NewGuid() },
-        //new CatalogDetail { CatalogId = 4, Id = 4, Name = "faster", TextValue = "faster", Guid = Guid.NewGuid() },
-        //new CatalogDetail { CatalogId = 4, Id = 5, Name = "fast", TextValue = "fast", Guid = Guid.NewGuid() },
-        //new CatalogDetail { CatalogId = 4, Id = 6, Name = "medium", TextValue = "medium", Guid = Guid.NewGuid() },
-        //new CatalogDetail { CatalogId = 4, Id = 7, Name = "slow", TextValue = "slow", Guid = Guid.NewGuid() },
-        //new CatalogDetail { CatalogId = 4, Id = 8, Name = "slower", TextValue = "slower", Guid = Guid.NewGuid() },
-        //new CatalogDetail { CatalogId = 4, Id = 9, Name = "veryslow", TextValue = "veryslow", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 4, Id = 1, Name = "ultrafast", TextValue = "ultrafast", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 4, Id = 2, Name = "superfast", TextValue = "superfast", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 4, Id = 3, Name = "veryfast", TextValue = "veryfast", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 4, Id = 4, Name = "faster", TextValue = "faster", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 4, Id = 5, Name = "fast", TextValue = "fast", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 4, Id = 6, Name = "medium", TextValue = "medium", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 4, Id = 7, Name = "slow", TextValue = "slow", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 4, Id = 8, Name = "slower", TextValue = "slower", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 4, Id = 9, Name = "veryslow", TextValue = "veryslow", Guid = Guid.NewGuid() },
 
-        //new CatalogDetail { CatalogId = 5, Id = 1, Name = "Imagen", Guid = Guid.NewGuid() },
-        //new CatalogDetail { CatalogId = 5, Id = 2, Name = "Font Awesome", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 5, Id = 1, Name = "Imagen", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 5, Id = 2, Name = "Font Awesome", Guid = Guid.NewGuid() },
 
-        //new CatalogDetail { CatalogId = 6, Id = 1, Name = "Google", Guid = Guid.NewGuid() },
-        //new CatalogDetail { CatalogId = 6, Id = 2, Name = "Facebook", Guid = Guid.NewGuid() },
-        //new CatalogDetail { CatalogId = 6, Id = 3, Name = "Apple", Guid = Guid.NewGuid() });
+        new CatalogDetail { CatalogId = 6, Id = 1, Name = "Google", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 6, Id = 2, Name = "Facebook", Guid = Guid.NewGuid() },
+        new CatalogDetail { CatalogId = 6, Id = 3, Name = "Apple", Guid = Guid.NewGuid() });
 
         modelBuilder.Entity<IdentityUserClaim<int>>(entity =>
         {
