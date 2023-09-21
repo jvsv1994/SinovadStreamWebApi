@@ -56,7 +56,7 @@ namespace Pacagroup.Ecommerce.Application.UseCases.Common.Mappings
             CreateMap<RoleCreationDto, Role>();
             CreateMap<Role, RoleDto>().ReverseMap();
 
-
+            CreateMap<MediaServerCreationDto, MediaServer>();
             CreateMap<MediaServer, MediaServerDto>().ReverseMap();
 
             CreateMap<LinkedAccount, LinkedAccountDto>().ReverseMap();

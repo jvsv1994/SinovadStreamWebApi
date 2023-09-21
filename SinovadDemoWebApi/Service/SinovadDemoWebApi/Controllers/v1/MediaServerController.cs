@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SinovadDemo.Application.DTO.MediaServer;
 using SinovadDemo.Application.Interface.UseCases;
-using System.ComponentModel.DataAnnotations;
+using SinovadDemo.Transversal.Common;
 
 namespace SinovadDemoWebApi.Controllers.v1
 {
@@ -19,149 +19,108 @@ namespace SinovadDemoWebApi.Controllers.v1
             _mediaServerService = mediaServerService;
         }
 
+        [HttpGet("GetAsync/{mediaServerId:int}",Name = "getMediaServer")]
+        public async Task<ActionResult<Response<MediaServerDto>>> GetAsync([FromRoute] int mediaServerId)
+        {
+            var response = await _mediaServerService.GetAsync(mediaServerId);
+            if (!response.IsSuccess)
+            {
+                return BadRequest(response.Message); ;
+            }
+            return response;
+        }
+
         [HttpGet("GetBySecurityIdentifierAsync/{sid}")]
-        public async Task<ActionResult> GetBySecurityIdentifierAsync([Required] string sid)
+        public async Task<ActionResult<Response<MediaServerDto>>> GetBySecurityIdentifierAsync([FromRoute] string sid)
         {
             var response = await _mediaServerService.GetBySecurityIdentifierAsync(sid);
-            if (response.IsSuccess)
+            if (!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message);
             }
-            return BadRequest(response.Message); ;
+            return response;
         }
 
         [HttpGet("GetByGuidAsync/{guid}")]
-        public async Task<ActionResult> GetByGuidAsync([Required] string guid)
+        public async Task<ActionResult<Response<MediaServerDto>>> GetByGuidAsync([FromRoute] string guid)
         {
             var response = await _mediaServerService.GetByGuidAsync(guid);
-            if (response.IsSuccess)
+            if (!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message); ;
             }
-            return BadRequest(response.Message); ;
+            return response;
         }
 
         [HttpGet("GetByUserAndIpAddressAsync")]
-        public async Task<ActionResult> Get([Required] int userId, [Required] string ipAddress)
+        public async Task<ActionResult<Response<MediaServerDto>>> GetByUserAndIpAddressAsync([FromQuery] int userId, [FromQuery] string ipAddress)
         {
             var response = await _mediaServerService.GetByUserAndIpAddressAsync(userId, ipAddress);
-            if (response.IsSuccess)
+            if (!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message); ;
             }
-            return BadRequest(response.Message); ;
+            return response;
         }
 
-        [HttpGet("GetAllByUserAsync/{userId}")]
-        public async Task<ActionResult> GetAllByUserAsync(int userId)
+        [HttpGet("GetAllByUserAsync/{userId:int}")]
+        public async Task<ActionResult<Response<List<MediaServerDto>>>> GetAllByUserAsync([FromRoute] int userId)
         {
             var response = await _mediaServerService.GetAllByUserAsync(userId);
-            if (response.IsSuccess)
+            if (!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message); ;
             }
-            return BadRequest(response.Message); ;
+            return response;
         }
 
-        [HttpGet("GetAllWithPaginationByUserAsync/{userId}")]
-        public async Task<ActionResult> GetAllWithPaginationByUserAsync([FromRoute]int userId,[FromQuery] int page = 1,[FromQuery] int take = 1000, [FromQuery] string sortBy = "Id", [FromQuery] string sortDirection = "asc", [FromQuery] string searchText = "", [FromQuery] string searchBy = "")
+        [HttpGet("GetAllWithPaginationByUserAsync/{userId:int}")]
+        public async Task<ActionResult<ResponsePagination<List<MediaServerDto>>>> GetAllWithPaginationByUserAsync([FromRoute]int userId,[FromQuery] int page = 1,[FromQuery] int take = 1000, [FromQuery] string sortBy = "Id", [FromQuery] string sortDirection = "asc", [FromQuery] string searchText = "", [FromQuery] string searchBy = "")
         {
             var response = await _mediaServerService.GetAllWithPaginationByUserAsync(userId, page, take, sortBy, sortDirection, searchText, searchBy);
-            if (response.IsSuccess)
+            if (!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message); ;
             }
-            return BadRequest(response.Message); ;
+            return response;
         }
 
-        [HttpPost("Create")]
-        public ActionResult Create([FromBody] MediaServerDto mediaServerDto)
+        [HttpPost("CreateAsync")]
+        public async Task<ActionResult> CreateAsync([FromBody] MediaServerCreationDto mediaServerDto)
         {
-            if (mediaServerDto == null)
+            var response = await _mediaServerService.CreateAsync(mediaServerDto);
+            if (!response.IsSuccess)
             {
-                return BadRequest();
+                return BadRequest(response.Message);
             }
-            var response = _mediaServerService.Create(mediaServerDto);
-            if (response.IsSuccess)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response.Message);
+            return CreatedAtRoute("getMediaServer",new {mediaServerId=response.Data.Id},response.Data);
         }
 
-        [HttpPost("CreateList")]
-        public ActionResult CreateList([FromBody] List<MediaServerDto> list)
+        [HttpPut("UpdateAsync")]
+        public async Task<ActionResult> UpdateAsync([FromRoute]int mediaServerId,[FromBody] MediaServerCreationDto mediaServerDto)
         {
-            if (list == null)
+            var exists = await _mediaServerService.CheckIfExistsAsync(mediaServerId);
+            if(!exists)
             {
-                return BadRequest();
+                return NotFound("Servidor no encontrado");
             }
-            var response = _mediaServerService.CreateList(list);
-            if (response.IsSuccess)
+            var response = await _mediaServerService.UpdateAsync(mediaServerId,mediaServerDto);
+            if (!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message);
             }
-            return BadRequest(response.Message);
+            return NoContent();
         }
 
-        [HttpPut("Update")]
-        public ActionResult Update([FromBody] MediaServerDto mediaServerDto)
+        [HttpDelete("DeleteAsync/{mediaServerId:int}")]
+        public async Task<ActionResult> DeleteAsync(int mediaServerId)
         {
-            if (mediaServerDto == null)
+            var response = await _mediaServerService.DeleteAsync(mediaServerId);
+            if (!response.IsSuccess)
             {
-                return BadRequest();
+                return BadRequest(response.Message);
             }
-            var response = _mediaServerService.Update(mediaServerDto);
-            if (response.IsSuccess)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response.Message);
-        }
-
-        [HttpPut("Save")]
-        public async Task<ActionResult> Save([FromBody] MediaServerDto mediaServerDto)
-        {
-            if (mediaServerDto == null)
-            {
-                return BadRequest();
-            }
-            var response = await _mediaServerService.Save(mediaServerDto);
-            if (response.IsSuccess)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response.Message);
-        }
-
-        [HttpDelete("Delete/{mediaServerId}")]
-        public ActionResult Delete(int mediaServerId)
-        {
-            if (mediaServerId == 0)
-            {
-                return BadRequest();
-            }
-            var response = _mediaServerService.Delete(mediaServerId);
-            if (response.IsSuccess)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response.Message);
-        }
-
-        [HttpDelete("DeleteList/{listIds}")]
-        public ActionResult DeleteList(string listIds)
-        {
-            if (string.IsNullOrEmpty(listIds))
-            {
-                return BadRequest();
-            }
-            var response = _mediaServerService.DeleteList(listIds);
-            if (response.IsSuccess)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response.Message);
+            return NoContent() ;
         }
 
     }

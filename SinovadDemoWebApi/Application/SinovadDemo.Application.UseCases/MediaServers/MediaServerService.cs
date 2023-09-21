@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Options;
 using SinovadDemo.Application.Configuration;
 using SinovadDemo.Application.DTO.MediaServer;
-using SinovadDemo.Application.Helpers;
 using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Domain.Entities;
@@ -14,16 +13,13 @@ namespace SinovadDemo.Application.UseCases.MediaServers
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        private readonly IOptions<MyConfig> _config;
-
         private readonly AutoMapper.IMapper _mapper;
 
         private readonly IAppLogger<MediaServerService> _logger;
 
-        public MediaServerService(IUnitOfWork unitOfWork, IOptions<MyConfig> config, IMapper mapper, IAppLogger<MediaServerService> logger)
+        public MediaServerService(IUnitOfWork unitOfWork, IMapper mapper, IAppLogger<MediaServerService> logger)
         {
             _unitOfWork = unitOfWork;
-            _config = config;
             _mapper = mapper;
             _logger = logger;
         }
@@ -77,29 +73,6 @@ namespace SinovadDemo.Application.UseCases.MediaServers
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }catch (Exception ex)
-            {
-                response.Message = ex.StackTrace;
-                _logger.LogError(ex.StackTrace);
-            }
-            return response;
-        }
-
-        public async Task<Response<string>> AuthenticateBySecurityIdentifierAsync(string securityIdentifier)
-        {
-            var response = new Response<string>();
-            try
-            {
-                var result =  await _unitOfWork.MediaServers.GetByExpressionAsync(x => x.SecurityIdentifier == securityIdentifier);
-                if(result != null)
-                {
-                    var jwtHelper = new JWTHelper(_config.Value.JwtSettings.Secret, _config.Value.JwtSettings.Issuer, _config.Value.JwtSettings.Audience);
-                    var token = jwtHelper.CreateTokenWithSecurityIdentifier(securityIdentifier);
-                    response.Data = token;
-                }
-                response.IsSuccess = true;
-                response.Message = "Successful";
-            }
-            catch (Exception ex)
             {
                 response.Message = ex.StackTrace;
                 _logger.LogError(ex.StackTrace);
@@ -164,69 +137,16 @@ namespace SinovadDemo.Application.UseCases.MediaServers
             return response;
         }
 
-        public Response<object> Create(MediaServerDto mediaServerDto)
-        {
-            var response = new Response<object>();
-            try
-            {
-                var mediaServer = _mapper.Map<MediaServer>(mediaServerDto);
-                _unitOfWork.MediaServers.Add(mediaServer);
-                _unitOfWork.Save();
-                response.IsSuccess = true;
-                response.Message = "Successful";
-            }
-            catch (Exception ex)
-            {
-                response.Message = ex.StackTrace;
-                _logger.LogError(ex.StackTrace);
-            }
-            return response;
-        }
-
-        public Response<object> CreateList(List<MediaServerDto> listMediaServerDto)
-        {
-            var response = new Response<object>();
-            try
-            {
-                var mediaServers = _mapper.Map<List<MediaServer>>(listMediaServerDto);
-                _unitOfWork.MediaServers.AddList(mediaServers);
-                _unitOfWork.Save();
-                response.IsSuccess = true;
-                response.Message = "Successful";
-            }
-            catch (Exception ex)
-            {
-                response.Message = ex.StackTrace;
-                _logger.LogError(ex.StackTrace);
-            }
-            return response;
-        }
-
-
-        public async Task<Response<MediaServerDto>> Save(MediaServerDto mediaServerDto)
+        public async Task<Response<MediaServerDto>> CreateAsync(MediaServerCreationDto mediaServerCreationDto)
         {
             var response = new Response<MediaServerDto>();
             try
             {
-                var ms= await _unitOfWork.MediaServers.GetByExpressionAsync(x=>x.SecurityIdentifier==mediaServerDto.SecurityIdentifier);
-                if(ms != null)
-                {
-                    ms.UserId = mediaServerDto.UserId;
-                    ms.IpAddress= mediaServerDto.IpAddress;
-                    ms.PublicIpAddress = mediaServerDto.PublicIpAddress;
-                    ms.Port = mediaServerDto.Port;
-                    ms.Url=mediaServerDto.Url;
-                    ms.DeviceName = mediaServerDto.DeviceName;
-                    _unitOfWork.MediaServers.Update(ms);
-                }else
-                {
-                    var mediaServer = _mapper.Map<MediaServer>(mediaServerDto);
-                    ms = await _unitOfWork.MediaServers.AddAsync(mediaServer);
-                }
+                var mediaServer = _mapper.Map<MediaServer>(mediaServerCreationDto);
+                mediaServer = await _unitOfWork.MediaServers.AddAsync(mediaServer);
                 await _unitOfWork.SaveAsync();
-                response.Data = _mapper.Map<MediaServerDto>(ms);
+                response.Data= _mapper.Map<MediaServerDto>(mediaServer);
                 response.IsSuccess = true;
-                response.Message = "Successful";
             }catch (Exception ex)
             {
                 response.Message = ex.StackTrace;
@@ -235,65 +155,41 @@ namespace SinovadDemo.Application.UseCases.MediaServers
             return response;
         }
 
-        public Response<object> Update(MediaServerDto mediaServerDto)
+        public async Task<Response<object>> UpdateAsync(int mediaServerId,MediaServerCreationDto mediaServerCreationDto)
         {
             var response = new Response<object>();
             try
             {
-                var mediaServer = _mapper.Map<MediaServer>(mediaServerDto);
+                var mediaServer = await _unitOfWork.MediaServers.GetAsync(mediaServerId);
+                mediaServer = _mapper.Map(mediaServerCreationDto, mediaServer);
                 _unitOfWork.MediaServers.Update(mediaServer);
-                _unitOfWork.Save();
+                await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
-                response.Message = "Successful";
-            }
-            catch (Exception ex)
-            {
-                response.Message = ex.StackTrace;
-                _logger.LogError(ex.StackTrace);
+            }catch (Exception ex){
+               response.Message = ex.StackTrace;
+               _logger.LogError(ex.StackTrace);
             }
             return response;
         }
 
-        public Response<object> Delete(int id)
+        public async Task<Response<object>> DeleteAsync(int id)
         {
             var response = new Response<object>();
             try
             {
                 _unitOfWork.MediaServers.Delete(id);
-                _unitOfWork.Save();
+                await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
-                response.Message = "Successful";
-            }
-            catch (Exception ex)
-            {
+            }catch (Exception ex){
                 response.Message = ex.StackTrace;
                 _logger.LogError(ex.StackTrace);
             }
             return response;
         }
 
-        public Response<object> DeleteList(string ids)
+        public async Task<bool> CheckIfExistsAsync(int mediaServerId)
         {
-            var response = new Response<object>();
-            try
-            {
-                List<int> listIds = new List<int>();
-                if (!string.IsNullOrEmpty(ids))
-                {
-                    listIds = ids.Split(",").Select(x => Convert.ToInt32(x)).ToList();
-                }
-                _unitOfWork.MediaServers.DeleteByExpression(x => listIds.Contains(x.Id));
-                _unitOfWork.Save();
-                response.IsSuccess = true;
-                response.Message = "Successful";
-            }
-            catch (Exception ex)
-            {
-                response.Message = ex.StackTrace;
-                _logger.LogError(ex.StackTrace);
-            }
-            return response;
+            return await _unitOfWork.Menus.CheckIfExistAsync(mediaServer=>mediaServer.Id==mediaServerId);
         }
-
     }
 }
