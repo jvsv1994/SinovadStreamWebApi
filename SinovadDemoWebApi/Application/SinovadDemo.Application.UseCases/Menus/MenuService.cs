@@ -21,6 +21,24 @@ namespace SinovadDemo.Application.UseCases.Users
             _mapper = mapper;
         }
 
+        public async Task<Response<MenuDto>> GetAsync(int menuId)
+        {
+            var response = new Response<MenuDto>();
+            try
+            {
+                var result = await _unitOfWork.Menus.GetAsync(menuId);
+                response.Data = _mapper.Map<MenuDto>(result);
+                response.IsSuccess = true;
+                response.Message = "Successful";
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
         public async Task<Response<List<MenuDto>>> GetAllAsync()
         {
             var response = new Response<List<MenuDto>>();
@@ -59,18 +77,17 @@ namespace SinovadDemo.Application.UseCases.Users
             return response;
         }
 
-        public Response<object> Create(MenuDto dto)
+        public async Task<Response<MenuDto>> CreateAsync(MenuCreationDto menuCreationDto)
         {
-            var response = new Response<object>();
+            var response = new Response<MenuDto>();
             try
             {
-                var entity = _mapper.Map<Menu>(dto);
-                _unitOfWork.Menus.Add(entity);
-                _unitOfWork.Save();
+                var menu = _mapper.Map<Menu>(menuCreationDto);
+                menu= await _unitOfWork.Menus.AddAsync(menu);
+                await _unitOfWork.SaveAsync();
+                response.Data = _mapper.Map<MenuDto>(menu);
                 response.IsSuccess = true;
-                response.Message = "Successful";
-            }
-            catch (Exception ex)
+            }catch (Exception ex)
             {
                 response.Message = ex.Message;
                 _logger.LogError(ex.StackTrace);
@@ -78,32 +95,30 @@ namespace SinovadDemo.Application.UseCases.Users
             return response;
         }
 
-        public Response<object> Update(MenuDto dto)
+        public async Task<Response<object>> UpdateAsync(int menuId,MenuCreationDto menuCreationDto)
         {
             var response = new Response<object>();
             try
             {
-                var entity = _mapper.Map<Menu>(dto);
-                _unitOfWork.Menus.Update(entity);
-                _unitOfWork.Save();
+                var menu = await _unitOfWork.Menus.GetAsync(menuId);
+                menu = _mapper.Map(menuCreationDto, menu);
+                _unitOfWork.Menus.Update(menu);
+                await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
-                response.Message = "Successful";
-            }
-            catch (Exception ex)
-            {
+            }catch (Exception ex){
                 response.Message = ex.Message;
                 _logger.LogError(ex.StackTrace);
             }
             return response;
         }
 
-        public Response<object> Delete(int id)
+        public async Task<Response<object>> DeleteAsync(int id)
         {
             var response = new Response<object>();
             try
             {
                 _unitOfWork.Menus.Delete(id);
-                _unitOfWork.Save();
+                await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -115,7 +130,7 @@ namespace SinovadDemo.Application.UseCases.Users
             return response;
         }
 
-        public Response<object> DeleteList(string ids)
+        public async Task<Response<object>> DeleteListAsync(string ids)
         {
             var response = new Response<object>();
             try
@@ -126,11 +141,9 @@ namespace SinovadDemo.Application.UseCases.Users
                     listIds = ids.Split(",").Select(x => Convert.ToInt32(x)).ToList();
                 }
                 _unitOfWork.Menus.DeleteByExpression(x => listIds.Contains(x.Id));
-                _unitOfWork.Save();
+                await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
-                response.Message = "Successful";
-            }
-            catch (Exception ex)
+            }catch (Exception ex)
             {
                 response.Message = ex.Message;
                 _logger.LogError(ex.StackTrace);
@@ -138,7 +151,7 @@ namespace SinovadDemo.Application.UseCases.Users
             return response;
         }
 
-        public async Task<Response<List<MenuDto>>> GetListMenusByUser(int userId)
+        public async Task<Response<List<MenuDto>>> GetListMenusByUserAsync(int userId)
         {
             var response = new Response<List<MenuDto>>();
             try
@@ -146,13 +159,16 @@ namespace SinovadDemo.Application.UseCases.Users
                 var list= await BuildListMenusByUser(userId);
                 response.Data = list;
                 response.IsSuccess = true;
-                response.Message = "Successful";
-            }catch (Exception ex)
-            {
+            }catch (Exception ex){
                 response.Message = ex.Message;
                 _logger.LogError(ex.StackTrace);
             }
             return response;
+        }
+
+        public async Task<bool> CheckIfExistsAsync(int menuId)
+        {
+            return await _unitOfWork.Menus.CheckIfExistAsync(menu=>menu.Id==menuId);
         }
 
         private async Task<List<MenuDto>> BuildListMenusByUser(int userId)

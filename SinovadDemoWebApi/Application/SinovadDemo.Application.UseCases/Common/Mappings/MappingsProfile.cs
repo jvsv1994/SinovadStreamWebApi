@@ -27,6 +27,8 @@ namespace Pacagroup.Ecommerce.Application.UseCases.Common.Mappings
 
             CreateMap<Catalog, CatalogDto>().ReverseMap();
             CreateMap<CatalogDetail, CatalogDetailDto>().ReverseMap();
+
+            CreateMap<MenuCreationDto, Menu>();
             CreateMap<Menu, MenuDto>().ReverseMap();
 
             CreateMap<ProfileCreationDto, Profile>();
