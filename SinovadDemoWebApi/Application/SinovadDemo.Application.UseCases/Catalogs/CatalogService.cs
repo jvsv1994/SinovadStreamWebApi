@@ -30,15 +30,14 @@ namespace SinovadDemo.Application.UseCases.Catalogs
                 var result = await _unitOfWork.Catalogs.GetAsync(id);
                 response.Data = _mapper.Map<CatalogDto>(result);
                 response.IsSuccess = true;
-                response.Message = "Successful";
-            }
-            catch (Exception ex)
+            }catch (Exception ex)
             {
                 response.Message = ex.Message;
                 _logger.LogError(ex.StackTrace);
             }
             return response;
         }
+
         public async Task<ResponsePagination<List<CatalogDto>>> GetAllWithPaginationAsync(int page, int take, string sortBy, string sortDirection, string searchText, string searchBy)
         {
             var response = new ResponsePagination<List<CatalogDto>>();
@@ -60,18 +59,17 @@ namespace SinovadDemo.Application.UseCases.Catalogs
             return response;
         }
 
-        public Response<object> Create(CatalogDto catalogDto)
+        public async Task<Response<CatalogDto>> CreateAsync(CatalogCreationDto catalogCreationDto)
         {
-            var response = new Response<object>();
+            var response = new Response<CatalogDto>();
             try
             {
-                var catalog = _mapper.Map<Catalog>(catalogDto);
-                _unitOfWork.Catalogs.Add(catalog);
-                _unitOfWork.Save();
+                var catalog = _mapper.Map<Catalog>(catalogCreationDto);
+                catalog=await _unitOfWork.Catalogs.AddAsync(catalog);
+                await _unitOfWork.SaveAsync();
+                response.Data = _mapper.Map<CatalogDto>(catalog);
                 response.IsSuccess = true;
-                response.Message = "Successful";
-            }
-            catch (Exception ex)
+            }catch (Exception ex)
             {
                 response.Message = ex.Message;
                 _logger.LogError(ex.StackTrace);
@@ -79,32 +77,29 @@ namespace SinovadDemo.Application.UseCases.Catalogs
             return response;
         }
 
-        public Response<object> Update(CatalogDto catalogDto)
+        public async Task<Response<object>> UpdateAsync(int catalogId,CatalogCreationDto catalogCreationDto)
         {
             var response = new Response<object>();
-            try
-            {
-                var catalog = _mapper.Map<Catalog>(catalogDto);
+            try{
+                var catalog = await _unitOfWork.Catalogs.GetAsync(catalogId);
+                catalog = _mapper.Map(catalogCreationDto,catalog);
                 _unitOfWork.Catalogs.Update(catalog);
-                _unitOfWork.Save();
+                await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
-                response.Message = "Successful";
-            }
-            catch (Exception ex)
-            {
+            }catch (Exception ex){
                 response.Message = ex.Message;
                 _logger.LogError(ex.StackTrace);
             }
             return response;
         }
 
-        public Response<object> Delete(int id)
+        public async Task<Response<object>> DeleteAsync(int id)
         {
             var response = new Response<object>();
             try
             {
                 _unitOfWork.Catalogs.Delete(id);
-                _unitOfWork.Save();
+                await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
                 response.Message = "Successful";
             }
@@ -116,7 +111,7 @@ namespace SinovadDemo.Application.UseCases.Catalogs
             return response;
         }
 
-        public Response<object> DeleteList(string ids)
+        public async Task<Response<object>> DeleteListAsync(string ids)
         {
             var response = new Response<object>();
             try
@@ -127,9 +122,8 @@ namespace SinovadDemo.Application.UseCases.Catalogs
                     listIds = ids.Split(",").Select(x => Convert.ToInt32(x)).ToList();
                 }
                 _unitOfWork.Catalogs.DeleteByExpression(x => listIds.Contains(x.Id));
-                _unitOfWork.Save();
+                await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
-                response.Message = "Successful";
             }
             catch (Exception ex)
             {
@@ -137,6 +131,11 @@ namespace SinovadDemo.Application.UseCases.Catalogs
                 _logger.LogError(ex.StackTrace);
             }
             return response;
+        }
+
+        public async Task<bool> CheckIfExistsAsync(int catalogId)
+        {
+            return await _unitOfWork.Catalogs.CheckIfExistAsync(catalog=>catalog.Id==catalogId);
         }
 
         public async Task<Response<CatalogDetailDto>> GetCatalogDetailAsync(int catalogId, int catalogDetailId)
@@ -147,7 +146,6 @@ namespace SinovadDemo.Application.UseCases.Catalogs
                 var result = await _unitOfWork.CatalogDetails.GetByExpressionAsync(x => x.CatalogId == catalogId && x.Id == catalogDetailId);
                 response.Data = _mapper.Map<CatalogDetailDto>(result);
                 response.IsSuccess = true;
-                response.Message = "Successful";
             }
             catch (Exception ex)
             {

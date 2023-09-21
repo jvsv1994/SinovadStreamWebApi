@@ -1,6 +1,5 @@
-﻿using SinovadDemo.Transversal.Collection;
+﻿using SinovadDemo.Application.DTO.Catalog;
 using SinovadDemo.Transversal.Common;
-using SinovadDemo.Application.DTO.Catalog;
 
 namespace SinovadDemo.Application.Interface.UseCases
 {
@@ -9,10 +8,12 @@ namespace SinovadDemo.Application.Interface.UseCases
         #region catalogs
         Task<Response<CatalogDto>> GetAsync(int id);
         Task<ResponsePagination<List<CatalogDto>>> GetAllWithPaginationAsync(int page, int take, string sortBy, string sortDirection, string searchText, string searchBy);
-        Response<object> Create(CatalogDto catalogDto);
-        Response<object> Update(CatalogDto catalogDto);
-        Response<object> Delete(int id);
-        Response<object> DeleteList(string ids);
+        Task<Response<CatalogDto>> CreateAsync(CatalogCreationDto catalogDto);
+        Task<Response<object>> UpdateAsync(int catalogId,CatalogCreationDto catalogDto);
+        Task<Response<object>> DeleteAsync(int id);
+        Task<Response<object>> DeleteListAsync(string ids);
+        Task<bool> CheckIfExistsAsync(int catalogId);
+
 
         #endregion
 

@@ -25,6 +25,7 @@ namespace Pacagroup.Ecommerce.Application.UseCases.Common.Mappings
             CreateMap<RegisterUserFromProviderDto, User>();
             CreateMap<User, UserDto>().ForMember(x => x.IsPasswordSetted, y => y.MapFrom(y => y.PasswordHash != null)).ReverseMap();
 
+            CreateMap<CatalogCreationDto, Catalog>();
             CreateMap<Catalog, CatalogDto>().ReverseMap();
             CreateMap<CatalogDetail, CatalogDetailDto>().ReverseMap();
 

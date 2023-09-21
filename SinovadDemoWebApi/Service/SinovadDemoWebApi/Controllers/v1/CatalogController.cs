@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SinovadDemo.Application.DTO.Catalog;
 using SinovadDemo.Application.Interface.UseCases;
+using SinovadDemo.Transversal.Common;
 using System.ComponentModel.DataAnnotations;
 
 namespace SinovadDemoWebApi.Controllers.v1
@@ -19,103 +20,120 @@ namespace SinovadDemoWebApi.Controllers.v1
             _catalogService = catalogService;
         }
 
+        [HttpGet("GetAsync/{catalogId:int}",Name ="getCatalog")]
+        public async Task<ActionResult<Response<CatalogDto>>> GetAllWithPaginationAsync([FromRoute] int catalogId)
+        {
+            var response = await _catalogService.GetAsync(catalogId);
+            if (!response.IsSuccess)
+            {
+                return BadRequest(response.Message);
+            }
+            return response;
+        }
+
+
         [HttpGet("GetAllWithPaginationAsync")]
-        public async Task<ActionResult> GetAllWithPaginationAsync([FromQuery] int page = 1, [FromQuery] int take = 1000, [FromQuery] string sortBy = "Id", [FromQuery] string sortDirection = "asc", [FromQuery] string searchText = "", [FromQuery] string searchBy = "")
+        public async Task<ActionResult<ResponsePagination<List<CatalogDto>>>> GetAllWithPaginationAsync([FromQuery] int page = 1, [FromQuery] int take = 1000, [FromQuery] string sortBy = "Id", [FromQuery] string sortDirection = "asc", [FromQuery] string searchText = "", [FromQuery] string searchBy = "")
         {
             var response = await _catalogService.GetAllWithPaginationAsync(page, take, sortBy, sortDirection, searchText, searchBy);
-            if (response.IsSuccess)
+            if(!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message);
             }
-            return BadRequest(response.Message);
+            return response;
         }
 
-        [HttpPost("Create")]
-        public ActionResult Create([FromBody] CatalogDto seasonDto)
+        [HttpPost("CreateAsync")]
+        public async Task<ActionResult> CreateAsync([FromBody] CatalogCreationDto catalogCreationDto)
         {
-            var response = _catalogService.Create(seasonDto);
-            if (response.IsSuccess)
+            var response = await _catalogService.CreateAsync(catalogCreationDto);
+            if (!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message);
             }
-            return BadRequest(response.Message);
+            return CreatedAtRoute("getCatalog", new { catalogId = response.Data.Id }, response.Data);
         }
 
-        [HttpPut("Update")]
-        public ActionResult Update([FromBody] CatalogDto seasonDto)
+        [HttpPut("UpdateAsync/{mediaServerId:int}")]
+        public async Task<ActionResult> UpdateAsync([FromRoute]int mediaServerId,[FromBody] CatalogCreationDto seasonDto)
         {
-            var response = _catalogService.Update(seasonDto);
-            if (response.IsSuccess)
+            var exists = await _catalogService.CheckIfExistsAsync(mediaServerId);
+            if(!exists)
             {
-                return Ok(response);
+                return NotFound("Catálogo no encontrado");
             }
-            return BadRequest(response.Message);
+            var response = await _catalogService.UpdateAsync(mediaServerId,seasonDto);
+            if (!response.IsSuccess)
+            {
+            }
+            return NoContent();
         }
 
-        [HttpDelete("Delete/{catalogId}")]
-        public ActionResult Delete(int catalogId)
+        [HttpDelete("DeleteAsync/{catalogId}")]
+        public async Task<ActionResult> DeleteAsync(int catalogId)
         {
-            var response = _catalogService.Delete(catalogId);
-            if (response.IsSuccess)
+            var response = await _catalogService.DeleteAsync(catalogId);
+            if(!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message);
             }
-            return BadRequest(response.Message);
+            return NoContent();
         }
 
-        [HttpDelete("DeleteList/{listIds}")]
-        public ActionResult DeleteList(string listIds)
+        [HttpDelete("DeleteListAsync/{listIds}")]
+        public async Task<ActionResult> DeleteListAsync(string listIds)
         {
-            var response = _catalogService.DeleteList(listIds);
-            if (response.IsSuccess)
+            var response = await _catalogService.DeleteListAsync(listIds);
+            if (!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message);
             }
-            return BadRequest(response.Message);
-        }
-
-        [HttpGet("GetCatalogDetailAsync/{catalogId}/{catalogDetailId}")]
-        public async Task<ActionResult> GetCatalogDetailAsync(int catalogId,int catalogDetailId)
-        {
-            var response = await _catalogService.GetCatalogDetailAsync(catalogId, catalogDetailId);
-            if (response.IsSuccess)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response.Message);
-        }
-
-        [HttpGet("GetDetailsByCatalogAsync/{catalogId}")]
-        public async Task<ActionResult> GetDetailsByCatalogAsync(int catalogId)
-        {
-            var response = await _catalogService.GetDetailsByCatalogAsync(catalogId);
-            if (response.IsSuccess)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response.Message);
-        }
-
-        [HttpGet("GetAllCatalogDetailsWithPaginationByCatalogIdsAsync")]
-        public async Task<ActionResult> GetAllCatalogDetailsWithPaginationByCatalogIdsAsync([Required]string catalogIds, int page = 1, int take = 1000)
-        {
-            var response = await _catalogService.GetAllCatalogDetailsWithPaginationByCatalogIdsAsync(catalogIds, page, take);
-            if (response.IsSuccess)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response.Message);
+            return NoContent();
         }
 
         [HttpGet("GetAllCatalogDetailsByCatalogIds")]
-        public async Task<ActionResult> GetAllCatalogDetailsByCatalogIds([Required] string catalogIds)
+        public async Task<ActionResult<Response<List<CatalogDetailDto>>>> GetAllCatalogDetailsByCatalogIds([Required] string catalogIds)
         {
             var response = await _catalogService.GetAllCatalogDetailsByCatalogIds(catalogIds);
-            if (response.IsSuccess)
+            if (!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message);
             }
-            return BadRequest(response.Message);
+            return response;
         }
+
+        [HttpGet("GetCatalogDetailAsync/{catalogId}/{catalogDetailId}")]
+        public async Task<ActionResult<Response<CatalogDetailDto>>> GetCatalogDetailAsync(int catalogId, int catalogDetailId)
+        {
+            var response = await _catalogService.GetCatalogDetailAsync(catalogId, catalogDetailId);
+            if (!response.IsSuccess)
+            {
+                return BadRequest(response.Message);
+            }
+            return response;
+        }
+
+        [HttpGet("GetDetailsByCatalogAsync/{catalogId}")]
+        public async Task<ActionResult<Response<List<CatalogDetailDto>>>> GetDetailsByCatalogAsync(int catalogId)
+        {
+            var response = await _catalogService.GetDetailsByCatalogAsync(catalogId);
+            if (!response.IsSuccess)
+            {
+                return BadRequest(response.Message);
+            }
+            return response;
+        }
+
+        [HttpGet("GetAllCatalogDetailsWithPaginationByCatalogIdsAsync")]
+        public async Task<ActionResult<ResponsePagination<List<CatalogDetailDto>>>> GetAllCatalogDetailsWithPaginationByCatalogIdsAsync([Required] string catalogIds, int page = 1, int take = 1000)
+        {
+            var response = await _catalogService.GetAllCatalogDetailsWithPaginationByCatalogIdsAsync(catalogIds, page, take);
+            if (!response.IsSuccess)
+            {
+                return BadRequest(response.Message);
+            }
+            return response;
+        }
+
     }
 }
