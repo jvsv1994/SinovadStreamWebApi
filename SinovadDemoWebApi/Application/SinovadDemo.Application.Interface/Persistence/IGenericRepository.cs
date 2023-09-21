@@ -27,6 +27,8 @@ namespace SinovadDemo.Application.Interface.Persistence
         void DeleteByExpression(Expression<Func<TEntity, bool>> predicate);
         void Update(TEntity data);
         void Save();
+        Task<int> CountAsync(CancellationToken cancellationToken = default);
+        Task<int> CountByExpressionAsync(Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken = default);
 
     }
 }

@@ -66,7 +66,8 @@ namespace SinovadDemo.Application.UseCases.Catalogs
             try
             {
                 var catalog = _mapper.Map<Catalog>(catalogCreationDto);
-                catalog=await _unitOfWork.Catalogs.AddAsync(catalog);
+                catalog.Id = await _unitOfWork.Catalogs.CountAsync()+1;
+                catalog =await _unitOfWork.Catalogs.AddAsync(catalog);
                 await _unitOfWork.SaveAsync();
                 response.Data = _mapper.Map<CatalogDto>(catalog);
                 response.IsSuccess = true;

@@ -102,7 +102,7 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
 
             entity.ToTable("Catalog");
             entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
-            entity.Property(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Name)
                 .HasMaxLength(1000)
                 .IsUnicode(false);

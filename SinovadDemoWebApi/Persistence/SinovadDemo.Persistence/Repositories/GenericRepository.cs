@@ -62,6 +62,16 @@ namespace SinovadDemo.Persistence.Repositories
             return _table.ToList();
         }
 
+        public async Task<int> CountAsync(CancellationToken cancellationToken = default)
+        {
+            return await _table.CountAsync(cancellationToken);
+        }
+
+        public async Task<int> CountByExpressionAsync(Expression<Func<TEntity, bool>> expression,CancellationToken cancellationToken = default)
+        {
+            return await _table.CountAsync(expression,cancellationToken);
+        }
+
         public async Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             return await _table.ToListAsync(cancellationToken);
