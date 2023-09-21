@@ -1,4 +1,5 @@
 ﻿using SinovadDemo.Application.DTO.Catalog;
+using SinovadDemo.Application.DTO.CatalogDetail;
 using SinovadDemo.Transversal.Common;
 
 namespace SinovadDemo.Application.Interface.UseCases

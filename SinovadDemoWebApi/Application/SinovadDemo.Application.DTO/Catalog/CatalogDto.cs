@@ -1,4 +1,6 @@
-﻿namespace SinovadDemo.Application.DTO.Catalog
+﻿using SinovadDemo.Application.DTO.CatalogDetail;
+
+namespace SinovadDemo.Application.DTO.Catalog
 {
     public class CatalogDto
     {

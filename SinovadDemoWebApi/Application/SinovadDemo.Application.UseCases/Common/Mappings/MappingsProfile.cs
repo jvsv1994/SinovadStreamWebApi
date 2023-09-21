@@ -2,6 +2,7 @@
 using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.DTO.Authenticate;
 using SinovadDemo.Application.DTO.Catalog;
+using SinovadDemo.Application.DTO.CatalogDetail;
 using SinovadDemo.Application.DTO.Episode;
 using SinovadDemo.Application.DTO.Genre;
 using SinovadDemo.Application.DTO.MediaServer;
@@ -27,6 +28,8 @@ namespace Pacagroup.Ecommerce.Application.UseCases.Common.Mappings
 
             CreateMap<CatalogCreationDto, Catalog>();
             CreateMap<Catalog, CatalogDto>().ReverseMap();
+
+            CreateMap<CatalogDetailCreationDto, CatalogDetail>();
             CreateMap<CatalogDetail, CatalogDetailDto>().ReverseMap();
 
             CreateMap<MenuCreationDto, Menu>();

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using SinovadDemo.Application.DTO.Catalog;
+using SinovadDemo.Application.DTO.CatalogDetail;
 using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Domain.Entities;

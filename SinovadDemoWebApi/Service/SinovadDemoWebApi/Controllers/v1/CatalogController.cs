@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SinovadDemo.Application.DTO.Catalog;
+using SinovadDemo.Application.DTO.CatalogDetail;
 using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Transversal.Common;
-using System.ComponentModel.DataAnnotations;
 
 namespace SinovadDemoWebApi.Controllers.v1
 {
@@ -55,22 +55,22 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpPut("UpdateAsync/{catalogId:int}")]
-        public async Task<ActionResult> UpdateAsync([FromRoute]int catalogId, [FromBody] CatalogCreationDto seasonDto)
+        public async Task<ActionResult> UpdateAsync([FromRoute]int catalogId, [FromBody] CatalogCreationDto catalogCreationDto)
         {
             var exists = await _catalogService.CheckIfExistsAsync(catalogId);
             if(!exists)
             {
                 return NotFound("Catálogo no encontrado");
             }
-            var response = await _catalogService.UpdateAsync(catalogId, seasonDto);
+            var response = await _catalogService.UpdateAsync(catalogId, catalogCreationDto);
             if (!response.IsSuccess)
             {
             }
             return NoContent();
         }
 
-        [HttpDelete("DeleteAsync/{catalogId}")]
-        public async Task<ActionResult> DeleteAsync(int catalogId)
+        [HttpDelete("DeleteAsync/{catalogId:int}")]
+        public async Task<ActionResult> DeleteAsync([FromRoute] int catalogId)
         {
             var response = await _catalogService.DeleteAsync(catalogId);
             if(!response.IsSuccess)
@@ -81,7 +81,7 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpDelete("DeleteListAsync/{listIds}")]
-        public async Task<ActionResult> DeleteListAsync(string listIds)
+        public async Task<ActionResult> DeleteListAsync([FromRoute] string listIds)
         {
             var response = await _catalogService.DeleteListAsync(listIds);
             if (!response.IsSuccess)
@@ -92,42 +92,9 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpGet("GetAllCatalogDetailsByCatalogIds")]
-        public async Task<ActionResult<Response<List<CatalogDetailDto>>>> GetAllCatalogDetailsByCatalogIds([Required] string catalogIds)
+        public async Task<ActionResult<Response<List<CatalogDetailDto>>>> GetAllCatalogDetailsByCatalogIds([FromQuery] string catalogIds)
         {
             var response = await _catalogService.GetAllCatalogDetailsByCatalogIds(catalogIds);
-            if (!response.IsSuccess)
-            {
-                return BadRequest(response.Message);
-            }
-            return response;
-        }
-
-        [HttpGet("GetCatalogDetailAsync/{catalogId}/{catalogDetailId}")]
-        public async Task<ActionResult<Response<CatalogDetailDto>>> GetCatalogDetailAsync(int catalogId, int catalogDetailId)
-        {
-            var response = await _catalogService.GetCatalogDetailAsync(catalogId, catalogDetailId);
-            if (!response.IsSuccess)
-            {
-                return BadRequest(response.Message);
-            }
-            return response;
-        }
-
-        [HttpGet("GetDetailsByCatalogAsync/{catalogId}")]
-        public async Task<ActionResult<Response<List<CatalogDetailDto>>>> GetDetailsByCatalogAsync(int catalogId)
-        {
-            var response = await _catalogService.GetDetailsByCatalogAsync(catalogId);
-            if (!response.IsSuccess)
-            {
-                return BadRequest(response.Message);
-            }
-            return response;
-        }
-
-        [HttpGet("GetAllCatalogDetailsWithPaginationByCatalogIdsAsync")]
-        public async Task<ActionResult<ResponsePagination<List<CatalogDetailDto>>>> GetAllCatalogDetailsWithPaginationByCatalogIdsAsync([Required] string catalogIds, int page = 1, int take = 1000)
-        {
-            var response = await _catalogService.GetAllCatalogDetailsWithPaginationByCatalogIdsAsync(catalogIds, page, take);
             if (!response.IsSuccess)
             {
                 return BadRequest(response.Message);

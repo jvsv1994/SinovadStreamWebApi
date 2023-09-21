@@ -2,6 +2,7 @@
 using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Application.Shared;
 using SinovadDemo.Application.UseCases.Authentication;
+using SinovadDemo.Application.UseCases.CatalogDetails;
 using SinovadDemo.Application.UseCases.Catalogs;
 using SinovadDemo.Application.UseCases.Documents;
 using SinovadDemo.Application.UseCases.Episodes;
@@ -36,6 +37,7 @@ namespace SinovadDemo.Application.UseCases
             services.AddScoped<IEpisodeService, EpisodeService>();
             services.AddScoped<IGenreService, GenreService>();
             services.AddScoped<ICatalogService, CatalogService>();
+            services.AddScoped<ICatalogDetailService, CatalogDetailService>();
             services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<IDocumentService, DocumentService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
