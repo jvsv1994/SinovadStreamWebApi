@@ -23,9 +23,9 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
 
     public virtual DbSet<MediaServer> MediaServers { get; set; }
 
-    public virtual DbSet<Catalog> Catalogs { get; set; }
+    //public virtual DbSet<Catalog> Catalogs { get; set; }
 
-    public virtual DbSet<CatalogDetail> CatalogDetails { get; set; }
+    //public virtual DbSet<CatalogDetail> CatalogDetails { get; set; }
 
     public virtual DbSet<Episode> Episodes { get; set; }
 
@@ -96,18 +96,17 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
             new Role { Id = 1, Name = "Administrador Principal", Enabled = true, Guid = Guid.NewGuid() },
             new Role { Id = 2, Name = "Administrador de Medios", Enabled = true, Guid = Guid.NewGuid() });
 
-        modelBuilder.Entity<Catalog>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Catalog__3214EC275C8D2947");
+        //modelBuilder.Entity<Catalog>(entity =>
+        //{
+        //    entity.HasKey(e => e.Id).HasName("PK__Catalog__3214EC275C8D2947");
 
-            entity.ToTable("Catalog");
-            entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
-            entity.Property(e => e.Id)
-            .ValueGeneratedNever();
-            entity.Property(e => e.Name)
-                .HasMaxLength(1000)
-                .IsUnicode(false);
-        });
+        //    entity.ToTable("Catalog");
+        //    entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
+        //    entity.Property(e => e.Id);
+        //    entity.Property(e => e.Name)
+        //        .HasMaxLength(1000)
+        //        .IsUnicode(false);
+        //});
 
         //modelBuilder.Entity<Catalog>().HasData(
         //   new Catalog { Id = 1, Name = "Estado del Servidor Multimedia", Guid = Guid.NewGuid() },
@@ -117,24 +116,24 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
         //   new Catalog { Id = 5, Name = "Tipo de Icono", Guid = Guid.NewGuid() },
         //   new Catalog { Id = 6, Name = "Proveedor de Cuenta Vinculada", Guid = Guid.NewGuid() });
 
-        modelBuilder.Entity<CatalogDetail>(entity =>
-        {
-            entity.HasKey(e => new { e.CatalogId, e.Id }).HasName("PK__CatalogD__5C6FE914EF292CEC");
+        //modelBuilder.Entity<CatalogDetail>(entity =>
+        //{
+        //    entity.HasKey(e => new { e.CatalogId, e.Id }).HasName("PK__CatalogD__5C6FE914EF292CEC");
 
-            entity.ToTable("CatalogDetail");
-            entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
-            entity.Property(e => e.Name)
-                .HasMaxLength(1000)
-                .IsUnicode(false);
-            entity.Property(e => e.TextValue)
-                .HasMaxLength(1000)
-                .IsUnicode(false);
+        //    entity.ToTable("CatalogDetail");
+        //    entity.Property(e => e.Guid).HasDefaultValueSql("NewId()");
+        //    entity.Property(e => e.Name)
+        //        .HasMaxLength(1000)
+        //        .IsUnicode(false);
+        //    entity.Property(e => e.TextValue)
+        //        .HasMaxLength(1000)
+        //        .IsUnicode(false);
 
-            entity.HasOne(d => d.Catalog).WithMany(p => p.CatalogDetails)
-                .HasForeignKey(d => d.CatalogId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_CatalogDetail_Catalog_ID");
-        });
+        //    entity.HasOne(d => d.Catalog).WithMany(p => p.CatalogDetails)
+        //        .HasForeignKey(d => d.CatalogId)
+        //        .OnDelete(DeleteBehavior.ClientSetNull)
+        //        .HasConstraintName("FK_CatalogDetail_Catalog_ID");
+        //});
 
         //modelBuilder.Entity<CatalogDetail>().HasData(
         //new CatalogDetail { CatalogId = 1, Id = 1, Name = "Iniciado", Guid = Guid.NewGuid() },
