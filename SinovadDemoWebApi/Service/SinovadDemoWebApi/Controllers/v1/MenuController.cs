@@ -29,7 +29,7 @@ namespace SinovadDemoWebApi.Controllers.v1
             return response;
         }
 
-        [HttpGet("GetAsync/{menuId:int}")]
+        [HttpGet("GetAsync/{menuId:int}",Name ="getMenu")]
         public async Task<ActionResult<Response<MenuDto>>> GetAsync([FromRoute]int menuId)
         {
             var response = await _menuService.GetAsync(menuId);
