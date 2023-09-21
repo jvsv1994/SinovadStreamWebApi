@@ -1,15 +1,12 @@
-﻿using SinovadDemo.Application.DTO;
-using SinovadDemo.Application.DTO.User;
+﻿using SinovadDemo.Application.DTO.User;
 using SinovadDemo.Transversal.Common;
 
 namespace SinovadDemo.Application.Interface.UseCases
 {
     public interface IUserService
     {
-        Task<ResponsePagination<List<UserDto>>> GetAllWithPaginationAsync(int page, int take, string sortBy, string sortDirection, string searchText, string searchBy);
-        Task<Response<UserSessionDto>> GetUserByGuid(string guid);
         Task<Response<UserSessionDto>> GetUserByMediaServerSecurityIdentifier(string securityIdentifier);
-        Task<Response<UserDto>> GetAsync(int id);
+        Task<Response<UserSessionDto>> GetUserByGuid(string guid);
         Task<Response<bool>> ChangeNames(ChangeNamesDto dto);
         Task<Response<bool>> ChangeUserName(ChangeUserNameDto dto);
         Task<Response<bool>> ResetPassword(ResetPasswordDto dto);
@@ -18,10 +15,9 @@ namespace SinovadDemo.Application.Interface.UseCases
         Task<Response<bool>> ValidateResetPasswordToken(ValidateResetPasswordTokenDto dto);
         Task<Response<bool>> RecoverPassword(RecoverPasswordDto dto);
         Task<Response<bool>> ValidateConfirmEmailToken(ValidateConfirmEmailTokenDto dto);
-        Response<object> Create(UserDto userDto);
-        Response<object> Update(UserDto userDto);
-        Response<object> Delete(int id);
-        Response<object> DeleteList(string ids);
+        Task<Response<UserDto>> GetAsync(int id);
+        Task<ResponsePagination<List<UserDto>>> GetAllWithPaginationAsync(int page, int take, string sortBy, string sortDirection, string searchText, string searchBy);
+        Task<Response<object>> DeleteAsync(int id);
         Task<bool> CheckIfExistAsync(int id);
     }
 }

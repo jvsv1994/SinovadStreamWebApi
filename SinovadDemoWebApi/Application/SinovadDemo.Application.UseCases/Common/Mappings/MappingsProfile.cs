@@ -1,5 +1,6 @@
 ﻿using Generic.Core.Models;
 using SinovadDemo.Application.DTO;
+using SinovadDemo.Application.DTO.Authenticate;
 using SinovadDemo.Application.DTO.Episode;
 using SinovadDemo.Application.DTO.Genre;
 using SinovadDemo.Application.DTO.Movie;

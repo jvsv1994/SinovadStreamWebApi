@@ -1,5 +1,4 @@
-﻿using SinovadDemo.Application.DTO;
-using SinovadDemo.Application.DTO.Authenticate;
+﻿using SinovadDemo.Application.DTO.Authenticate;
 using SinovadDemo.Application.DTO.SignUp;
 using SinovadDemo.Transversal.Common;
 

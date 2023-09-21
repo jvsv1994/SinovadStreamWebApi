@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SinovadDemo.Application.DTO
+namespace SinovadDemo.Application.DTO.User
 {
     public class RecoverPasswordDto
     {

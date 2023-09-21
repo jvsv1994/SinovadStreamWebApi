@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.DTO.SignUp;
+using SinovadDemo.Application.DTO.User;
 using SinovadDemo.Application.Interface.Infrastructure;
 using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Application.Interface.UseCases;

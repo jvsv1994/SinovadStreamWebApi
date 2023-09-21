@@ -1,16 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
-using SinovadDemo.Application.Configuration;
 using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.DTO.Authenticate;
 using SinovadDemo.Application.DTO.Profile;
 using SinovadDemo.Application.DTO.User;
-using SinovadDemo.Application.Helpers;
 using SinovadDemo.Application.Interface.Infrastructure;
 using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Application.Interface.UseCases;
-using SinovadDemo.Application.Validator;
 using SinovadDemo.Domain.Entities;
 using SinovadDemo.Transversal.Common;
 
@@ -24,50 +21,17 @@ namespace SinovadDemo.Application.UseCases.Users
 
         private readonly IEmailSenderService _emalSenderService;
 
-        private readonly SignInManager<User> _signInManager;
-
-        private readonly AccessUserDtoValidator _accessUserDtoValidator;
-
-        private readonly IOptions<MyConfig> _config;
-
         private readonly AutoMapper.IMapper _mapper;
 
         private readonly IAppLogger<UserService> _logger;
 
-        public UserService(IUnitOfWork unitOfWork, IAppLogger<UserService> logger, IOptions<MyConfig> config, UserManager<User> userManager, SignInManager<User> signInManager, IEmailSenderService emalSenderService, AccessUserDtoValidator accessUserDtoValidator,AutoMapper.IMapper mapper)
+        public UserService(IUnitOfWork unitOfWork, UserManager<User> userManager, IEmailSenderService emalSenderService, IMapper mapper, IAppLogger<UserService> logger)
         {
             _unitOfWork = unitOfWork;
-            _logger = logger;
-            _config = config;
             _userManager = userManager;
-            _signInManager = signInManager;
             _emalSenderService = emalSenderService;
-            _accessUserDtoValidator = accessUserDtoValidator;
             _mapper = mapper;
-        }
-
-        public async Task<ResponsePagination<List<UserDto>>> GetAllWithPaginationAsync(int page, int take, string sortBy, string sortDirection, string searchText, string searchBy)
-        {
-            var response = new ResponsePagination<List<UserDto>>();
-            try
-            {
-                var result = await _unitOfWork.Users.GetAllWithPaginationAsync(page, take, sortBy, sortDirection, searchText, searchBy);
-                response.Data = _mapper.Map<List<UserDto>>(result.Items);
-                if (response.Data != null)
-                {
-                    response.PageNumber = page;
-                    response.TotalCount = result.Total;
-                    response.TotalPages = result.Pages;
-                    response.IsSuccess = true;
-                    response.Message = "Successful";
-                }
-            }
-            catch (Exception ex)
-            {
-                response.Message = ex.Message;
-                _logger.LogError(ex.StackTrace);
-            }
-            return response;
+            _logger = logger;
         }
 
         public async Task<Response<UserSessionDto>> GetUserByGuid(string userGuid)
@@ -75,51 +39,12 @@ namespace SinovadDemo.Application.UseCases.Users
             var response = new Response<UserSessionDto>();
             try
             {
-                _logger.LogInformation("Getting user data from user with Guid " + userGuid);
                 var user = await _unitOfWork.Users.GetUserRelatedData(x => x.Guid.ToString() == userGuid);
-                if(user!=null)
+                if (user != null)
                 {
                     response.Data = GetUserSessionData(user);
-                    response.Message = "Successful";
+                    response.IsSuccess = true;
                 }
-                response.IsSuccess = true;
-            }
-            catch (Exception ex)
-            {
-                response.Message = ex.Message;
-                _logger.LogError(ex.StackTrace);
-            }
-            return response;
-        }
-
-        private UserSessionDto GetUserSessionData(User user)
-        {
-            var userDto = _mapper.Map<UserDto>(user);
-            userDto.IsPasswordSetted = user.PasswordHash != null ? true : false;
-            var userSessionDto = new UserSessionDto();
-            userSessionDto.User = userDto;
-            userSessionDto.MediaServers = _mapper.Map<List<MediaServerDto>>(user.MediaServers);
-            userSessionDto.Profiles = _mapper.Map<List<ProfileDto>>(user.Profiles);
-            userSessionDto.LinkedAccounts = _mapper.Map<List<LinkedAccountDto>>(user.LinkedAccounts);
-            return userSessionDto;
-        }
-
-        public async Task<Response<UserSessionDto>> GetUserByMediaServerSecurityIdentifier(string securityIdentifier)
-        {
-            var response = new Response<UserSessionDto>();
-            try
-            {
-                var mediaServer = await _unitOfWork.MediaServers.GetByExpressionAsync(x => x.SecurityIdentifier == securityIdentifier);
-                if(mediaServer!=null)
-                {
-                    var user = await _unitOfWork.Users.GetUserRelatedData(x => x.Id == mediaServer.UserId);
-                    if(user!=null)
-                    {
-                        response.Data =  GetUserSessionData(user);
-                        response.Message = "Successful";
-                    }
-                }
-                response.IsSuccess = true;
             }catch (Exception ex)
             {
                 response.Message = ex.Message;
@@ -128,15 +53,21 @@ namespace SinovadDemo.Application.UseCases.Users
             return response;
         }
 
-        public async Task<Response<UserDto>> GetAsync(int id)
+        public async Task<Response<UserSessionDto>> GetUserByMediaServerSecurityIdentifier(string securityIdentifier)
         {
-            var response = new Response<UserDto>();
+            var response = new Response<UserSessionDto>();
             try
             {
-                var result = await _unitOfWork.Users.GetAsync(id);
-                response.Data = _mapper.Map<UserDto>(result);
-                response.IsSuccess = true;
-                response.Message = "Successful";
+                var mediaServer = await _unitOfWork.MediaServers.GetByExpressionAsync(x => x.SecurityIdentifier == securityIdentifier);
+                if (mediaServer != null)
+                {
+                    var user = await _unitOfWork.Users.GetUserRelatedData(x => x.Id == mediaServer.UserId);
+                    if (user != null)
+                    {
+                        response.Data = GetUserSessionData(user);
+                        response.IsSuccess = true;
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -390,16 +321,32 @@ namespace SinovadDemo.Application.UseCases.Users
             return response;
         }
 
-        public Response<object> Create(UserDto userDto)
+        private UserSessionDto GetUserSessionData(User user)
         {
-            var response = new Response<object>();
+            var userDto = _mapper.Map<UserDto>(user);
+            userDto.IsPasswordSetted = user.PasswordHash != null ? true : false;
+            var userSessionDto = new UserSessionDto();
+            userSessionDto.User = userDto;
+            userSessionDto.MediaServers = _mapper.Map<List<MediaServerDto>>(user.MediaServers);
+            userSessionDto.Profiles = _mapper.Map<List<ProfileDto>>(user.Profiles);
+            userSessionDto.LinkedAccounts = _mapper.Map<List<LinkedAccountDto>>(user.LinkedAccounts);
+            return userSessionDto;
+        }
+
+        public async Task<ResponsePagination<List<UserDto>>> GetAllWithPaginationAsync(int page, int take, string sortBy, string sortDirection, string searchText, string searchBy)
+        {
+            var response = new ResponsePagination<List<UserDto>>();
             try
             {
-                var user = _mapper.Map<User>(userDto);
-                _unitOfWork.Users.Add(user);
-                _unitOfWork.Save();
-                response.IsSuccess = true;
-                response.Message = "Successful";
+                var result = await _unitOfWork.Users.GetAllWithPaginationAsync(page, take, sortBy, sortDirection, searchText, searchBy);
+                response.Data = _mapper.Map<List<UserDto>>(result.Items);
+                if (response.Data != null)
+                {
+                    response.PageNumber = page;
+                    response.TotalCount = result.Total;
+                    response.TotalPages = result.Pages;
+                    response.IsSuccess = true;
+                }
             }
             catch (Exception ex)
             {
@@ -409,18 +356,15 @@ namespace SinovadDemo.Application.UseCases.Users
             return response;
         }
 
-        public Response<object> Update(UserDto userDto)
+        public async Task<Response<UserDto>> GetAsync(int id)
         {
-            var response = new Response<object>();
+            var response = new Response<UserDto>();
             try
             {
-                var user = _mapper.Map<User>(userDto);
-                _unitOfWork.Users.Update(user);
-                _unitOfWork.Save();
+                var result = await _unitOfWork.Users.GetAsync(id);
+                response.Data = _mapper.Map<UserDto>(result);
                 response.IsSuccess = true;
-                response.Message = "Successful";
-            }
-            catch (Exception ex)
+            }catch (Exception ex)
             {
                 response.Message = ex.Message;
                 _logger.LogError(ex.StackTrace);
@@ -428,52 +372,27 @@ namespace SinovadDemo.Application.UseCases.Users
             return response;
         }
 
-        public Response<object> Delete(int id)
+        public async Task<Response<object>> DeleteAsync(int id)
         {
             var response = new Response<object>();
             try
             {
                 _unitOfWork.LinkedAccounts.DeleteByExpression(x => x.UserId == id);
-                _unitOfWork.Profiles.DeleteByExpression(x=>x.UserId==id);
+                _unitOfWork.Profiles.DeleteByExpression(x => x.UserId == id);
                 _unitOfWork.Users.Delete(id);
-                _unitOfWork.Save();
+                await _unitOfWork.SaveAsync();
                 response.IsSuccess = true;
-                response.Message = "Successful";
-            }
-            catch (Exception ex)
+            }catch (Exception ex)
             {
                 response.Message = ex.Message;
                 _logger.LogError(ex.StackTrace);
             }
             return response;
         }
-
-        public Response<object> DeleteList(string ids)
-        {
-            var response = new Response<object>();
-            try
-            {
-                List<string> listIds = new List<string>();
-                if (!string.IsNullOrEmpty(ids))
-                {
-                    listIds = ids.Split(",").ToList();
-                }
-                _unitOfWork.Users.DeleteByExpression(x => listIds.Contains(x.Id.ToString()));
-                _unitOfWork.Save();
-                response.IsSuccess = true;
-                response.Message = "Successful";
-            }
-            catch (Exception ex)
-            {
-                response.Message = ex.Message;
-                _logger.LogError(ex.StackTrace);
-            }
-            return response;
-        }
-
         public async Task<bool> CheckIfExistAsync(int id)
         {
-            return await _unitOfWork.Users.CheckIfExistAsync(user=>user.Id==id);
+            return await _unitOfWork.Users.CheckIfExistAsync(user => user.Id == id);
         }
+
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.DTO.User;
 using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Transversal.Common;
@@ -11,7 +10,7 @@ namespace SinovadDemoWebApi.Controllers.v1
 {
     [Route("api/v{version:apiVersion}/users")]
     [ApiController]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiVersion("1.0",Deprecated = false)]
     public class UserController : ControllerBase
     {
@@ -22,58 +21,29 @@ namespace SinovadDemoWebApi.Controllers.v1
             _userService = userService;
         }
 
-        [HttpGet("GetAllWithPaginationAsync")]
-        public async Task<ActionResult> GetAllWithPaginationAsync(int page = 1, int take = 1000, string sortBy = "Id", string sortDirection = "asc", string searchText = "", string searchBy = "")
-        {
-            var response = await _userService.GetAllWithPaginationAsync(page, take, sortBy, sortDirection, searchText, searchBy);
-            if (response.IsSuccess)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response.Message);
-        }
-
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("GetUserData")]
-        public async Task<ActionResult> GetUserData()
+        public async Task<ActionResult<Response<UserSessionDto>>> GetUserData()
         {
-            Response<UserSessionDto> response = null;
-            var claimUser = User.FindFirst(ClaimTypes.NameIdentifier);
-            if (claimUser != null)
+            var claim = HttpContext.User.Claims.Where(claim => claim.Type == ClaimTypes.NameIdentifier || claim.Type== ClaimTypes.Sid).FirstOrDefault();
+            if (claim != null)
             {
-                response = await _userService.GetUserByGuid(claimUser.Value);
-            }else
-            {
-                var claimSID = User.FindFirst(ClaimTypes.Sid);
-                if(claimSID != null)
+                Response<UserSessionDto> response = null;
+                if (claim.Type == ClaimTypes.NameIdentifier)
                 {
-                  response = await _userService.GetUserByMediaServerSecurityIdentifier(claimSID.Value);
+                    response = await _userService.GetUserByGuid(claim.Value);
                 }
-            }
-            if (response==null)
-            {
+                if (claim.Type == ClaimTypes.Sid)
+                {
+                    response = await _userService.GetUserByMediaServerSecurityIdentifier(claim.Value);
+                }
+                if (!response.IsSuccess)
+                {
+                    return BadRequest(response.Message);
+                }
+                return response;
+            }else{
                 return BadRequest();
             }
-            if (response.IsSuccess && response.Data!=null)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response.Message);
-        }
-
-        [HttpGet("GetByIdAsync/{id}")]
-        public async Task<ActionResult> GetByIdAsync([FromRoute] int id)
-        {
-            if (id == null)
-            {
-                return BadRequest();
-            }
-            var response = await _userService.GetAsync(id);
-            if (response.IsSuccess)
-            {
-                return Ok(response);
-            }
-            return BadRequest(response.Message);
         }
 
         [HttpPost("ValidateConfirmEmailToken")]
@@ -201,17 +171,39 @@ namespace SinovadDemoWebApi.Controllers.v1
             return BadRequest(response.Message);
         }
 
-        [HttpDelete("Delete/{userId}")]
-        public ActionResult Delete(int userId)
+
+        [HttpGet("GetAsync/{userId}")]
+        public async Task<ActionResult<Response<UserDto>>> GetAsync([FromRoute] int userId)
         {
-            var response = _userService.Delete(userId);
-            if (response.IsSuccess)
+            var response = await _userService.GetAsync(userId);
+            if (!response.IsSuccess)
             {
-                return Ok(response);
+                return BadRequest(response.Message);
             }
-            return BadRequest(response.Message);
+            return response;
         }
 
+        [HttpGet("GetAllWithPaginationAsync")]
+        public async Task<ActionResult<ResponsePagination<List<UserDto>>>> GetAllWithPaginationAsync(int page = 1, int take = 1000, string sortBy = "Id", string sortDirection = "asc", string searchText = "", string searchBy = "")
+        {
+            var response = await _userService.GetAllWithPaginationAsync(page, take, sortBy, sortDirection, searchText, searchBy);
+            if (!response.IsSuccess)
+            {
+                return BadRequest(response.Message);
+            }
+            return response;
+        }
+
+        [HttpDelete("DeleteAsync/{userId}")]
+        public async Task<ActionResult> DeleteAsync([FromRoute]int userId)
+        {
+            var response = await _userService.DeleteAsync(userId);
+            if (!response.IsSuccess)
+            {
+                return BadRequest(response.Message);
+            }
+            return NoContent();
+        }
 
     }
 

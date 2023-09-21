@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.DTO.Authenticate;
 using SinovadDemo.Application.DTO.User;
 using SinovadDemo.Application.Interface.Infrastructure;

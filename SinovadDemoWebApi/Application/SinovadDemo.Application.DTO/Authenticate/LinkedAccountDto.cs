@@ -1,6 +1,6 @@
 ﻿using SinovadDemo.Domain.Enums;
 
-namespace SinovadDemo.Application.DTO
+namespace SinovadDemo.Application.DTO.Authenticate
 {
     public class LinkedAccountDto
     {
