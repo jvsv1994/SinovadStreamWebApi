@@ -7,6 +7,6 @@ namespace SinovadDemo.Application.Interface.UseCases
     public interface ISignUpService
     {
         Task<Response<bool>> Register(RegisterUserDto dto);
-        Task RegisterWithLinkedAccount(RegisterUserFromProviderDto registerUserFromProviderDto);
+        Task<int> RegisterWithLinkedAccount(RegisterUserFromProviderDto registerUserFromProviderDto);
     }
 }

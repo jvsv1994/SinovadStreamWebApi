@@ -111,7 +111,7 @@ namespace SinovadDemo.Application.UseCases.SignUp
             return response;
         }
 
-        public async Task RegisterWithLinkedAccount(RegisterUserFromProviderDto registerUserFromProviderDto)
+        public async Task<int> RegisterWithLinkedAccount(RegisterUserFromProviderDto registerUserFromProviderDto)
         {
             try
             {
@@ -133,6 +133,7 @@ namespace SinovadDemo.Application.UseCases.SignUp
                 appUser.LinkedAccounts.Add(linkedAccount);
                 var user = await _unitOfWork.Users.AddAsync(appUser);
                 await _unitOfWork.SaveAsync();
+                return user.Id;
             }catch(Exception ex)
             {
                 _logger.LogError(ex.StackTrace);

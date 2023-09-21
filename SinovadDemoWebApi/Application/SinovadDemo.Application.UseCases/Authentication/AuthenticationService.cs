@@ -142,8 +142,8 @@ namespace SinovadDemo.Application.UseCases.Authentication
                         authenticateUserResponse.ConfirmLinkAccountData = confirmLinkAccountData;
                         response.Data = authenticateUserResponse;
                     }else{
-                        await _signUpService.RegisterWithLinkedAccount(registerUserFromProviderDto);
-                        user = await _unitOfWork.Users.GetUserRelatedData(user => user.Id == linkedAccountFinded.UserId);
+                        var userId=await _signUpService.RegisterWithLinkedAccount(registerUserFromProviderDto);
+                        user = await _unitOfWork.Users.GetUserRelatedData(user => user.Id == userId);
                         var authenticateUserResponse = new AuthenticationUserResponseDto();
                         authenticateUserResponse.UserData = GetUserSessionData(user);
                         authenticateUserResponse.ApiToken = CreateWebToken(user);
