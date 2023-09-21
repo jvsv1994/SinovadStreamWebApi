@@ -54,15 +54,15 @@ namespace SinovadDemoWebApi.Controllers.v1
             return CreatedAtRoute("getCatalog", new { catalogId = response.Data.Id }, response.Data);
         }
 
-        [HttpPut("UpdateAsync/{mediaServerId:int}")]
-        public async Task<ActionResult> UpdateAsync([FromRoute]int mediaServerId,[FromBody] CatalogCreationDto seasonDto)
+        [HttpPut("UpdateAsync/{catalogId:int}")]
+        public async Task<ActionResult> UpdateAsync([FromRoute]int catalogId, [FromBody] CatalogCreationDto seasonDto)
         {
-            var exists = await _catalogService.CheckIfExistsAsync(mediaServerId);
+            var exists = await _catalogService.CheckIfExistsAsync(catalogId);
             if(!exists)
             {
                 return NotFound("Catálogo no encontrado");
             }
-            var response = await _catalogService.UpdateAsync(mediaServerId,seasonDto);
+            var response = await _catalogService.UpdateAsync(catalogId, seasonDto);
             if (!response.IsSuccess)
             {
             }
