@@ -37,6 +37,7 @@ namespace SinovadDemo.Application.UseCases.CatalogDetails
             {
                 var catalogDetail = _mapper.Map<CatalogDetail>(catalogDetailCreationDto);
                 catalogDetail.CatalogId = catalogId;
+                catalogDetail.Id = await _unitOfWork.CatalogDetails.CountByExpressionAsync(catalogDetail=>catalogDetail.CatalogId==catalogId) + 1;
                 catalogDetail = await _unitOfWork.CatalogDetails.AddAsync(catalogDetail);
                 await _unitOfWork.SaveAsync();
                 response.Data = _mapper.Map<CatalogDetailDto>(catalogDetail);
