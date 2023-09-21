@@ -128,7 +128,7 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
             entity.Property(e => e.TextValue)
                 .HasMaxLength(1000)
                 .IsUnicode(false);
-
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.HasOne(d => d.Catalog).WithMany(p => p.CatalogDetails)
                 .HasForeignKey(d => d.CatalogId)
                 .OnDelete(DeleteBehavior.ClientSetNull)

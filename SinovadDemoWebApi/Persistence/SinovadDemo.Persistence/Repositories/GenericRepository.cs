@@ -52,6 +52,11 @@ namespace SinovadDemo.Persistence.Repositories
             return await _table.FirstOrDefaultAsync(predicate, cancellationToken);
         }
 
+        public async Task<TEntity> GetByExpressionAsync(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, object>> include, CancellationToken cancellationToken = default)
+        {
+            return await _table.Include(include).FirstOrDefaultAsync(predicate, cancellationToken);
+        }
+
         public IEnumerable<TEntity> GetAll()
         {
             return _table.ToList();

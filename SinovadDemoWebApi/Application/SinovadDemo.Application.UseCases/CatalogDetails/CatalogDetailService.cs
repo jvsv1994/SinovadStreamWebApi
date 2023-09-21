@@ -104,7 +104,7 @@ namespace SinovadDemo.Application.UseCases.CatalogDetails
             var response = new Response<CatalogDetailDto>();
             try
             {
-                var result = await _unitOfWork.CatalogDetails.GetByExpressionAsync(catalogDetail => catalogDetail.Id==catalogDetailId && catalogDetail.CatalogId == catalogId);
+                var result = await _unitOfWork.CatalogDetails.GetByExpressionAsync(catalogDetail => catalogDetail.Id==catalogDetailId && catalogDetail.CatalogId == catalogId, catalogDetail => catalogDetail.Catalog);
                 response.Data = _mapper.Map<CatalogDetailDto>(result);
                 response.IsSuccess = true;
             }catch (Exception exception)
