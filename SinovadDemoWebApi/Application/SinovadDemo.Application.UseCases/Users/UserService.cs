@@ -379,9 +379,16 @@ namespace SinovadDemo.Application.UseCases.Users
         {
             var response = new Response<UserWithRolesDto>();
             try
-            {
+            {                
                 var user = await _unitOfWork.Users.GetUserWithRolesAsync(user=>user.Id==userId);
-                response.Data = _mapper.Map<UserWithRolesDto>(user);
+                var userWithRoles= _mapper.Map<UserWithRolesDto>(user);
+                var roleIds = userWithRoles.UserRoles.Select(rol => rol.RoleId);
+                var rolesToAdd = await _unitOfWork.Roles.GetAllByExpressionAsync(rol=> !roleIds.Contains(rol.Id));
+                foreach (var role in rolesToAdd)
+                {
+                    userWithRoles.UserRoles.Add(new UserRoleDto() { RoleId = role.Id, RoleName = role.Name, Enabled = false });
+                }
+                response.Data = userWithRoles;
                 response.IsSuccess = true;
             }catch (Exception ex)
             {

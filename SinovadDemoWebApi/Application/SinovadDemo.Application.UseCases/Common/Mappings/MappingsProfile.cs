@@ -25,7 +25,7 @@ namespace Pacagroup.Ecommerce.Application.UseCases.Common.Mappings
             CreateMap<RegisterUserDto, User>();
             CreateMap<RegisterUserFromProviderDto, User>();
             CreateMap<User, UserDto>().ForMember(x => x.IsPasswordSetted, y => y.MapFrom(y => y.PasswordHash != null)).ReverseMap();
-            CreateMap<User, UserWithRolesDto>().ForMember(uwrdto => uwrdto.Roles, options => options.MapFrom(MapRolesFromUser));
+            CreateMap<User, UserWithRolesDto>().ForMember(uwrdto => uwrdto.UserRoles, options => options.MapFrom(MapRolesFromUser));
 
             CreateMap<CatalogCreationDto, Catalog>();
             CreateMap<Catalog, CatalogDto>().ReverseMap();
@@ -119,15 +119,15 @@ namespace Pacagroup.Ecommerce.Application.UseCases.Common.Mappings
             return result;
         }
 
-        private List<RoleDto> MapRolesFromUser(User user, UserWithRolesDto userWithRolesDto)
+        private List<UserRoleDto> MapRolesFromUser(User user, UserWithRolesDto userWithRolesDto)
         {
-            var result = new List<RoleDto>();
+            var result = new List<UserRoleDto>();
 
             if (user.UserRoles == null) return result;
 
             foreach (var userRole in user.UserRoles)
             {
-                result.Add(new RoleDto() { Id = userRole.Role.Id, Name = userRole.Role.Name, Enabled = userRole.Role.Enabled });
+                result.Add(new UserRoleDto() { RoleId = userRole.Role.Id, RoleName = userRole.Role.Name, Enabled = userRole.Enabled });
             }
             return result;
         }
