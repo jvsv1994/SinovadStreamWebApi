@@ -183,7 +183,7 @@ namespace SinovadDemoWebApi.Controllers.v1
             return response;
         }
 
-        [HttpGet("GetAsync/{userId}/roles")]
+        [HttpGet("GetUserWithRolesAsync/{userId}")]
         public async Task<ActionResult<Response<UserWithRolesDto>>> GetUserWithRolesAsync([FromRoute] int userId)
         {
             var response = await _userService.GetUserWithRolesAsync(userId);
@@ -192,6 +192,22 @@ namespace SinovadDemoWebApi.Controllers.v1
                 return BadRequest(response.Message);
             }
             return response;
+        }
+
+        [HttpPut("UpdateUserRolesAsync/{userId}")]
+        public async Task<ActionResult> UpdateUserRolesAsync([FromRoute] int userId,[FromBody] List<UserRoleDto> userRoles)
+        {
+            var exists= await _userService.CheckIfExistAsync(userId);
+            if(!exists)
+            {
+                return NotFound("Usuario no encontrado");
+            }
+            var response = await _userService.UpdateUserRolesAsync(userId, userRoles);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response.Message);
         }
 
         [HttpGet("GetAllWithPaginationAsync")]

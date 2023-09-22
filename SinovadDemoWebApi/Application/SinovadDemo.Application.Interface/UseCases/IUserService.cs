@@ -17,6 +17,7 @@ namespace SinovadDemo.Application.Interface.UseCases
         Task<Response<bool>> ValidateConfirmEmailToken(ValidateConfirmEmailTokenDto dto);
         Task<Response<UserDto>> GetAsync(int id);
         Task<Response<UserWithRolesDto>> GetUserWithRolesAsync(int id);
+        Task<Response<object>> UpdateUserRolesAsync(int userId, List<UserRoleDto> userRoles);
         Task<ResponsePagination<List<UserDto>>> GetAllWithPaginationAsync(int page, int take, string sortBy, string sortDirection, string searchText, string searchBy);
         Task<Response<object>> DeleteAsync(int id);
         Task<bool> CheckIfExistAsync(int id);

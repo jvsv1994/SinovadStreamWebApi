@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Generic.Core.Models;
 using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 using SinovadDemo.Application.DTO;
@@ -392,6 +393,23 @@ namespace SinovadDemo.Application.UseCases.Users
                 response.IsSuccess = true;
             }catch (Exception ex)
             {
+                response.Message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
+        public async Task<Response<object>> UpdateUserRolesAsync(int userId, List<UserRoleDto> userRoles)
+        {
+            var response = new Response<object>();
+            try
+            {
+                var user = await _unitOfWork.Users.GetUserWithRolesAsync(user => user.Id == userId);
+                user.UserRoles = _mapper.Map<List<UserRole>>(userRoles);
+                _unitOfWork.Users.Update(user);
+                await _unitOfWork.SaveAsync();
+                response.IsSuccess = true;
+            }catch (Exception ex){
                 response.Message = ex.Message;
                 _logger.LogError(ex.StackTrace);
             }
