@@ -375,6 +375,22 @@ namespace SinovadDemo.Application.UseCases.Users
             return response;
         }
 
+        public async Task<Response<UserWithRolesDto>> GetUserWithRolesAsync(int userId)
+        {
+            var response = new Response<UserWithRolesDto>();
+            try
+            {
+                var user = await _unitOfWork.Users.GetUserWithRolesAsync(user=>user.Id==userId);
+                response.Data = _mapper.Map<UserWithRolesDto>(user);
+                response.IsSuccess = true;
+            }catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
         public async Task<Response<object>> DeleteAsync(int id)
         {
             var response = new Response<object>();

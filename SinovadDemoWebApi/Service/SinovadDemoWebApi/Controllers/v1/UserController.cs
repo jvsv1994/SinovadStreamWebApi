@@ -183,6 +183,17 @@ namespace SinovadDemoWebApi.Controllers.v1
             return response;
         }
 
+        [HttpGet("GetAsync/{userId}/roles")]
+        public async Task<ActionResult<Response<UserWithRolesDto>>> GetUserWithRolesAsync([FromRoute] int userId)
+        {
+            var response = await _userService.GetUserWithRolesAsync(userId);
+            if (!response.IsSuccess)
+            {
+                return BadRequest(response.Message);
+            }
+            return response;
+        }
+
         [HttpGet("GetAllWithPaginationAsync")]
         public async Task<ActionResult<ResponsePagination<List<UserDto>>>> GetAllWithPaginationAsync(int page = 1, int take = 1000, string sortBy = "Id", string sortDirection = "asc", string searchText = "", string searchBy = "")
         {
