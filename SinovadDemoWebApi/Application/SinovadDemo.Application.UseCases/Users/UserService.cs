@@ -5,6 +5,7 @@ using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.DTO.Authenticate;
 using SinovadDemo.Application.DTO.MediaServer;
 using SinovadDemo.Application.DTO.Profile;
+using SinovadDemo.Application.DTO.Role;
 using SinovadDemo.Application.DTO.User;
 using SinovadDemo.Application.Interface.Infrastructure;
 using SinovadDemo.Application.Interface.Persistence;
@@ -331,6 +332,7 @@ namespace SinovadDemo.Application.UseCases.Users
             userSessionDto.MediaServers = _mapper.Map<List<MediaServerDto>>(user.MediaServers);
             userSessionDto.Profiles = _mapper.Map<List<ProfileDto>>(user.Profiles);
             userSessionDto.LinkedAccounts = _mapper.Map<List<LinkedAccountDto>>(user.LinkedAccounts);
+            userSessionDto.Roles = _mapper.Map<List<RoleDto>>(user.UserRoles.Select(ur => ur.Role).ToList());
             return userSessionDto;
         }
 

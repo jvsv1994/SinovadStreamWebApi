@@ -1,6 +1,7 @@
 ﻿using SinovadDemo.Application.DTO.Authenticate;
 using SinovadDemo.Application.DTO.MediaServer;
 using SinovadDemo.Application.DTO.Profile;
+using SinovadDemo.Application.DTO.Role;
 
 namespace SinovadDemo.Application.DTO.User
 {
@@ -10,6 +11,7 @@ namespace SinovadDemo.Application.DTO.User
         public List<LinkedAccountDto> LinkedAccounts { get; set; }
         public List<ProfileDto> Profiles { get; set; }
         public List<MediaServerDto> MediaServers { get; set; }
+        public List<RoleDto> Roles { get; set; }
 
     }
 }

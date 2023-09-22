@@ -4,6 +4,7 @@ using SinovadDemo.Application.Configuration;
 using SinovadDemo.Application.DTO.Authenticate;
 using SinovadDemo.Application.DTO.MediaServer;
 using SinovadDemo.Application.DTO.Profile;
+using SinovadDemo.Application.DTO.Role;
 using SinovadDemo.Application.DTO.SignUp;
 using SinovadDemo.Application.DTO.User;
 using SinovadDemo.Application.Helpers;
@@ -13,6 +14,7 @@ using SinovadDemo.Application.Validator;
 using SinovadDemo.Domain.Entities;
 using SinovadDemo.Domain.Enums;
 using SinovadDemo.Transversal.Common;
+using System.Security.Policy;
 
 namespace SinovadDemo.Application.UseCases.Authentication
 {
@@ -240,6 +242,7 @@ namespace SinovadDemo.Application.UseCases.Authentication
             userSessionDto.MediaServers = _mapper.Map<List<MediaServerDto>>(user.MediaServers);
             userSessionDto.Profiles = _mapper.Map<List<ProfileDto>>(user.Profiles);
             userSessionDto.LinkedAccounts = _mapper.Map<List<LinkedAccountDto>>(user.LinkedAccounts);
+            userSessionDto.Roles = _mapper.Map<List<RoleDto>>(user.UserRoles.Select(ur=>ur.Role).ToList());
             return userSessionDto;
         }
     }
