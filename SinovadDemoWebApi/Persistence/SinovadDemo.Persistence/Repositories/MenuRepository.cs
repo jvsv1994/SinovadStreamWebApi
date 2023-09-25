@@ -22,7 +22,7 @@ namespace SinovadDemo.Persistence.Repositories
                         join rolemenu in _context.RoleMenus on menu.Id equals rolemenu.MenuId
                         join role in _context.Roles on rolemenu.RoleId equals role.Id
                         join userrole in _context.UserRoles on role.Id equals userrole.RoleId
-                        where userrole.UserId == userId
+                        where userrole.UserId == userId && userrole.Enabled==true && role.Enabled==true && rolemenu.Enabled == true
                         select menu;
             return await res.Distinct().ToListAsync();
         }
