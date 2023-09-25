@@ -1,10 +1,7 @@
 ﻿using Generic.Core.Models;
 using Microsoft.EntityFrameworkCore;
-using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Domain.Entities;
-using SinovadDemo.Domain.Enums;
-using System.Linq.Expressions;
 
 namespace SinovadDemo.Persistence.Repositories
 {
@@ -19,13 +16,15 @@ namespace SinovadDemo.Persistence.Repositories
         public async Task<List<Menu>> GetListMenusByUser(int userId)
         {
 
+
+
             var res = from menu in _context.Menus
                         join rolemenu in _context.RoleMenus on menu.Id equals rolemenu.MenuId
                         join role in _context.Roles on rolemenu.RoleId equals role.Id
                         join userrole in _context.UserRoles on role.Id equals userrole.RoleId
                         where userrole.UserId == userId
                         select menu;
-            return await res.ToListAsync();
+            return await res.Distinct().ToListAsync();
         }
 
     }
