@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Generic.Core.Models;
 using SinovadDemo.Application.DTO.Role;
+using SinovadDemo.Application.DTO.User;
 using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Application.Interface.UseCases;
 using SinovadDemo.Transversal.Common;
@@ -140,6 +141,49 @@ namespace SinovadDemo.Application.UseCases.Roles
         {
             return await _unitOfWork.Roles.CheckIfExistAsync(role=>role.Id==roleId);
         }
+
+
+        public async Task<Response<RoleWithMenusDto>> GetRoleWithMenusAsync(int roleId)
+        {
+            var response = new Response<RoleWithMenusDto>();
+            try
+            {
+                var role = await _unitOfWork.Roles.GetRoleWithMenusAsync(role => role.Id == roleId);
+                var roleWithMenus = _mapper.Map<RoleWithMenusDto>(role);
+                var menuIds = roleWithMenus.RoleMenus.Select(roleMenu => roleMenu.MenuId);
+                var menusToAdd = await _unitOfWork.Menus.GetAllByExpressionAsync(menu => !menuIds.Contains(menu.Id));
+                foreach (var menu in menusToAdd)
+                {
+                    roleWithMenus.RoleMenus.Add(new RoleMenuDto() { MenuId = menu.Id, MenuTitle = menu.Title, Enabled = false ,AllowCreate = false ,AllowRead =false, AllowUpdate =false, AllowDelete=false });
+                }
+                response.Data = roleWithMenus;
+                response.IsSuccess = true;
+            }catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
+        public async Task<Response<object>> UpdateRoleMenusAsync(int roleId, List<RoleMenuDto> roleMenus)
+        {
+            var response = new Response<object>();
+            try
+            {
+                var role = await _unitOfWork.Roles.GetRoleWithMenusAsync(role => role.Id == roleId);
+                role.RoleMenus = _mapper.Map<List<RoleMenu>>(roleMenus);
+                _unitOfWork.Roles.Update(role);
+                await _unitOfWork.SaveAsync();
+                response.IsSuccess = true;
+            }catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                _logger.LogError(ex.StackTrace);
+            }
+            return response;
+        }
+
 
     }
 }

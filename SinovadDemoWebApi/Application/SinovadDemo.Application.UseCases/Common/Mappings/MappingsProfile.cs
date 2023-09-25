@@ -61,6 +61,8 @@ namespace Pacagroup.Ecommerce.Application.UseCases.Common.Mappings
 
             CreateMap<RoleCreationDto, Role>();
             CreateMap<Role, RoleDto>().ReverseMap();
+            CreateMap<Role, RoleWithMenusDto>().ForMember(rwmdto => rwmdto.RoleMenus, options => options.MapFrom(MapMenusFromRole));
+            CreateMap<RoleMenuDto, RoleMenu>();
 
             CreateMap<MediaServerCreationDto, MediaServer>();
             CreateMap<MediaServer, MediaServerDto>().ReverseMap();
@@ -133,6 +135,24 @@ namespace Pacagroup.Ecommerce.Application.UseCases.Common.Mappings
             return result;
         }
 
+        private List<RoleMenuDto> MapMenusFromRole(Role role, RoleWithMenusDto roleWithMenusDto)
+        {
+            var result = new List<RoleMenuDto>();
+
+            if (role.RoleMenus == null) return result;
+
+            foreach (var roleMenu in role.RoleMenus)
+            {
+                result.Add(new RoleMenuDto() { MenuId = roleMenu.Menu.Id, MenuTitle = roleMenu.Menu.Title, Enabled = roleMenu.Enabled 
+                    ,AllowCreate= roleMenu.AllowCreate, AllowUpdate = roleMenu.AllowUpdate,AllowRead= roleMenu.AllowRead,AllowDelete = roleMenu.AllowDelete
+                });
+            }
+            return result;
+        }
+
+
         
+
+
     }
 }

@@ -90,6 +90,33 @@ namespace SinovadDemoWebApi.Controllers.v1
             return NoContent();
         }
 
+
+        [HttpGet("GetRoleWithMenusAsync/{roleId}")]
+        public async Task<ActionResult<Response<RoleWithMenusDto>>> GetRoleWithMenusAsync([FromRoute] int roleId)
+        {
+            var response = await _roleService.GetRoleWithMenusAsync(roleId);
+            if (!response.IsSuccess)
+            {
+                return BadRequest(response.Message);
+            }
+            return response;
+        }
+
+        [HttpPut("UpdateRoleMenusAsync/{roleId}")]
+        public async Task<ActionResult> UpdateRoleMenusAsync([FromRoute] int roleId, [FromBody] List<RoleMenuDto> roleMenus)
+        {
+            var exists = await _roleService.CheckIfExistAsync(roleId);
+            if (!exists)
+            {
+                return NotFound("Usuario no encontrado");
+            }
+            var response = await _roleService.UpdateRoleMenusAsync(roleId, roleMenus);
+            if (response.IsSuccess)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response.Message);
+        }
     }
 
 }

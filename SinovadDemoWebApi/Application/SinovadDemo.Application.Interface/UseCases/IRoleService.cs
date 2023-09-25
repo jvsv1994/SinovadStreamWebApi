@@ -12,7 +12,8 @@ namespace SinovadDemo.Application.Interface.UseCases
         Task<Response<object>> DeleteAsync(int id);
         Task<Response<object>> DeleteListAsync(string ids);
         Task<bool> CheckIfExistAsync(int id);
-
+        Task<Response<RoleWithMenusDto>> GetRoleWithMenusAsync(int roleId);
+        Task<Response<object>> UpdateRoleMenusAsync(int roleId, List<RoleMenuDto> roleMenus);
 
     }
 
