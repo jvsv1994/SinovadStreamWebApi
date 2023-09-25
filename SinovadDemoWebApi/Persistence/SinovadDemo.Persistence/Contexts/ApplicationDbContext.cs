@@ -219,19 +219,19 @@ public partial class ApplicationDbContext : IdentityDbContext<User, Role, int, I
 
 
         modelBuilder.Entity<RoleMenu>().HasData(
-           new RoleMenu { RoleId = 1, MenuId = 1 },
-           new RoleMenu { RoleId = 1, MenuId = 2 },
-           new RoleMenu { RoleId = 1, MenuId = 3 },
-           new RoleMenu { RoleId = 1, MenuId = 4 },
-           new RoleMenu { RoleId = 1, MenuId = 5 },
-           new RoleMenu { RoleId = 1, MenuId = 6 },
-           new RoleMenu { RoleId = 1, MenuId = 7 },
-           new RoleMenu { RoleId = 1, MenuId = 8 },
-           new RoleMenu { RoleId = 1, MenuId = 9 },
-           new RoleMenu { RoleId = 2, MenuId = 2 },
-           new RoleMenu { RoleId = 2, MenuId = 7 },
-           new RoleMenu { RoleId = 2, MenuId = 8 },
-           new RoleMenu { RoleId = 2, MenuId = 9 });
+           new RoleMenu { RoleId = 1, MenuId = 1,Enabled=true,AllowCreate=true,AllowDelete=true,AllowUpdate=true,AllowRead=true},
+           new RoleMenu { RoleId = 1, MenuId = 2, Enabled = true, AllowCreate = true, AllowDelete = true, AllowUpdate = true, AllowRead = true },
+           new RoleMenu { RoleId = 1, MenuId = 3, Enabled = true, AllowCreate = true, AllowDelete = true, AllowUpdate = true, AllowRead = true },
+           new RoleMenu { RoleId = 1, MenuId = 4, Enabled = true, AllowCreate = true, AllowDelete = true, AllowUpdate = true, AllowRead = true },
+           new RoleMenu { RoleId = 1, MenuId = 5, Enabled = true, AllowCreate = true, AllowDelete = true, AllowUpdate = true, AllowRead = true },
+           new RoleMenu { RoleId = 1, MenuId = 6, Enabled = true, AllowCreate = true, AllowDelete = true, AllowUpdate = true, AllowRead = true },
+           new RoleMenu { RoleId = 1, MenuId = 7, Enabled = true, AllowCreate = true, AllowDelete = true, AllowUpdate = true, AllowRead = true },
+           new RoleMenu { RoleId = 1, MenuId = 8, Enabled = true, AllowCreate = true, AllowDelete = true, AllowUpdate = true, AllowRead = true },
+           new RoleMenu { RoleId = 1, MenuId = 9, Enabled = true, AllowCreate = true, AllowDelete = true, AllowUpdate = true, AllowRead = true },
+           new RoleMenu { RoleId = 2, MenuId = 2, Enabled = true, AllowCreate = true, AllowDelete = true, AllowUpdate = true, AllowRead = true },
+           new RoleMenu { RoleId = 2, MenuId = 7, Enabled = true, AllowCreate = true, AllowDelete = true, AllowUpdate = true, AllowRead = true },
+           new RoleMenu { RoleId = 2, MenuId = 8, Enabled = true, AllowCreate = true, AllowDelete = true, AllowUpdate = true, AllowRead = true },
+           new RoleMenu { RoleId = 2, MenuId = 9, Enabled = true, AllowCreate = true, AllowDelete = true, AllowUpdate = true, AllowRead = true });
 
 
         modelBuilder.Entity<MediaServer>(entity =>
