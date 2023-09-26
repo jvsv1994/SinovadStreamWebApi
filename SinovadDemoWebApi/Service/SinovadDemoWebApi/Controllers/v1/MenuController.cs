@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SinovadDemo.Application.DTO.Menu;
 using SinovadDemo.Application.Interface.UseCases;
@@ -8,7 +9,7 @@ namespace SinovadDemoWebApi.Controllers.v1
 {
     [Route("api/v{version:apiVersion}/menus")]
     [ApiController]
-    [Authorize]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "IsMainAdmin")]
     [ApiVersion("1.0", Deprecated = false)]
     public class MenuController : ControllerBase
     {
@@ -17,16 +18,6 @@ namespace SinovadDemoWebApi.Controllers.v1
         public MenuController(IMenuService userService)
         {
             _menuService = userService;
-        }
-        [HttpGet("GetByUserAsync/{userId}")]
-        public async Task<ActionResult<Response<List<MenuDto>>>> GetByUserAsync([FromRoute]int userId)
-        {
-            var response = await _menuService.GetListMenusByUserAsync(userId);
-            if (!response.IsSuccess)
-            {
-                return BadRequest(response.Message);
-            }
-            return response;
         }
 
         [HttpGet("GetAsync/{menuId:int}",Name ="getMenu")]

@@ -151,40 +151,9 @@ namespace SinovadDemo.Application.UseCases.Users
             return response;
         }
 
-        public async Task<Response<List<MenuDto>>> GetListMenusByUserAsync(int userId)
-        {
-            var response = new Response<List<MenuDto>>();
-            try
-            {
-                var list= await BuildListMenusByUser(userId);
-                response.Data = list;
-                response.IsSuccess = true;
-            }catch (Exception ex){
-                response.Message = ex.Message;
-                _logger.LogError(ex.StackTrace);
-            }
-            return response;
-        }
-
         public async Task<bool> CheckIfExistsAsync(int menuId)
         {
-            return await _unitOfWork.Menus.CheckIfExistAsync(menu=>menu.Id==menuId);
-        }
-
-        private async Task<List<MenuDto>> BuildListMenusByUser(int userId)
-        {
-            var result = await _unitOfWork.Menus.GetListMenusByUser(userId);
-            var listMenus = _mapper.Map<List<MenuDto>>(result);
-            var mainMenus = listMenus.Where(m => m.ParentId == 0 && m.Enabled == true).OrderBy(m => m.SortOrder).ToList();
-            mainMenus.ForEach(m => m.ChildMenus = BuildMenuChilds(m.Id, listMenus));
-            return mainMenus;
-        }
-
-        private List<MenuDto> BuildMenuChilds(int parentId, List<MenuDto> originalList)
-        {
-            var listMenus = originalList.Where(m => m.ParentId == parentId && m.Enabled == true).OrderBy(m => m.SortOrder).ToList();
-            listMenus.ForEach(m => m.ChildMenus = BuildMenuChilds(m.Id, originalList));
-            return listMenus;
+            return await _unitOfWork.Menus.CheckIfExistAsync(menu => menu.Id == menuId);
         }
 
     }

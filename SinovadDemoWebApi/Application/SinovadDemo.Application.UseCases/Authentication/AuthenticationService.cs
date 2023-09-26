@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using SinovadDemo.Application.Configuration;
 using SinovadDemo.Application.DTO.Authenticate;
 using SinovadDemo.Application.DTO.MediaServer;
+using SinovadDemo.Application.DTO.Menu;
 using SinovadDemo.Application.DTO.Profile;
 using SinovadDemo.Application.DTO.Role;
 using SinovadDemo.Application.DTO.SignUp;
@@ -14,7 +15,6 @@ using SinovadDemo.Application.Validator;
 using SinovadDemo.Domain.Entities;
 using SinovadDemo.Domain.Enums;
 using SinovadDemo.Transversal.Common;
-using System.Security.Policy;
 
 namespace SinovadDemo.Application.UseCases.Authentication
 {
@@ -88,7 +88,7 @@ namespace SinovadDemo.Application.UseCases.Authentication
                             if (user.Active)
                             {
                                 var data = new AuthenticationUserResponseDto();                   
-                                data.UserData = GetUserSessionData(user);
+                                data.UserData = await GetUserSessionData(user);
                                 var jwtHelper = new JWTHelper(_config.Value.JwtSettings.Secret, _config.Value.JwtSettings.Issuer, _config.Value.JwtSettings.Audience);
                                 var token = jwtHelper.CreateTokenWithUserGuid(user.Guid);
                                 data.ApiToken = token;
@@ -128,7 +128,7 @@ namespace SinovadDemo.Application.UseCases.Authentication
                 {
                     var user = await _unitOfWork.Users.GetUserRelatedData(user=>user.Id == linkedAccountFinded.UserId);
                     var authenticateUserResponse = new AuthenticationUserResponseDto();
-                    authenticateUserResponse.UserData = GetUserSessionData(user);
+                    authenticateUserResponse.UserData = await GetUserSessionData(user);
                     authenticateUserResponse.ApiToken = CreateWebToken(user);
                     response.Data = authenticateUserResponse;
                 }else{
@@ -147,7 +147,7 @@ namespace SinovadDemo.Application.UseCases.Authentication
                         var userId=await _signUpService.RegisterWithLinkedAccount(registerUserFromProviderDto);
                         user = await _unitOfWork.Users.GetUserRelatedData(user => user.Id == userId);
                         var authenticateUserResponse = new AuthenticationUserResponseDto();
-                        authenticateUserResponse.UserData = GetUserSessionData(user);
+                        authenticateUserResponse.UserData = await GetUserSessionData(user);
                         authenticateUserResponse.ApiToken = CreateWebToken(user);
                         response.Data = authenticateUserResponse;
                     }
@@ -179,7 +179,7 @@ namespace SinovadDemo.Application.UseCases.Authentication
                     linkedAccount = await _unitOfWork.LinkedAccounts.AddAsync(linkedAccount);
                     await _unitOfWork.SaveAsync();
                     var authenticateUserResponse = new AuthenticationUserResponseDto();
-                    authenticateUserResponse.UserData = GetUserSessionData(user);       
+                    authenticateUserResponse.UserData = await GetUserSessionData(user);       
                     authenticateUserResponse.ApiToken = CreateWebToken(user);
                     response.Data = authenticateUserResponse;
                     response.IsSuccess = true;
@@ -233,7 +233,7 @@ namespace SinovadDemo.Application.UseCases.Authentication
             return token;
         }
 
-        private UserSessionDto GetUserSessionData(User user)
+        private async Task<UserSessionDto> GetUserSessionData(User user)
         {
             var userDto = _mapper.Map<UserDto>(user);
             userDto.IsPasswordSetted = user.PasswordHash != null ? true : false;
@@ -243,7 +243,24 @@ namespace SinovadDemo.Application.UseCases.Authentication
             userSessionDto.Profiles = _mapper.Map<List<ProfileDto>>(user.Profiles);
             userSessionDto.LinkedAccounts = _mapper.Map<List<LinkedAccountDto>>(user.LinkedAccounts);
             userSessionDto.Roles = _mapper.Map<List<RoleDto>>(user.UserRoles.Select(ur=>ur.Role).ToList());
+            userSessionDto.Menus = await BuildListMenusByUser(user.Id);
             return userSessionDto;
+        }
+
+        private async Task<List<MenuDto>> BuildListMenusByUser(int userId)
+        {
+            var result = await _unitOfWork.Menus.GetListMenusByUser(userId);
+            var listMenus = _mapper.Map<List<MenuDto>>(result);
+            var mainMenus = listMenus.Where(m => m.ParentId == 0 && m.Enabled == true).OrderBy(m => m.SortOrder).ToList();
+            mainMenus.ForEach(m => m.ChildMenus = BuildMenuChilds(m.Id, listMenus));
+            return mainMenus;
+        }
+
+        private List<MenuDto> BuildMenuChilds(int parentId, List<MenuDto> originalList)
+        {
+            var listMenus = originalList.Where(m => m.ParentId == parentId && m.Enabled == true).OrderBy(m => m.SortOrder).ToList();
+            listMenus.ForEach(m => m.ChildMenus = BuildMenuChilds(m.Id, originalList));
+            return listMenus;
         }
     }
 }

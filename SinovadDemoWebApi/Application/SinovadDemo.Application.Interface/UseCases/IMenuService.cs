@@ -12,7 +12,6 @@ namespace SinovadDemo.Application.Interface.UseCases
         Task<Response<object>> UpdateAsync(int menuId,MenuCreationDto menuCreationDto);
         Task<Response<object>> DeleteAsync(int id);
         Task<Response<object>> DeleteListAsync(string ids);
-        Task<Response<List<MenuDto>>> GetListMenusByUserAsync(int userId);
         Task<bool> CheckIfExistsAsync(int menuId);
 
     }

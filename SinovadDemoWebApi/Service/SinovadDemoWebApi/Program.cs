@@ -42,6 +42,12 @@ builder.Services.AddApplicationServices();
 
 builder.Services.AddInjection(builder.Configuration);
 builder.Services.AddAuthentication(builder.Configuration);
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("IsMainAdmin",policy=>policy.RequireClaim("IsMainAdmin"));
+    options.AddPolicy("IsMediaAdmin", policy => policy.RequireClaim("IsMediaAdmin"));
+});
+
 builder.Services.AddVersioning();
 builder.Services.AddSwagger();
 builder.Services.AddHealthCheck(builder.Configuration);

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SinovadDemo.Application.DTO.Movie;
 using SinovadDemo.Application.Interface.UseCases;
@@ -9,7 +10,7 @@ namespace SinovadDemoWebApi.Controllers.v1
 {
     [Route("api/v{version:apiVersion}/movies")]
     [ApiController]
-    [Authorize]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,Policy = "IsMediaAdmin")]
     [ApiVersion("1.0", Deprecated = false)]
     public class MovieController : ControllerBase
     {

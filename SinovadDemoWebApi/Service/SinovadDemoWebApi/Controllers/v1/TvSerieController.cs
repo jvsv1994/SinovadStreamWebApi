@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SinovadDemo.Application.DTO.TvSerie;
 using SinovadDemo.Application.Interface.UseCases;
@@ -8,7 +9,7 @@ namespace SinovadDemoWebApi.Controllers.v1
 {
     [Route("api/v{version:apiVersion}/tvseries")]
     [ApiController]
-    [Authorize]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "IsMainAdmin")]
     [ApiVersion("1.0", Deprecated = false)]
     public class TvSerieController : ControllerBase
     {

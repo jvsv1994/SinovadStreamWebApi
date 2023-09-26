@@ -15,7 +15,7 @@ namespace SinovadDemo.Persistence.Repositories
 
         public async Task<User> GetUserRelatedData(Expression<Func<User, bool>> predicate)
         {
-          return await _context.Users.Include(x=>x.MediaServers).Include(x=>x.LinkedAccounts).Include(x=>x.Profiles).Include(x=>x.UserRoles).ThenInclude(x=>x.Role).FirstOrDefaultAsync(predicate);
+          return await _context.Users.Include(x=>x.MediaServers).Include(x=>x.LinkedAccounts).Include(x=>x.Profiles).Include(x=>x.UserRoles.Where(ur=>ur.Enabled==true)).ThenInclude(x=>x.Role).FirstOrDefaultAsync(predicate);
         }
 
         public async Task<User> GetUserWithRolesAsync(Expression<Func<User, bool>> predicate)

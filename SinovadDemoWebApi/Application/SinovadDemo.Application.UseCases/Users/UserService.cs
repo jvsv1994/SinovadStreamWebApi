@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using SinovadDemo.Application.DTO;
 using SinovadDemo.Application.DTO.Authenticate;
 using SinovadDemo.Application.DTO.MediaServer;
+using SinovadDemo.Application.DTO.Menu;
 using SinovadDemo.Application.DTO.Profile;
 using SinovadDemo.Application.DTO.Role;
 using SinovadDemo.Application.DTO.User;
@@ -45,7 +46,7 @@ namespace SinovadDemo.Application.UseCases.Users
                 var user = await _unitOfWork.Users.GetUserRelatedData(x => x.Guid.ToString() == userGuid);
                 if (user != null)
                 {
-                    response.Data = GetUserSessionData(user);
+                    response.Data = await GetUserSessionData(user);
                     response.IsSuccess = true;
                 }
             }catch (Exception ex)
@@ -67,7 +68,7 @@ namespace SinovadDemo.Application.UseCases.Users
                     var user = await _unitOfWork.Users.GetUserRelatedData(x => x.Id == mediaServer.UserId);
                     if (user != null)
                     {
-                        response.Data = GetUserSessionData(user);
+                        response.Data = await GetUserSessionData(user);
                         response.IsSuccess = true;
                     }
                 }
@@ -324,7 +325,7 @@ namespace SinovadDemo.Application.UseCases.Users
             return response;
         }
 
-        private UserSessionDto GetUserSessionData(User user)
+        private async  Task<UserSessionDto> GetUserSessionData(User user)
         {
             var userDto = _mapper.Map<UserDto>(user);
             userDto.IsPasswordSetted = user.PasswordHash != null ? true : false;
@@ -334,7 +335,24 @@ namespace SinovadDemo.Application.UseCases.Users
             userSessionDto.Profiles = _mapper.Map<List<ProfileDto>>(user.Profiles);
             userSessionDto.LinkedAccounts = _mapper.Map<List<LinkedAccountDto>>(user.LinkedAccounts);
             userSessionDto.Roles = _mapper.Map<List<RoleDto>>(user.UserRoles.Select(ur => ur.Role).ToList());
+            userSessionDto.Menus = await BuildListMenusByUser(user.Id);
             return userSessionDto;
+        }
+
+        private async Task<List<MenuDto>> BuildListMenusByUser(int userId)
+        {
+            var result = await _unitOfWork.Menus.GetListMenusByUser(userId);
+            var listMenus = _mapper.Map<List<MenuDto>>(result);
+            var mainMenus = listMenus.Where(m => m.ParentId == 0 && m.Enabled == true).OrderBy(m => m.SortOrder).ToList();
+            mainMenus.ForEach(m => m.ChildMenus = BuildMenuChilds(m.Id, listMenus));
+            return mainMenus;
+        }
+
+        private List<MenuDto> BuildMenuChilds(int parentId, List<MenuDto> originalList)
+        {
+            var listMenus = originalList.Where(m => m.ParentId == parentId && m.Enabled == true).OrderBy(m => m.SortOrder).ToList();
+            listMenus.ForEach(m => m.ChildMenus = BuildMenuChilds(m.Id, originalList));
+            return listMenus;
         }
 
         public async Task<ResponsePagination<List<UserDto>>> GetAllWithPaginationAsync(int page, int take, string sortBy, string sortDirection, string searchText, string searchBy)
