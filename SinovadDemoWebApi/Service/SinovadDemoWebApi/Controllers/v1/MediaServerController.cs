@@ -96,7 +96,7 @@ namespace SinovadDemoWebApi.Controllers.v1
             return CreatedAtRoute("getMediaServer",new {mediaServerId=response.Data.Id},response.Data);
         }
 
-        [HttpPut("UpdateAsync")]
+        [HttpPut("UpdateAsync/{mediaServerId:int}")]
         public async Task<ActionResult> UpdateAsync([FromRoute]int mediaServerId,[FromBody] MediaServerCreationDto mediaServerDto)
         {
             var exists = await _mediaServerService.CheckIfExistsAsync(mediaServerId);
