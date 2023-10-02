@@ -86,14 +86,14 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpPost("CreateAsync")]
-        public async Task<ActionResult> CreateAsync([FromBody] MediaServerCreationDto mediaServerDto)
+        public async Task<ActionResult<Response<MediaServerDto>>> CreateAsync([FromBody] MediaServerCreationDto mediaServerDto)
         {
             var response = await _mediaServerService.CreateAsync(mediaServerDto);
             if (!response.IsSuccess)
             {
                 return BadRequest(response.Message);
             }
-            return CreatedAtRoute("getMediaServer",new {mediaServerId=response.Data.Id},response.Data);
+            return CreatedAtRoute("getMediaServer",new {mediaServerId=response.Data.Id},response);
         }
 
         [HttpPut("UpdateAsync/{mediaServerId:int}")]

@@ -55,14 +55,14 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpPost("CreateAsync")]
-        public async Task<ActionResult> CreateAsync([FromBody] MovieCreationDto movieDto)
+        public async Task<ActionResult<Response<MovieDto>>> CreateAsync([FromBody] MovieCreationDto movieDto)
         {
             var response = await _movieService.CreateAsync(movieDto);
             if (!response.IsSuccess)
             {
                 return BadRequest(response.Message);
             }
-            return CreatedAtRoute("getMovie", new {id=response.Data.Id},response.Data);
+            return CreatedAtRoute("getMovie", new {id=response.Data.Id},response);
         }
 
         [HttpPut("UpdateAsync/{movieId:int}")]
