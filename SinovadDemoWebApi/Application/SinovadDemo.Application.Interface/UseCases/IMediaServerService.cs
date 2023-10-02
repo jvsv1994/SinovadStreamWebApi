@@ -12,7 +12,7 @@ namespace SinovadDemo.Application.Interface.UseCases
         Task<Response<List<MediaServerDto>>> GetAllByUserAsync(int userId);
         Task<ResponsePagination<List<MediaServerDto>>> GetAllWithPaginationByUserAsync(int userId, int page, int take, string sortBy, string sortDirection, string searchText, string searchBy);
         Task<Response<MediaServerDto>> CreateAsync(MediaServerCreationDto mediaServerDto);
-        Task<Response<object>> UpdateAsync(int mediaServerId,MediaServerCreationDto mediaServerCreationDto);
+        Task<Response<MediaServerDto>> UpdateAsync(int mediaServerId,MediaServerCreationDto mediaServerCreationDto);
         Task<Response<object>> DeleteAsync(int id);
         Task<bool> CheckIfExistsAsync(int mediaServerId);
     }

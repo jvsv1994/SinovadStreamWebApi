@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.Extensions.Options;
-using SinovadDemo.Application.Configuration;
 using SinovadDemo.Application.DTO.MediaServer;
 using SinovadDemo.Application.Interface.Persistence;
 using SinovadDemo.Application.Interface.UseCases;
@@ -155,15 +153,16 @@ namespace SinovadDemo.Application.UseCases.MediaServers
             return response;
         }
 
-        public async Task<Response<object>> UpdateAsync(int mediaServerId,MediaServerCreationDto mediaServerCreationDto)
+        public async Task<Response<MediaServerDto>> UpdateAsync(int mediaServerId,MediaServerCreationDto mediaServerCreationDto)
         {
-            var response = new Response<object>();
+            var response = new Response<MediaServerDto>();
             try
             {
                 var mediaServer = await _unitOfWork.MediaServers.GetAsync(mediaServerId);
                 mediaServer = _mapper.Map(mediaServerCreationDto, mediaServer);
                 _unitOfWork.MediaServers.Update(mediaServer);
                 await _unitOfWork.SaveAsync();
+                response.Data= _mapper.Map<MediaServerDto>(mediaServer);
                 response.IsSuccess = true;
             }catch (Exception ex){
                response.Message = ex.StackTrace;

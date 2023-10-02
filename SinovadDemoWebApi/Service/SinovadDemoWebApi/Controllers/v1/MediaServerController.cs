@@ -97,7 +97,7 @@ namespace SinovadDemoWebApi.Controllers.v1
         }
 
         [HttpPut("UpdateAsync/{mediaServerId:int}")]
-        public async Task<ActionResult> UpdateAsync([FromRoute]int mediaServerId,[FromBody] MediaServerCreationDto mediaServerDto)
+        public async Task<ActionResult<Response<MediaServerDto>>> UpdateAsync([FromRoute]int mediaServerId,[FromBody] MediaServerCreationDto mediaServerDto)
         {
             var exists = await _mediaServerService.CheckIfExistsAsync(mediaServerId);
             if(!exists)
@@ -109,7 +109,7 @@ namespace SinovadDemoWebApi.Controllers.v1
             {
                 return BadRequest(response.Message);
             }
-            return NoContent();
+            return response;
         }
 
         [HttpDelete("DeleteAsync/{mediaServerId:int}")]
