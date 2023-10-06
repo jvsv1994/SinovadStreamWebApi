@@ -63,7 +63,7 @@ namespace SinovadDemo.Application.UseCases.MediaServers
             var response = new Response<MediaServerDto>();
             try
             {
-                var result = await _unitOfWork.MediaServers.GetByExpressionAsync(x => x.SecurityIdentifier.ToString() == securityIdentifier);
+                var result = await _unitOfWork.MediaServers.GetByExpressionAsync(x => x.SecurityIdentifier == securityIdentifier);
                 if(result!=null)
                 {
                     response.Data = _mapper.Map<MediaServerDto>(result);
