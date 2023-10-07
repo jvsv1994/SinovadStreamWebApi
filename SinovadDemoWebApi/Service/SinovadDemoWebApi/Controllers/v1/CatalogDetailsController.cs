@@ -30,6 +30,17 @@ namespace SinovadDemoWebApi.Controllers.v1
             return response;
         }
 
+        [HttpGet("GetAllAsync")]
+        public async Task<ActionResult<Response<List<CatalogDetailDto>>>> GetAllAsync([FromRoute] int catalogId)
+        {
+            var response = await _catalogDetailService.GetAllAsync(catalogId);
+            if (!response.IsSuccess)
+            {
+                return BadRequest(response.Message);
+            }
+            return response;
+        }
+
 
         [HttpGet("GetAllWithPaginationAsync")]
         public async Task<ActionResult<ResponsePagination<List<CatalogDetailDto>>>> GetAllWithPaginationAsync([FromRoute] int catalogId, [FromQuery] int page = 1, [FromQuery] int take = 1000, [FromQuery] string sortBy = "Id", [FromQuery] string sortDirection = "asc", [FromQuery] string searchText = "", [FromQuery] string searchBy = "")

@@ -7,6 +7,7 @@ namespace SinovadDemo.Application.Interface.UseCases
     public interface ICatalogDetailService
     {
         Task<Response<CatalogDetailDto>> GetAsync(int catalogId, int catalogDetailId);
+        Task<Response<List<CatalogDetailDto>>> GetAllAsync(int catalogId);
         Task<ResponsePagination<List<CatalogDetailDto>>> GetAllWithPaginationAsync(int catalogId,int page, int take, string sortBy, string sortDirection, string searchText, string searchBy);
         Task<Response<CatalogDetailDto>> CreateAsync(int catalogId,CatalogDetailCreationDto catalogDetaiLCreationDto);
         Task<Response<object>> UpdateAsync(int catalogId,int catalogDetailId, CatalogDetailCreationDto catalogDetaiLCreationDto);

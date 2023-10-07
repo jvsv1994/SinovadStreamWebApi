@@ -100,6 +100,23 @@ namespace SinovadDemo.Application.UseCases.CatalogDetails
             return response;
         }
 
+        public async Task<Response<List<CatalogDetailDto>>> GetAllAsync(int catalogId)
+        {
+            var response = new Response<List<CatalogDetailDto>>();
+            try
+            {
+                var result = await _unitOfWork.CatalogDetails.GetAllByExpressionAsync(catalogDetail => catalogDetail.CatalogId == catalogId);
+                response.Data = _mapper.Map<List<CatalogDetailDto>>(result);
+                response.IsSuccess = true;
+            }
+            catch (Exception exception)
+            {
+                response.Message = exception.Message;
+                _logger.LogError(exception.StackTrace);
+            }
+            return response;
+        }
+
         public async Task<Response<CatalogDetailDto>> GetAsync(int catalogId, int catalogDetailId)
         {
             var response = new Response<CatalogDetailDto>();
